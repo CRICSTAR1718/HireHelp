@@ -21,6 +21,7 @@ import CandidateSettings from "@/pages/candidate/Settings";
 
 // ── Recruiter / HR ──────────────────────────────────────────────────────
 import { RecruiterLayout } from "@/layouts/shared/RecruiterLayout";
+import { RecruiterDashboard } from "@/pages/recruiter/Dashboard";
 import RequisitionsPage from "@/pages/recruiter/RequisitionsPage";
 import RequisitionDetailPage from "@/pages/recruiter/RequisitionDetailPage";
 import RequisitionFormPage from "@/pages/recruiter/RequisitionFormPage";
@@ -132,7 +133,22 @@ export function AppRouter() {
 
         {/* Recruiter / HR */}
         <Route element={<ProtectedRoute allowedRoles={["recruiter", "hr", "admin"]} />}>
-          <Route path="/recruiter/*" element={<RecruiterLayout />}>
+          <Route path="/recruiter" element={<RecruiterLayout />}>
+            <Route index element={<Navigate replace to="dashboard" />} />
+            <Route path="dashboard" element={<RecruiterDashboard />} />
+            <Route path="jobs" element={<PublishedJobsList />} />
+            <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
+            <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="pipeline" element={<RecruiterPagesWithUser />} />
+            <Route path="candidates" element={<RecruiterPagesWithUser />} />
+            <Route path="talent-pool" element={<PublishedJobsList />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="analytics" element={<AssignedInterviews />} />
+            <Route path="reports" element={<AssignedInterviews />} />
+            <Route path="notifications" element={<AssignedInterviews />} />
+            <Route path="settings" element={<AssignedInterviews />} />
             <Route path="*" element={<RecruiterPagesWithUser />} />
           </Route>
         </Route>
@@ -141,8 +157,11 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["interviewer"]} />}>
           <Route path="/interviewer" element={<InterviewerLayout />}>
             <Route index element={<AssignedInterviews />} />
-            <Route path="schedule" element={<ScheduleCalendarView />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="candidates" element={<AssignedInterviews />} />
             <Route path="feedback" element={<FeedbackForm />} />
+            <Route path="settings" element={<AssignedInterviews />} />
+            <Route path="schedule" element={<ScheduleCalendarView />} />
             <Route path="calendar" element={<CalendarSync />} />
             <Route path="history" element={<InterviewHistory />} />
           </Route>

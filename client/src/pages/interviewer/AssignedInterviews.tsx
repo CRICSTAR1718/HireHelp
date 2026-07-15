@@ -65,8 +65,16 @@ export const AssignedInterviews: React.FC = () => {
               <CardBody>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Candidate:</span>
+                    <span className="font-medium text-gray-900">{assignment.candidateName || `Candidate #${assignment.candidateId}`}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Role:</span>
                     <span className="font-medium text-gray-900">{assignment.role}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Interviewer:</span>
+                    <span className="font-medium text-gray-900">{assignment.interviewerName || `Interviewer #${assignment.interviewerId}`}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Assigned:</span>

@@ -1,13 +1,13 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { ClipboardList, Calendar, MessageSquare, Link, History, LogOut, LayoutDashboard } from "lucide-react";
+import { ClipboardList, Calendar, LogOut, LayoutDashboard, Users, FileText, Settings, Home } from "lucide-react";
 
 const navItems = [
-  { to: "/interviewer", label: "My Interviews", icon: ClipboardList, end: true },
-  { to: "/interviewer/schedule", label: "Schedule", icon: Calendar },
-  { to: "/interviewer/feedback", label: "Feedback", icon: MessageSquare },
-  { to: "/interviewer/calendar", label: "Integrations", icon: Link },
-  { to: "/interviewer/history", label: "History", icon: History },
+  { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
+  { to: "/interviewer/interviews", label: "My Interviews", icon: Calendar },
+  { to: "/interviewer/candidates", label: "Candidates", icon: Users },
+  { to: "/interviewer/feedback", label: "Feedback", icon: FileText },
+  { to: "/interviewer/settings", label: "Settings", icon: Settings },
 ];
 
 export const InterviewerLayout = () => {
@@ -22,16 +22,16 @@ export const InterviewerLayout = () => {
   return (
     <div className="scope-interviewer min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
       {/* Sidebar */}
-      <aside className="w-72 bg-white shadow-xl border-r border-slate-200 flex flex-col fixed h-full z-50">
+      <aside className="w-64 bg-white shadow-lg border-r border-slate-200 flex flex-col fixed h-full z-50">
         {/* Logo */}
-        <div className="p-6 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+        <div className="p-5 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
-              <LayoutDashboard className="w-6 h-6 text-white" />
+              <LayoutDashboard className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">HireHelp</h1>
-              <p className="text-xs text-blue-100">Interview Portal</p>
+              <h1 className="text-lg font-bold text-white">HireHelp</h1>
+              <p className="text-xs text-blue-100">AI Recruitment</p>
             </div>
           </div>
         </div>
@@ -47,9 +47,9 @@ export const InterviewerLayout = () => {
                     to={item.to}
                     end={item.end}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                      `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                         isActive
-                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
                           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       }`
                     }
@@ -71,7 +71,7 @@ export const InterviewerLayout = () => {
         <div className="p-4 border-t border-slate-200 bg-slate-50">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
             <span>Logout</span>
@@ -80,7 +80,7 @@ export const InterviewerLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-72 p-8">
+      <main className="flex-1 ml-64 p-6">
         <div className="max-w-7xl mx-auto">
           <Outlet />
         </div>

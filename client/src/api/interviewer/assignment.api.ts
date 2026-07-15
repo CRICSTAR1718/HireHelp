@@ -4,7 +4,9 @@ export interface Assignment {
   id: number;
   interviewId: string;
   interviewerId: number;
+  interviewerName?: string;
   candidateId: string;
+  candidateName?: string;
   role: string;
   status: string;
   assignedAt: Date;
