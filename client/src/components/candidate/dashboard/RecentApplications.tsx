@@ -19,17 +19,17 @@ export default function RecentApplications({ applications }: Props) {
                             className="flex justify-between items-center border-b border-slate-800 pb-4"
                         >
                             <div>
-                                <h3 className="text-white font-semibold">{job.role}</h3>
+                                <h3 className="text-white font-semibold">{job.jobTitle || 'Job Position'}</h3>
                                 <p className="text-slate-400">{job.company}</p>
                             </div>
 
                             <span
                                 className={`px-3 py-1 rounded-full text-sm ${
-                                    job.status === "Interview"
+                                    job.status === "interview"
                                         ? "bg-green-600"
-                                        : job.status === "Applied"
+                                        : job.status === "applied"
                                         ? "bg-blue-600"
-                                        : job.status === "Offer"
+                                        : job.status === "offer"
                                         ? "bg-purple-600"
                                         : "bg-red-600"
                                 }`}

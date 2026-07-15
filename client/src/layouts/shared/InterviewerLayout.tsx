@@ -1,12 +1,13 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
+import { ClipboardList, Calendar, MessageSquare, Link, History, LogOut, LayoutDashboard } from "lucide-react";
 
 const navItems = [
-  { to: "/interviewer", label: "My Interviews", icon: "📋", end: true },
-  { to: "/interviewer/schedule", label: "Schedule", icon: "📅" },
-  { to: "/interviewer/feedback", label: "Feedback", icon: "✍️" },
-  { to: "/interviewer/calendar", label: "Integrations", icon: "🔗" },
-  { to: "/interviewer/history", label: "History", icon: "📊" },
+  { to: "/interviewer", label: "My Interviews", icon: ClipboardList, end: true },
+  { to: "/interviewer/schedule", label: "Schedule", icon: Calendar },
+  { to: "/interviewer/feedback", label: "Feedback", icon: MessageSquare },
+  { to: "/interviewer/calendar", label: "Integrations", icon: Link },
+  { to: "/interviewer/history", label: "History", icon: History },
 ];
 
 export const InterviewerLayout = () => {
@@ -19,54 +20,70 @@ export const InterviewerLayout = () => {
   };
 
   return (
-    <div className="scope-interviewer min-h-screen bg-gray-100 flex">
+    <div className="scope-interviewer min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col fixed h-full">
+      <aside className="w-72 bg-white shadow-xl border-r border-slate-200 flex flex-col fixed h-full z-50">
         {/* Logo */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🎯</span>
-            <span className="text-xl font-bold text-gray-900">HireHelp Interview</span>
+        <div className="p-6 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+              <LayoutDashboard className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white">HireHelp</h1>
+              <p className="text-xs text-blue-100">Interview Portal</p>
+            </div>
           </div>
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
-                      isActive ? "bg-blue-600 text-white" : "text-gray-600 hover:bg-gray-100"
-                    }`
-                  }
-                >
-                  <span className="text-xl">{item.icon}</span>
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
+        <nav className="flex-1 p-4 overflow-y-auto">
+          <ul className="space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    end={item.end}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      }`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-slate-500"}`} strokeWidth={2} />
+                        <span>{item.label}</span>
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
-        {/* Logout Button */}
-        <div className="p-4 border-t border-gray-200">
+        {/* User Info & Logout */}
+        <div className="p-4 border-t border-slate-200 bg-slate-50">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 transition-colors"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
           >
-            <span className="text-xl">🚪</span>
-            Logout
+            <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
+            <span>Logout</span>
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6">
-        <Outlet />
+      <main className="flex-1 ml-72 p-8">
+        <div className="max-w-7xl mx-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

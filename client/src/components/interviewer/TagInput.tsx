@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { KeyboardEvent } from 'react';
+import { X, Plus } from 'lucide-react';
 
 interface TagInputProps {
   value: string[];
@@ -43,53 +44,56 @@ export const TagInput: React.FC<TagInputProps> = ({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {label && (
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-semibold text-slate-700">
           {label}
-          {required && <span className="text-red-500 ml-1">⭐</span>}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div className="flex flex-wrap gap-2">
         {value.map((tag, index) => (
           <span
             key={index}
-            className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+            className="inline-flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-200 shadow-sm"
           >
             {tag}
             <button
               type="button"
               onClick={() => removeTag(tag)}
-              className="hover:text-blue-600 font-bold"
+              className="hover:text-blue-900 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
             >
-              ×
+              <X className="w-4 h-4" strokeWidth={2} />
             </button>
           </span>
         ))}
       </div>
 
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <div className="relative">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white"
+        />
+      </div>
 
       {examples.length > 0 && (
         <div className="mt-2">
-          <p className="text-xs text-gray-500 mb-1">Examples:</p>
-          <div className="flex flex-wrap gap-1">
+          <p className="text-xs font-medium text-slate-500 mb-2">Quick add:</p>
+          <div className="flex flex-wrap gap-2">
             {examples.map((example, index) => (
               <button
                 key={index}
                 type="button"
                 onClick={() => addExample(example)}
-                className="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-700"
+                className="inline-flex items-center gap-1 text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 font-medium transition-colors"
               >
-                + {example}
+                <Plus className="w-3 h-3" strokeWidth={2} />
+                {example}
               </button>
             ))}
           </div>

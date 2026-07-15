@@ -52,10 +52,10 @@ export default function ResumePage() {
         };
     }, [refreshKey]);
 
-    async function handleUpload(fileName: string) {
+    async function handleUpload(file: File) {
         setUploading(true);
         try {
-            await uploadResume(fileName);
+            await uploadResume(file);
             setError(null);
             setRefreshKey((k) => k + 1);
         } catch (err) {
