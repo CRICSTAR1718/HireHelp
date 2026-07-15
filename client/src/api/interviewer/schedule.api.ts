@@ -12,9 +12,41 @@ export interface Schedule {
   updatedAt: Date;
 }
 
+export interface InterviewSchedule {
+  assignment: {
+    id: number;
+    interviewId: string;
+    interviewerId: number;
+    candidateId: string;
+    role: string;
+    status: string;
+    assignedAt: Date;
+  };
+  schedule: Schedule;
+}
+
 export const scheduleApi = {
   async createSchedule(data: Partial<Schedule>): Promise<Schedule> {
     const response = await apiFetch(`/scheduling`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+
+  async createInterviewSchedule(data: {
+    interviewerId: number;
+    candidateId: string;
+    role: string;
+    interviewId?: string;
+    startTime: string;
+    endTime: string;
+    location?: string;
+    meetingLink?: string;
+    status?: string;
+  }): Promise<InterviewSchedule> {
+    const response = await apiFetch(`/scheduling/interview`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

@@ -22,6 +22,28 @@ const formatDateValue = (value: Date | string | null | undefined) => {
 };
 
 export class ProfileController {
+  async getAllCandidates(req: Request, res: Response) {
+    try {
+      const candidatesData = await db.select().from(candidates).where(eq(candidates.isActive, true));
+      const candidatesWithProfiles = await Promise.all(
+        candidatesData.map(async (candidate) => {
+          const profileData = await profileService.getProfile(candidate.id);
+          return {
+            id: candidate.id,
+            firstName: candidate.firstName,
+            lastName: candidate.lastName,
+            email: candidate.email,
+            phone: candidate.phone,
+            profile: profileData?.profile || null,
+          };
+        })
+      );
+      res.json(candidatesWithProfiles);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get candidates' });
+    }
+  }
+
   private buildProfileResponse(candidate: any, profileData: any, resume: any) {
     const profile = profileData?.profile;
     const profilePictureUrl = profile?.profilePictureUrl || null;

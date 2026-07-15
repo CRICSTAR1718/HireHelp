@@ -65,6 +65,7 @@ import { NotFoundPage } from "@/pages/admin/NotFound/NotFoundPage";
 import { PermissionsPage } from "@/pages/admin/Permissions/PermissionsPage";
 import { RolesPage } from "@/pages/admin/Roles/RolesPage";
 import { UsersPage } from "@/pages/admin/Users/UsersPage";
+import InterviewSchedulingPage from "@/pages/admin/InterviewSchedulingPage";
 
 // Recruiter pages take `user` as a prop (the original apps prop-drilled it
 // from a top-level App component's local state). Since session now lives in
@@ -202,6 +203,7 @@ export function AppRouter() {
             <Route path="configuration" element={<ConfigurationPage />} />
             <Route path="audit" element={<AuditPage />} />
             <Route path="approvals" element={<AdminApprovalsPage />} />
+            <Route path="schedule-interview" element={<InterviewSchedulingPage />} />
           </Route>
         </Route>
 

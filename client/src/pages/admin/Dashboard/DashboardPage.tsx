@@ -7,6 +7,7 @@ import { useAuth } from "../../../hooks/shared/useAuth";
 const activityItems = ["Role policy was updated", "New department request received", "User access review completed"];
 const quickActions = [
   { label: "Manage users", href: "/admin/users", icon: Users },
+  { label: "Schedule interview", href: "/admin/schedule-interview", icon: Activity },
   { label: "Review approvals", href: "/admin/approvals", icon: ClipboardCheck },
   { label: "Review requisitions", href: "/admin/requisitions/review", icon: FileText },
   { label: "Review form approvals", href: "/admin/forms/approvals", icon: ClipboardCheck },

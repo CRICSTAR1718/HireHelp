@@ -46,6 +46,15 @@ export class InterviewerController {
     }
   }
 
+  async getAvailable(req: Request, res: Response) {
+    try {
+      const interviewers = await interviewerService.getAvailableInterviewers();
+      res.json(interviewers);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get available interviewers' });
+    }
+  }
+
   async update(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);

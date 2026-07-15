@@ -18,6 +18,12 @@ export class InterviewerService {
     return interviewerRepository.findAll();
   }
 
+  async getAvailableInterviewers() {
+    // For now, return all interviewers as available
+    // In the future, this could filter by availability/schedule
+    return interviewerRepository.findAll();
+  }
+
   async updateInterviewer(id: number, data: UpdateInterviewerInput) {
     return interviewerRepository.update(id, data);
   }
