@@ -39,11 +39,11 @@ export const RecruiterLayout = () => {
   };
 
   return (
-    <div className="scope-recruiter min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
+    <div className="scope-recruiter min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg border-r border-slate-200 flex flex-col fixed h-full z-50">
+      <aside className="w-64 bg-white shadow-lg border-r flex flex-col fixed h-full z-50" style={{ borderColor: 'var(--border)' }}>
         {/* Logo */}
-        <div className="p-5 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+        <div className="p-5 border-b" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
               <LayoutDashboard className="w-5 h-5 text-white" />
@@ -67,16 +67,19 @@ export const RecruiterLayout = () => {
                   <li key={item.to}>
                     <button
                       onClick={() => toggleExpanded(item.label)}
-                      className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200"
+                      style={{ color: 'var(--text-secondary)', backgroundColor: 'transparent' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
                     >
                       <div className="flex items-center gap-3">
-                        <Icon className="w-5 h-5 text-slate-500" strokeWidth={2} />
+                        <Icon className="w-5 h-5" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
                         <span>{item.label}</span>
                       </div>
                       {expandedItem === item.label ? (
-                        <ChevronDown className="w-4 h-4 text-slate-500" strokeWidth={2} />
+                        <ChevronDown className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-slate-500" strokeWidth={2} />
+                        <ChevronRight className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
                       )}
                     </button>
                     {expandedItem === item.label && item.subItems && (
@@ -90,14 +93,20 @@ export const RecruiterLayout = () => {
                                 className={({ isActive }) =>
                                   `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                                     isActive
-                                      ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                      ? "text-white shadow-md"
+                                      : ""
                                   }`
                                 }
+                                style={({ isActive }) => ({
+                                  backgroundColor: isActive ? 'linear-gradient(135deg, var(--accent), #6366f1)' : 'transparent',
+                                  color: isActive ? 'white' : 'var(--text-secondary)'
+                                })}
+                                onMouseEnter={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                                onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                               >
                                 {({ isActive }) => (
                                   <>
-                                    <SubIcon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500"}`} strokeWidth={2} />
+                                    <SubIcon className={`w-4 h-4`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
                                     <span className="text-sm">{subItem.label}</span>
                                   </>
                                 )}
@@ -118,14 +127,20 @@ export const RecruiterLayout = () => {
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                         isActive
-                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          ? "text-white shadow-md"
+                          : ""
                       }`
                     }
+                    style={({ isActive }) => ({
+                      backgroundColor: isActive ? 'linear-gradient(135deg, var(--accent), #6366f1)' : 'transparent',
+                      color: isActive ? 'white' : 'var(--text-secondary)'
+                    })}
+                    onMouseEnter={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                    onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                   >
                     {({ isActive }) => (
                       <>
-                        <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-slate-500"}`} strokeWidth={2} />
+                        <Icon className={`w-5 h-5`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
                         <span>{item.label}</span>
                       </>
                     )}
@@ -137,10 +152,13 @@ export const RecruiterLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="p-4 border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-hover)' }}>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 group"
+            style={{ color: 'var(--danger)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = 'var(--danger)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--danger)'; }}
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
             <span>Logout</span>
@@ -149,7 +167,7 @@ export const RecruiterLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6">
+      <main className="flex-1 ml-64 p-6" style={{ backgroundColor: 'var(--bg-primary)' }}>
         <div className="max-w-7xl mx-auto">
           <Outlet />
         </div>

@@ -319,6 +319,236 @@
 .scope-recruiter .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
 .scope-recruiter .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
 
+.scope-recruiter .page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.scope-recruiter textarea.input-field {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.scope-recruiter .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.scope-recruiter .checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scope-recruiter .checkbox-item:hover {
+  border-color: var(--border-light);
+  background: var(--bg-hover);
+}
+
+.scope-recruiter .checkbox-item input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.scope-recruiter .radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.scope-recruiter .radio-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.scope-recruiter .radio-item input[type="radio"] {
+  accent-color: var(--accent);
+}
+
+.scope-recruiter .form-section {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+.scope-recruiter .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.scope-recruiter .form-row-full {
+  grid-column: span 2;
+}
+
+.scope-recruiter .form-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.scope-recruiter .required-mark {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.scope-recruiter .status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.scope-recruiter .status-badge-draft {
+  background: rgba(148, 163, 184, 0.1);
+  color: #64748b;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.scope-recruiter .status-badge-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.scope-recruiter .status-badge-approved {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.scope-recruiter .status-badge-rejected {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.scope-recruiter .field-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  transition: all 0.2s;
+}
+
+.scope-recruiter .field-card:hover {
+  border-color: var(--border-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.scope-recruiter .field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.scope-recruiter .field-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.scope-recruiter .field-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--bg-hover);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.scope-recruiter .field-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.scope-recruiter .field-hint-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.scope-recruiter .template-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scope-recruiter .template-item:hover {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+}
+
+.scope-recruiter .template-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.scope-recruiter .template-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.scope-recruiter .drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  padding: 0.25rem;
+}
+
+.scope-recruiter .drag-handle:active {
+  cursor: grabbing;
+}
+
+.scope-recruiter .sortable-item {
+  transition: transform 0.2s;
+}
+
+.scope-recruiter .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.scope-recruiter .modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
 /* ── Candidate base typography (ex-CandidatePortal index.css) ──────────
    Same gap as recruiter above, smaller blast radius: only heading/code
    sizing was dropped, not whole components, but still a real "missing

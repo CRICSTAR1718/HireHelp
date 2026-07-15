@@ -30,6 +30,11 @@ import ApprovalsPage from "@/pages/recruiter/ApprovalsPage";
 import { PipelineBoard } from "@/pages/recruiter/PipelineBoard";
 import { CandidateProfileView } from "@/pages/recruiter/CandidateProfileView";
 import { PublishedJobsList } from "@/pages/recruiter/PublishedJobsList";
+import { Pipeline } from "@/pages/recruiter/Pipeline";
+import { Candidates } from "@/pages/recruiter/Candidates";
+import { TalentPool } from "@/pages/recruiter/TalentPool";
+import { Notifications } from "@/pages/recruiter/Notifications";
+import { RecruiterSettings } from "@/pages/recruiter/Settings";
 import FormBuilderPage from "@/pages/recruiter/hr/FormBuilderPage";
 import ApplicationsListPage from "@/pages/recruiter/hr/ApplicationsListPage";
 import ApplicationDetailPage from "@/pages/recruiter/hr/ApplicationDetailPage";
@@ -141,14 +146,14 @@ export function AppRouter() {
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
             <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
-            <Route path="pipeline" element={<RecruiterPagesWithUser />} />
-            <Route path="candidates" element={<RecruiterPagesWithUser />} />
-            <Route path="talent-pool" element={<PublishedJobsList />} />
+            <Route path="pipeline" element={<Pipeline />} />
+            <Route path="candidates" element={<Candidates />} />
+            <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<AssignedInterviews />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
-            <Route path="notifications" element={<AssignedInterviews />} />
-            <Route path="settings" element={<AssignedInterviews />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<RecruiterSettings />} />
             <Route path="*" element={<RecruiterPagesWithUser />} />
           </Route>
         </Route>
@@ -171,6 +176,21 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<AdminDashboardPage />} />
+            <Route path="requisitions" element={<RequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
+            <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/review" element={<RequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="forms/approvals" element={<FormApprovalsPage />} />
+            <Route path="pipeline" element={<Pipeline />} />
+            <Route path="candidates" element={<Candidates />} />
+            <Route path="talent-pool" element={<TalentPool />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="analytics" element={<AssignedInterviews />} />
+            <Route path="reports" element={<AssignedInterviews />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<RecruiterSettings />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="permissions" element={<PermissionsPage />} />
