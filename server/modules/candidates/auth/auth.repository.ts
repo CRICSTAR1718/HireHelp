@@ -38,6 +38,15 @@ export class AuthRepository {
   async verifyPassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
+
+  async updatePasswordByEmail(email: string, newPassword: string) {
+    const hash = await bcrypt.hash(newPassword, 10);
+    await db.update(candidates).set({ passwordHash: hash }).where(eq(candidates.email, email));
+  }
+
+  async markVerifiedByEmail(email: string) {
+    await db.update(candidates).set({ isVerified: true }).where(eq(candidates.email, email));
+  }
 }
 
 export const authRepository = new AuthRepository();

@@ -16,3 +16,4 @@ export * from './admin.schema';
 export * from './candidate.schema';
 export * from './recruitment.schema';
 export * from './interview.schema';
+export * from './otp.schema';
