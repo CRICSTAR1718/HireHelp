@@ -8,8 +8,8 @@ const activityItems = ["Role policy was updated", "New department request receiv
 const quickActions = [
   { label: "Manage users", href: "/admin/users", icon: Users },
   { label: "Review approvals", href: "/admin/approvals", icon: ClipboardCheck },
-  { label: "Review requisitions", href: "/recruiter/admin/requisitions", icon: FileText },
-  { label: "Review form approvals", href: "/recruiter/admin/form-approvals", icon: ClipboardCheck },
+  { label: "Review requisitions", href: "/admin/requisitions/review", icon: FileText },
+  { label: "Review form approvals", href: "/admin/forms/approvals", icon: ClipboardCheck },
   { label: "Platform settings", href: "/admin/configuration", icon: ShieldCheck },
 ];
 
@@ -18,33 +18,6 @@ export const DashboardPage = () => {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <section className="overflow-hidden rounded-xl border border-blue-100 bg-blue-600 px-6 py-7 text-white shadow-sm sm:px-8">
-        <p className="text-sm font-medium text-blue-100">HireHelp Admin Portal</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-          Welcome back, {user?.firstName ?? "Admin"}.
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
-          Monitor platform operations, manage administrative resources, and keep the recruitment workflow moving.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Link
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-blue-700 shadow-sm transition-colors hover:bg-blue-50"
-            to="/recruiter/admin/requisitions"
-          >
-            <FileText className="h-4 w-4" />
-            Requisition Review
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
-          <Link
-            className="inline-flex items-center gap-2 rounded-lg border border-blue-300 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
-            to="/recruiter/admin/form-approvals"
-          >
-            <ClipboardCheck className="h-4 w-4" />
-            Form Approvals
-          </Link>
-        </div>
-      </section>
-
       <section>
         <SectionTitle
           description="Overview placeholders for the management modules that will be connected in later milestones."

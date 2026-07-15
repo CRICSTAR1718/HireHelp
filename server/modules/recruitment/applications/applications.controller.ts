@@ -77,3 +77,10 @@ export async function checkApplicationStatus(req: Request, res: Response) {
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
+
+export async function recalculateFitment(req: Request, res: Response) {
+  try {
+    const data = await service.recalculateFitment(req.params.aid as string, req.params.reqId as string)
+    res.json(data)
+  } catch (err) { handleError(res, err) }
+}

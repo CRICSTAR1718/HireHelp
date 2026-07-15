@@ -12,11 +12,18 @@ type ApplicationStatus = InferSelectModel<typeof applications>['status']
 
 export async function findByRequisition(requisitionId: string) {
   return db.select({
-    id:           applications.id,
-    candidate_id: applications.candidate_id,
-    status:       applications.status,
-    ai_score:     applications.ai_score,
-    submitted_at: applications.submitted_at
+    id:             applications.id,
+    candidate_id:   applications.candidate_id,
+    status:         applications.status,
+    ai_score:       applications.ai_score,
+    recommendation: applications.recommendation,
+    strengths:      applications.strengths,
+    weaknesses:     applications.weaknesses,
+    matched_skills: applications.matched_skills,
+    missing_skills: applications.missing_skills,
+    ai_status:      applications.ai_status,
+    processed_at:   applications.processed_at,
+    submitted_at:   applications.submitted_at
   })
   .from(applications)
   .where(eq(applications.requisition_id, requisitionId))
@@ -25,11 +32,18 @@ export async function findByRequisition(requisitionId: string) {
 
 export async function findOne(applicationId: string, requisitionId: string) {
   const [app] = await db.select({
-    id:           applications.id,
-    candidate_id: applications.candidate_id,
-    status:       applications.status,
-    ai_score:     applications.ai_score,
-    submitted_at: applications.submitted_at
+    id:             applications.id,
+    candidate_id:   applications.candidate_id,
+    status:         applications.status,
+    ai_score:       applications.ai_score,
+    recommendation: applications.recommendation,
+    strengths:      applications.strengths,
+    weaknesses:     applications.weaknesses,
+    matched_skills: applications.matched_skills,
+    missing_skills: applications.missing_skills,
+    ai_status:      applications.ai_status,
+    processed_at:   applications.processed_at,
+    submitted_at:   applications.submitted_at
   })
   .from(applications)
   .where(and(
@@ -123,6 +137,53 @@ export async function findResponses(applicationId: string) {
 export async function updateStatus(applicationId: string, requisitionId: string, status: ApplicationStatus) {
   const [updated] = await db.update(applications)
     .set({ status })
+    .where(and(
+      eq(applications.id, applicationId),
+      eq(applications.requisition_id, requisitionId)
+    ))
+    .returning()
+  return updated ?? null
+}
+
+export async function updateAiEvaluation(
+  applicationId: string,
+  requisitionId: string,
+  aiData: {
+    ai_score: number
+    recommendation: string
+    strengths: string[]
+    weaknesses: string[]
+    matched_skills: string[]
+    missing_skills: string[]
+    ai_status: 'completed' | 'failed'
+  }
+) {
+  const [updated] = await db.update(applications)
+    .set({
+      ai_score: aiData.ai_score.toString(),
+      recommendation: aiData.recommendation,
+      strengths: aiData.strengths,
+      weaknesses: aiData.weaknesses,
+      matched_skills: aiData.matched_skills,
+      missing_skills: aiData.missing_skills,
+      ai_status: aiData.ai_status,
+      processed_at: new Date()
+    })
+    .where(and(
+      eq(applications.id, applicationId),
+      eq(applications.requisition_id, requisitionId)
+    ))
+    .returning()
+  return updated ?? null
+}
+
+export async function updateAiStatus(
+  applicationId: string,
+  requisitionId: string,
+  aiStatus: 'pending' | 'processing' | 'completed' | 'failed'
+) {
+  const [updated] = await db.update(applications)
+    .set({ ai_status: aiStatus })
     .where(and(
       eq(applications.id, applicationId),
       eq(applications.requisition_id, requisitionId)

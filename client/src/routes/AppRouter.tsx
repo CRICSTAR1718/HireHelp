@@ -21,6 +21,7 @@ import CandidateSettings from "@/pages/candidate/Settings";
 
 // ── Recruiter / HR ──────────────────────────────────────────────────────
 import { RecruiterLayout } from "@/layouts/shared/RecruiterLayout";
+import { RecruiterDashboard } from "@/pages/recruiter/Dashboard";
 import RequisitionsPage from "@/pages/recruiter/RequisitionsPage";
 import RequisitionDetailPage from "@/pages/recruiter/RequisitionDetailPage";
 import RequisitionFormPage from "@/pages/recruiter/RequisitionFormPage";
@@ -29,6 +30,11 @@ import ApprovalsPage from "@/pages/recruiter/ApprovalsPage";
 import { PipelineBoard } from "@/pages/recruiter/PipelineBoard";
 import { CandidateProfileView } from "@/pages/recruiter/CandidateProfileView";
 import { PublishedJobsList } from "@/pages/recruiter/PublishedJobsList";
+import { Pipeline } from "@/pages/recruiter/Pipeline";
+import { Candidates } from "@/pages/recruiter/Candidates";
+import { TalentPool } from "@/pages/recruiter/TalentPool";
+import { Notifications } from "@/pages/recruiter/Notifications";
+import { RecruiterSettings } from "@/pages/recruiter/Settings";
 import FormBuilderPage from "@/pages/recruiter/hr/FormBuilderPage";
 import ApplicationsListPage from "@/pages/recruiter/hr/ApplicationsListPage";
 import ApplicationDetailPage from "@/pages/recruiter/hr/ApplicationDetailPage";
@@ -47,6 +53,10 @@ import { InterviewHistory } from "@/pages/interviewer/InterviewHistory";
 import { AppLayout as AdminAppLayout } from "@/layouts/admin/AppLayout";
 import { ApprovalsPage as AdminApprovalsPage } from "@/pages/admin/Approvals/ApprovalsPage";
 import { AuditPage } from "@/pages/admin/Audit/AuditPage";
+import AdminRequisitionsPage from "@/pages/admin/AdminRequisitionsPage";
+import AdminRequisitionDetailPage from "@/pages/admin/AdminRequisitionDetailPage";
+import AdminRequisitionFormPage from "@/pages/admin/AdminRequisitionFormPage";
+import AdminRequisitionReviewPage from "@/pages/admin/AdminRequisitionReviewPage";
 import { ConfigurationPage } from "@/pages/admin/Configuration/ConfigurationPage";
 import { DashboardPage as AdminDashboardPage } from "@/pages/admin/Dashboard/DashboardPage";
 import { DepartmentsPage } from "@/pages/admin/Departments/DepartmentsPage";
@@ -132,7 +142,22 @@ export function AppRouter() {
 
         {/* Recruiter / HR */}
         <Route element={<ProtectedRoute allowedRoles={["recruiter", "hr", "admin"]} />}>
-          <Route path="/recruiter/*" element={<RecruiterLayout />}>
+          <Route path="/recruiter" element={<RecruiterLayout />}>
+            <Route index element={<Navigate replace to="dashboard" />} />
+            <Route path="dashboard" element={<RecruiterDashboard />} />
+            <Route path="jobs" element={<PublishedJobsList />} />
+            <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
+            <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="pipeline" element={<Pipeline />} />
+            <Route path="candidates" element={<Candidates />} />
+            <Route path="talent-pool" element={<TalentPool />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="analytics" element={<AssignedInterviews />} />
+            <Route path="reports" element={<AssignedInterviews />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<RecruiterSettings />} />
             <Route path="*" element={<RecruiterPagesWithUser />} />
           </Route>
         </Route>
@@ -141,8 +166,11 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["interviewer"]} />}>
           <Route path="/interviewer" element={<InterviewerLayout />}>
             <Route index element={<AssignedInterviews />} />
-            <Route path="schedule" element={<ScheduleCalendarView />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="candidates" element={<AssignedInterviews />} />
             <Route path="feedback" element={<FeedbackForm />} />
+            <Route path="settings" element={<AssignedInterviews />} />
+            <Route path="schedule" element={<ScheduleCalendarView />} />
             <Route path="calendar" element={<CalendarSync />} />
             <Route path="history" element={<InterviewHistory />} />
           </Route>
@@ -152,6 +180,21 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<AdminDashboardPage />} />
+            <Route path="requisitions" element={<AdminRequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/new" element={<AdminRequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
+            <Route path="requisitions/:id/edit" element={<AdminRequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<AdminRequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/review" element={<AdminRequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="forms/approvals" element={<FormApprovalsPage />} />
+            <Route path="pipeline" element={<Pipeline />} />
+            <Route path="candidates" element={<Candidates />} />
+            <Route path="talent-pool" element={<TalentPool />} />
+            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="analytics" element={<AssignedInterviews />} />
+            <Route path="reports" element={<AssignedInterviews />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="settings" element={<RecruiterSettings />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="permissions" element={<PermissionsPage />} />
