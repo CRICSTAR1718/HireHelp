@@ -53,6 +53,8 @@ import { InterviewHistory } from "@/pages/interviewer/InterviewHistory";
 import { AppLayout as AdminAppLayout } from "@/layouts/admin/AppLayout";
 import { ApprovalsPage as AdminApprovalsPage } from "@/pages/admin/Approvals/ApprovalsPage";
 import { AuditPage } from "@/pages/admin/Audit/AuditPage";
+import AdminRequisitionsPage from "@/pages/admin/AdminRequisitionsPage";
+import AdminRequisitionDetailPage from "@/pages/admin/AdminRequisitionDetailPage";
 import { ConfigurationPage } from "@/pages/admin/Configuration/ConfigurationPage";
 import { DashboardPage as AdminDashboardPage } from "@/pages/admin/Dashboard/DashboardPage";
 import { DepartmentsPage } from "@/pages/admin/Departments/DepartmentsPage";
@@ -176,11 +178,11 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<AdminDashboardPage />} />
-            <Route path="requisitions" element={<RequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions" element={<AdminRequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
             <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
-            <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<AdminRequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/review" element={<RequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="forms/approvals" element={<FormApprovalsPage />} />
             <Route path="pipeline" element={<Pipeline />} />

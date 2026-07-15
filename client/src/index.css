@@ -67,6 +67,439 @@
 }
 .scope-admin * { border-color: #e2e8f0; }
 
+/* ── Admin requisition page styling ─────────────────────────────────── */
+.scope-admin .admin-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.scope-admin .admin-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.scope-admin .admin-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.scope-admin .admin-page-subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.scope-admin .admin-requisition-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+}
+
+.scope-admin .admin-requisition-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.scope-admin .admin-requisition-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.scope-admin .admin-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.scope-admin .admin-memo-badge {
+  background: #eff6ff;
+  color: #3b82f6;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  letter-spacing: 0.025em;
+}
+
+.scope-admin .admin-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.scope-admin .admin-card-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.scope-admin .admin-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.scope-admin .admin-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 1rem;
+}
+
+.scope-admin .admin-card-date {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.scope-admin .admin-status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.scope-admin .admin-status-draft {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.scope-admin .admin-status-submitted {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.scope-admin .admin-status-approved {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.scope-admin .admin-status-rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.scope-admin .admin-status-published {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.scope-admin .admin-btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scope-admin .admin-btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.scope-admin .admin-btn-secondary {
+  background: white;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scope-admin .admin-btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.scope-admin .admin-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.scope-admin .admin-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.scope-admin .admin-empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.scope-admin .admin-empty-text {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* Enhanced admin requisition styling */
+.scope-admin .admin-filter-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.scope-admin .admin-search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.625rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  background: white;
+}
+
+.scope-admin .admin-search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.scope-admin .admin-filter-select {
+  padding: 0.625rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  background: white;
+  cursor: pointer;
+}
+
+.scope-admin .admin-filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.scope-admin .admin-requisition-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.scope-admin .admin-requisition-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.scope-admin .admin-requisition-card:hover::before {
+  opacity: 1;
+}
+
+.scope-admin .admin-requisition-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+  transform: translateY(-4px);
+}
+
+.scope-admin .admin-card-priority {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.scope-admin .admin-priority-high {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.scope-admin .admin-priority-medium {
+  background: #f59e0b;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+.scope-admin .admin-priority-low {
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.scope-admin .admin-card-content {
+  padding-right: 2rem;
+}
+
+.scope-admin .admin-card-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.scope-admin .admin-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.scope-admin .admin-stat-value {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.scope-admin .admin-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.scope-admin .admin-action-btn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+}
+
+.scope-admin .admin-action-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.scope-admin .admin-action-btn-danger {
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.scope-admin .admin-action-btn-danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.scope-admin .admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.scope-admin .admin-tab {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+}
+
+.scope-admin .admin-tab:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.scope-admin .admin-tab-active {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.scope-admin .admin-badge-count {
+  background: #3b82f6;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  margin-left: 0.5rem;
+}
+
+.scope-admin .admin-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-right: 1rem;
+}
+
+.scope-admin .admin-card-user {
+  display: flex;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.scope-admin .admin-card-user-info {
+  flex: 1;
+}
+
+.scope-admin .admin-card-user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+.scope-admin .admin-card-user-role {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
 /* ── Candidate portal tokens (ex-CandidatePortal) ───────────────────── */
 .scope-candidate {
   --text: #6b6375;
