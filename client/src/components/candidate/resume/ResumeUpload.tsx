@@ -1,7 +1,7 @@
 import { Upload } from "lucide-react";
 
 interface Props {
-    onUpload: (fileName: string) => void;
+    onUpload: (file: File) => void;
     uploading?: boolean;
 }
 
@@ -9,7 +9,7 @@ export default function ResumeUpload({ onUpload, uploading = false }: Props) {
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
         if (file) {
-            onUpload(file.name);
+            onUpload(file);
         }
     }
 

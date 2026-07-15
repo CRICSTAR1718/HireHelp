@@ -25,16 +25,18 @@ export const InterviewHistory: React.FC = () => {
     switch (recommendation) {
       case 'hire': return 'bg-green-100 text-green-800';
       case 'hire_with_reservations': return 'bg-yellow-100 text-yellow-800';
-      case 'no_hire': return 'bg-red-100 text-red-800';
+      case 'hold': return 'bg-gray-100 text-gray-800';
+      case 'reject': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getRecommendationLabel = (recommendation: string) => {
     switch (recommendation) {
-      case 'hire': return 'Strong Hire';
+      case 'hire': return 'Hire';
       case 'hire_with_reservations': return 'Hire with Reservations';
-      case 'no_hire': return 'No Hire';
+      case 'hold': return 'Hold';
+      case 'reject': return 'Reject';
       default: return 'Pending';
     }
   };
@@ -70,11 +72,11 @@ export const InterviewHistory: React.FC = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <p className="text-sm text-gray-500">Overall Score</p>
-                      <p className="text-2xl font-bold text-gray-900">{feedback.overallScore}/5</p>
+                      <p className="text-sm text-gray-500">Overall Rating</p>
+                      <p className="text-2xl font-bold text-gray-900">{feedback.overallRating}/5</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRecommendationColor(feedback.recommendation)}`}>
-                      {getRecommendationLabel(feedback.recommendation)}
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRecommendationColor(feedback.overallRecommendation)}`}>
+                      {getRecommendationLabel(feedback.overallRecommendation)}
                     </span>
                   </div>
                 </div>
@@ -83,44 +85,59 @@ export const InterviewHistory: React.FC = () => {
                 <div className="mb-4">
                   <h4 className="text-sm font-medium text-gray-700 mb-2">Competency Ratings</h4>
                   <div className="space-y-2">
-                    {feedback.ratings.map((rating, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">{rating.competency}</span>
+                    {Object.entries(feedback.ratings).map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 capitalize">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
                         <div className="flex items-center gap-2">
                           <div className="flex gap-1">
                             {[1, 2, 3, 4, 5].map((score) => (
                               <div
                                 key={score}
                                 className={`w-4 h-4 rounded-full ${
-                                  rating.score >= score ? 'bg-blue-600' : 'bg-gray-200'
+                                  value >= score ? 'bg-blue-600' : 'bg-gray-200'
                                 }`}
                               />
                             ))}
                           </div>
-                          <span className="text-sm font-medium text-gray-900">{rating.score}/5</span>
+                          <span className="text-sm font-medium text-gray-900">{value}/5</span>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {feedback.ratings.some(r => r.comment) && (
+                {feedback.strengthAreas && feedback.strengthAreas.length > 0 && (
                   <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Comments</h4>
-                    <div className="space-y-2">
-                      {feedback.ratings.filter(r => r.comment).map((rating, idx) => (
-                        <p key={idx} className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
-                          <span className="font-medium">{rating.competency}:</span> {rating.comment}
-                        </p>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Strength Areas</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {feedback.strengthAreas.map((area, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                          {area}
+                        </span>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {feedback.notes && (
+                {feedback.weakAreas && feedback.weakAreas.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Areas to Improve</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {feedback.weakAreas.map((area, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
+                          {area}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {feedback.detailedRemarks && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Additional Notes</h4>
-                    <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{feedback.notes}</p>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">Detailed Remarks</h4>
+                    <p className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">{feedback.detailedRemarks}</p>
                   </div>
                 )}
               </CardBody>
