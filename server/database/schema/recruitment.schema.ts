@@ -21,6 +21,10 @@ export const applicationStatusEnum = pgEnum('application_status', [
   'submitted', 'under_review', 'shortlisted', 'rejected', 'hired'
 ])
 
+export const aiStatusEnum = pgEnum('ai_status', [
+  'pending', 'processing', 'completed', 'failed'
+])
+
 export const fieldTypeEnum = pgEnum('field_type', [
   'text', 'textarea', 'dropdown', 'file', 'checkbox',
   'date', 'number', 'url', 'multi_select', 'rating', 'yes_no'
@@ -158,6 +162,13 @@ export const applications = pgTable('applications', {
   candidate_id:   uuid('candidate_id').notNull(), // logical ref -> candidate module (see note above)
   status:         applicationStatusEnum('status').default('submitted'),
   ai_score:       numeric('ai_score', { precision: 5, scale: 2 }),
+  recommendation: text('recommendation'),
+  strengths:      jsonb('strengths'),
+  weaknesses:     jsonb('weaknesses'),
+  matched_skills: jsonb('matched_skills'),
+  missing_skills: jsonb('missing_skills'),
+  ai_status:      aiStatusEnum('ai_status').default('pending'),
+  processed_at:   timestamp('processed_at'),
   submitted_at:   timestamp('submitted_at').defaultNow()
 })
 

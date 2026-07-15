@@ -16,11 +16,12 @@ dotenv.config();
 //   - CANDIDATE_SERVICE_URL / ADMIN_SERVICE_URL / INTERVIEW_SERVICE_URL —
 //     those modules are now in-process, no HTTP calls between them needed
 //   - API_GATEWAY_URL — the gateway is dissolved into this monolith
+//   - S3_* — replaced with Cloudinary for resume storage
 //
 // KEPT:
 //   - AI_EVALUATION_SERVICE_URL — the one service that stays genuinely
 //     separate (Python/FastAPI), still called over HTTP
-//   - S3_* — resume storage, from candidate-service
+//   - CLOUDINARY_* — resume storage, migrated from S3
 // ─────────────────────────────────────────────────────────────────────────────
 
 const envSchema = z.object({
@@ -49,11 +50,9 @@ const envSchema = z.object({
 
   AI_EVALUATION_SERVICE_URL: z.string().min(1, "AI_EVALUATION_SERVICE_URL is required"),
 
-  S3_ENDPOINT: z.string().optional().default(""),
-  S3_REGION: z.string().optional().default("us-east-1"),
-  S3_ACCESS_KEY: z.string().optional().default(""),
-  S3_SECRET_KEY: z.string().optional().default(""),
-  S3_BUCKET: z.string().optional().default(""),
+  CLOUDINARY_CLOUD_NAME: z.string().min(1, "CLOUDINARY_CLOUD_NAME is required"),
+  CLOUDINARY_API_KEY: z.string().min(1, "CLOUDINARY_API_KEY is required"),
+  CLOUDINARY_API_SECRET: z.string().min(1, "CLOUDINARY_API_SECRET is required"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -80,11 +79,9 @@ export const env = parsedEnv.success
     LOG_LEVEL: "info",
     CLIENT_ORIGIN: "http://localhost:5173",
     AI_EVALUATION_SERVICE_URL: "",
-    S3_ENDPOINT: "",
-    S3_REGION: "us-east-1",
-    S3_ACCESS_KEY: "",
-    S3_SECRET_KEY: "",
-    S3_BUCKET: "",
+    CLOUDINARY_CLOUD_NAME: "",
+    CLOUDINARY_API_KEY: "",
+    CLOUDINARY_API_SECRET: "",
   } satisfies z.infer<typeof envSchema>);
 
 export type Env = typeof env;

@@ -14,6 +14,24 @@ import { env } from '../config/env';
 // needs it, instead of duplicating a fetch wrapper per module.
 // ─────────────────────────────────────────────────────────────────────────────
 
+export interface EvaluationRequest {
+  application_id: string
+  candidate_id: string
+  job_id: string
+  resume_url: string
+  job_description: string
+}
+
+export interface EvaluationResponse {
+  application_id: string
+  fitment_score: number
+  recommendation: string
+  matched_skills: string[]
+  missing_skills: string[]
+  strengths: string[]
+  weaknesses: string[]
+}
+
 export const aiEvaluationClient = {
   async getFitmentScore(applicationId: number | string) {
     const response = await fetch(
@@ -24,4 +42,28 @@ export const aiEvaluationClient = {
     }
     return response.json();
   },
+
+  async evaluateApplication(request: EvaluationRequest): Promise<EvaluationResponse> {
+    if (!env.AI_EVALUATION_SERVICE_URL) {
+      throw new Error('AI_EVALUATION_SERVICE_URL not configured')
+    }
+
+    const url = `${env.AI_EVALUATION_SERVICE_URL}/api/v1/evaluation`
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-service': 'recruitment-service'
+      },
+      body: JSON.stringify(request)
+    })
+
+    if (!res.ok) {
+      const errorText = await res.text()
+      console.error(`[ai-evaluation-client] Failed to evaluate application: ${res.status} - ${errorText}`)
+      throw new Error(`AI evaluation failed: ${res.status}`)
+    }
+
+    return res.json() as Promise<EvaluationResponse>
+  }
 };
