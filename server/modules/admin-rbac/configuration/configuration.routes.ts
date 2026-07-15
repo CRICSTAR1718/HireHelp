@@ -1,0 +1,10 @@
+import { Router } from "express";
+import { authenticate } from "../../../common/middleware/auth";
+import { authorize } from "../../../common/middleware/rbac";
+import { validate } from "../../../common/middleware/validate";
+import { listConfiguration, updateConfiguration } from "./configuration.controller";
+import { updateConfigurationSchema } from "./configuration.schema";
+const router = Router();
+router.get("/configuration", authenticate, authorize("configuration:read"), listConfiguration);
+router.patch("/configuration", authenticate, authorize("configuration:update"), validate(updateConfigurationSchema), updateConfiguration);
+export default router;

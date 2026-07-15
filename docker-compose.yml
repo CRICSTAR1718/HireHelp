@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hirehelp
+    ports:
+      - '5432:5432'
+    volumes:
+      - hirehelp_pg_data:/var/lib/postgresql/data
+
+  # ai-evaluation-service stays a separate process/container — not merged.
+  # Point AI_EVALUATION_SERVICE_URL at wherever it's actually running
+  # (this compose file assumes it's run separately, e.g. its own
+  # docker-compose or `uvicorn` locally).
+
+volumes:
+  hirehelp_pg_data:

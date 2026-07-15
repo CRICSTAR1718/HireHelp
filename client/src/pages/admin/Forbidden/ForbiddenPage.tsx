@@ -1,0 +1,4 @@
+import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { Link } from "react-router-dom";
+
+export const ForbiddenPage = () => <main className="grid min-h-screen place-items-center bg-slate-50 p-6"><section className="max-w-md text-center"><ShieldAlert className="mx-auto h-12 w-12 text-blue-600" /><p className="mt-6 text-sm font-semibold text-blue-600">403</p><h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">Access forbidden</h1><p className="mt-3 text-slate-500">The server denied access to this resource.</p><Link className="mt-8 inline-flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700" to="/admin"><ArrowLeft className="mr-2 h-4 w-4" />Back to dashboard</Link></section></main>;

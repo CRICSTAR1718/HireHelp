@@ -1,0 +1,5 @@
+import * as repository from "./audit.repository";
+import { getAuditLogById, listAuditLogs } from "./audit.service";
+jest.mock("./audit.repository", () => ({ findAll: jest.fn(), findById: jest.fn() }));
+const log = { id: "11111111-1111-4111-8111-111111111111", userId: null, action: "USER_CREATED", resource: "users", metadata: {}, ipAddress: "127.0.0.1", createdAt: new Date("2026-01-01T00:00:00.000Z") };
+describe("audit.service", () => { beforeEach(() => jest.clearAllMocks()); it("lists audit logs", async () => { (repository.findAll as jest.Mock).mockResolvedValue([log]); await expect(listAuditLogs({ limit: 50, offset: 0 })).resolves.toHaveLength(1); }); it("gets an audit log and throws 404 when missing", async () => { (repository.findById as jest.Mock).mockResolvedValueOnce(log).mockResolvedValueOnce(undefined); await expect(getAuditLogById(log.id)).resolves.toMatchObject({ id: log.id }); await expect(getAuditLogById("missing")).rejects.toMatchObject({ statusCode: 404 }); }); });
