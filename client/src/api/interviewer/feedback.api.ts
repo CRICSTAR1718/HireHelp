@@ -6,14 +6,36 @@ export interface FeedbackRating {
   comment?: string;
 }
 
+export interface DynamicField {
+  id: string;
+  label: string;
+  type: 'rating' | 'text' | 'textarea' | 'tags';
+  value: any;
+  required: boolean;
+}
+
 export interface Feedback {
-  id: number;
+  id?: number;
   assignmentId: number;
   interviewerId: number;
-  ratings: FeedbackRating[];
-  overallScore: number;
-  recommendation: string;
-  notes?: string;
+  overallRecommendation: string;
+  overallRating: number;
+  ratings: {
+    communicationSkills: number;
+    domainKnowledge: number;
+    problemSolving: number;
+    confidenceProfessionalism: number;
+    learningAbility: number;
+  };
+  strengthAreas: string[];
+  weakAreas: string[];
+  topicsCovered: string[];
+  topicsToWorkOn: string[];
+  detailedRemarks: string;
+  suitableForFutureRoles: string;
+  recommendedRole?: string;
+  nextAction: string;
+  dynamicFields?: DynamicField[];
   submittedAt: Date;
 }
 

@@ -69,22 +69,22 @@ if (!parsedEnv.success) {
 export const env = parsedEnv.success
   ? parsedEnv.data
   : ({
-      PORT: 5000,
-      NODE_ENV: "test",
-      DATABASE_URL: "",
-      JWT_SECRET: "",
-      JWT_EXPIRES_IN: "1h",
-      JWT_REFRESH_EXPIRES_IN: "7d",
-      CANDIDATE_JWT_SECRET: "",
-      CANDIDATE_JWT_EXPIRES_IN: "7d",
-      LOG_LEVEL: "info",
-      CLIENT_ORIGIN: "http://localhost:5173",
-      AI_EVALUATION_SERVICE_URL: "",
-      S3_ENDPOINT: "",
-      S3_REGION: "us-east-1",
-      S3_ACCESS_KEY: "",
-      S3_SECRET_KEY: "",
-      S3_BUCKET: "",
-    } satisfies z.infer<typeof envSchema>);
+    PORT: 5000,
+    NODE_ENV: "test",
+    DATABASE_URL: "",
+    JWT_SECRET: "",
+    JWT_EXPIRES_IN: "1h",
+    JWT_REFRESH_EXPIRES_IN: "7d",
+    CANDIDATE_JWT_SECRET: "",
+    CANDIDATE_JWT_EXPIRES_IN: "7d",
+    LOG_LEVEL: "info",
+    CLIENT_ORIGIN: "http://localhost:5173",
+    AI_EVALUATION_SERVICE_URL: "",
+    S3_ENDPOINT: "",
+    S3_REGION: "us-east-1",
+    S3_ACCESS_KEY: "",
+    S3_SECRET_KEY: "",
+    S3_BUCKET: "",
+  } satisfies z.infer<typeof envSchema>);
 
 export type Env = typeof env;
