@@ -17,3 +17,48 @@ export async function updateStatus(applicationId: string, requisitionId: string,
   if (!updated) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
   return updated
 }
+
+export async function submitApplication(candidateId: string, jobId: string, responses: Array<{
+  field_id: string
+  response_text?: string
+  response_json?: any
+  file_url?: string
+}>, resumeId?: number) {
+  console.log('[Application Service] Creating application:', {
+    candidateId,
+    jobId,
+    resumeId,
+    responsesCount: responses?.length
+  })
+
+  // Check if already applied
+  const existing = await repo.findByCandidateAndJob(candidateId, jobId)
+  if (existing) {
+    throw Object.assign(new Error('You have already applied for this job'), { statusCode: 409 })
+  }
+
+  // Create application
+  const application = await repo.createApplication({
+    requisition_id: jobId,
+    candidate_id: candidateId
+  })
+
+  console.log('[Application Service] Application created:', application.id)
+
+  // Create field responses
+  if (responses && responses.length > 0) {
+    const fieldResponses = await repo.createFieldResponses(application.id, responses)
+    console.log('[Application Service] Field responses created:', fieldResponses.length)
+  }
+
+  return application
+}
+
+export async function getCandidateApplications(candidateId: string) {
+  return repo.findByCandidate(candidateId)
+}
+
+export async function checkApplicationStatus(candidateId: string, requisitionId: string) {
+  const application = await repo.findByCandidateAndJob(candidateId, requisitionId)
+  return application ? { applied: true, status: application.status } : { applied: false }
+}

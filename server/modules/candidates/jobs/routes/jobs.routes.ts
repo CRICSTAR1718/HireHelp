@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllJobs, getJobById, searchJobs } from "../services/jobs.service.js";
+import { getAllJobs, getJobById, searchJobs, getJobForm } from "../services/jobs.service.js";
 
 const router = Router();
 
@@ -26,7 +26,18 @@ router.get("/:id", async (req, res) => {
     }
     res.json(job);
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch job" });
+    const statusCode = (error as any).statusCode || 500;
+    res.status(statusCode).json({ message: (error as Error).message || "Failed to fetch job" });
+  }
+});
+
+router.get("/:id/form", async (req, res) => {
+  try {
+    const form = await getJobForm(req.params.id);
+    res.json(form);
+  } catch (error) {
+    const statusCode = (error as any).statusCode || 500;
+    res.status(statusCode).json({ message: (error as Error).message || "Failed to fetch form" });
   }
 });
 
