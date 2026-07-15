@@ -10,6 +10,7 @@ interface Props {
     salary?: string;
     published_at?: string;
     onApply?: (jobId: string) => void;
+    onViewDetails?: (jobId: string) => void;
     applying?: boolean;
     hasApplied?: boolean;
 }
@@ -24,6 +25,7 @@ export default function JobCard({
     salary,
     published_at,
     onApply,
+    onViewDetails,
     applying = false,
     hasApplied = false,
 }: Props) {
@@ -101,6 +103,10 @@ export default function JobCard({
 
                 <button
                     type="button"
+                    onClick={() => {
+                        console.log('View Details button clicked for job:', id);
+                        if (onViewDetails) onViewDetails(id);
+                    }}
                     className="rounded-lg border border-slate-700/50 px-5 py-2 text-white hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300"
                 >
                     View Details

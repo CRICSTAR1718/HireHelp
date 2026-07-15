@@ -33,6 +33,7 @@ export const profiles = pgTable('profiles', {
   website: varchar('website', { length: 255 }),
   linkedin: varchar('linkedin', { length: 255 }),
   github: varchar('github', { length: 255 }),
+  profilePictureUrl: varchar('profile_picture_url', { length: 500 }),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

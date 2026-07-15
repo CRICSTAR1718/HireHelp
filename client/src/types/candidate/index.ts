@@ -88,9 +88,14 @@ export interface Profile {
     location?: string;
     headline?: string;
     summary?: string;
+    portfolio?: string;
+    linkedin?: string;
+    github?: string;
+    profilePictureUrl?: string;
     skills: string[];
     education: Education[];
     experience: Experience[];
+    resume?: Resume | null;
 }
 
 export interface Resume {
