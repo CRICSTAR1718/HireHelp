@@ -1,61 +1,234 @@
-# HireHelp
-HireHelp is a merged modular monolith that combines the backend behavior from the former `CandidatePortal`, `RecruitmentPortal`, `AdministrationPortal`, and `InterviewManagement` services into one Node.js application. The `ai-evaluation-service` remains a separate process and is called through `server/clients/ai-evaluation.client.ts`.
+# HireHelp 🚀
 
-## What is included
+> **Your hiring, handled.**
 
-- A single Express app in `server/app.ts` with the server entry point in `server/index.ts`.
-- One router composition layer in `server/routes.ts`.
-- Centralized configuration, logging, and constants in `server/config/`.
-- A single Postgres connection and merged Drizzle schema set in `server/database/`.
-- An in-process event bus in `server/events/`.
-- Shared authentication, RBAC, validation, JWT, and password helpers in `server/common/`.
-- Four feature areas under `server/modules/`:
-  - `candidates/` for auth, profile, resume, applications, dashboard, notifications, interview status, and jobs.
-  - `recruitment/` for requisitions, jobs, forms, pipeline, feedback, offers, applications, approvals, and logs.
-  - `admin-rbac/` for auth, users, roles, permissions, departments, audit, configuration, approvals, and health.
-  - `interviews/` for assignment, scheduling, calendar, interviewer, meeting links, feedback, and reminders.
+HireHelp is an AI-powered recruitment platform that streamlines the complete hiring lifecycle—from job requisition and resume screening to interview scheduling, candidate evaluation, offers, and talent rediscovery.
 
-## Current structure
+The platform combines AI-assisted decision-making with modern web technologies to help recruiters hire faster while maintaining complete control over the recruitment process.
 
-```text
-server/
-├── app.ts
-├── index.ts
-├── routes.ts
-├── clients/
-├── common/
-├── config/
-├── database/
-├── events/
-└── modules/
-    ├── admin-rbac/
-    ├── candidates/
-    ├── interviews/
-    └── recruitment/
+---
+
+## ✨ Features
+
+### 👤 Candidate Portal
+- Candidate registration and login
+- Profile management
+- Resume upload
+- Browse and apply for jobs
+- Application status tracking
+
+### 💼 Recruitment Management
+- Create and manage job requisitions
+- Approval workflow
+- Publish job openings
+- Candidate pipeline management
+
+### 🤖 AI Evaluation
+- Resume parsing
+- Job description matching
+- AI-powered fitment scoring
+- Candidate evaluation insights
+
+### 📅 Interview Management
+- Interview scheduling
+- Interviewer assignment
+- Feedback collection
+- Interview status tracking
+
+### 📧 Communication
+- Interview invitations
+- Offer notifications
+- Rejection emails
+- Reminder notifications
+
+### 🧠 Talent Pool
+- Archive rejected candidates
+- Rediscover candidates for future roles
+- Candidate history management
+
+### 📊 Analytics
+- Hiring pipeline insights
+- Time-to-hire metrics
+- Screening statistics
+- Offer acceptance rate
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
+
+### Backend
+- Express.js
+- TypeScript
+- FastAPI (AI Service)
+- Drizzle ORM
+
+### Database
+- PostgreSQL
+- Redis
+
+### Messaging
+- Kafka
+
+### AI
+- Python
+- FastAPI
+- Large Language Models (LLMs)
+
+### DevOps
+- Docker
+- Docker Compose
+- GitHub Actions
+- Kubernetes (Planned)
+
+---
+
+## 📂 Project Structure
+
+```
+HireHelp/
+├── frontend
+├── api-gateway
+├── candidate-service
+├── recruitment-service
+├── admin-service
+├── interview-service
+├── ai-evaluation-service
+├── communication-service
+├── talent-service
+└── analytics-service
 ```
 
-## Scripts
+---
 
-- `npm run dev` starts the server in watch mode.
-- `npm run start` runs the server once.
-- `npm run typecheck` runs the TypeScript compiler without emitting files.
-- `npm run test` runs Jest.
-- `npm run lint` runs ESLint.
-- `npm run db:generate` generates Drizzle migrations.
-- `npm run db:migrate` applies Drizzle migrations.
-- `npm run db:seed` seeds the database.
-- `npm run db:studio` opens Drizzle Studio.
+## 🔐 Authentication
 
-## Setup
+HireHelp uses **JWT-based authentication** with **Role-Based Access Control (RBAC)**.
+
+Supported roles:
+
+- Candidate
+- Recruiter
+- Interviewer
+- Admin
+
+---
+
+## 🚀 Getting Started
+
+### Clone the Repository
 
 ```bash
-cp .env.example .env
-docker compose up -d
+git clone https://github.com/your-org/HireHelp.git
+cd HireHelp
+```
+
+### Install Dependencies
+
+```bash
 npm install
-npm run db:generate
-npm run db:migrate
-npm run db:seed
+```
+
+For the AI service:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file:
+
+```env
+PORT=
+
+DATABASE_URL=
+
+JWT_SECRET=
+
+KAFKA_BROKER=
+
+REDIS_URL=
+
+OPENAI_API_KEY=
+```
+
+---
+
+## ▶️ Run the Project
+
+Using Docker:
+
+```bash
+docker compose up --build
+```
+
+Or run services individually:
+
+```bash
 npm run dev
 ```
 
-The seed script creates the bootstrap admin account defined by `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` if those variables are set, otherwise it uses the default seed credentials in the code. Change the admin password after first login.
+AI Service:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+## 🔒 Security
+
+- JWT Authentication
+- Role-Based Access Control
+- Password Hashing
+- Input Validation
+- Rate Limiting
+- Environment-based Configuration
+
+---
+
+## 🎯 MVP Features
+
+- Candidate registration
+- Job requisition management
+- Resume upload
+- AI resume screening
+- Candidate pipeline
+- Interview scheduling
+- Email notifications
+- Feedback management
+- Talent pool
+
+---
+
+## 🚀 Future Enhancements
+
+- AI-powered interview rounds
+- Calendar integration
+- Semantic talent search
+- Real-time notifications
+- Advanced analytics
+- Kubernetes deployment
+
+---
+
+## 👥 Team
+
+- Adeela Azeez
+- Archi Garg
+- Anushka Berlia
+
+---
+
+## 📄 License
+
+This project is developed for educational purposes.
