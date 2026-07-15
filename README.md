@@ -143,47 +143,6 @@ pip install -r requirements.txt
 
 ---
 
-## ⚙️ Environment Variables
-
-Create a `.env` file:
-
-```env
-PORT=
-
-DATABASE_URL=
-
-JWT_SECRET=
-
-KAFKA_BROKER=
-
-REDIS_URL=
-
-OPENAI_API_KEY=
-```
-
----
-
-## ▶️ Run the Project
-
-Using Docker:
-
-```bash
-docker compose up --build
-```
-
-Or run services individually:
-
-```bash
-npm run dev
-```
-
-AI Service:
-
-```bash
-uvicorn app.main:app --reload
-```
-
----
 
 ## 🔒 Security
 
