@@ -20,6 +20,7 @@ export const candidates = pgTable('candidates', {
   lastName: varchar('last_name', { length: 100 }).notNull(),
   phone: varchar('phone', { length: 20 }),
   isActive: boolean('is_active').notNull().default(true),
+  isVerified: boolean('is_verified').notNull().default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

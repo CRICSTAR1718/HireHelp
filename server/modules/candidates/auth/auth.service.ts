@@ -2,19 +2,58 @@ import jwt from 'jsonwebtoken';
 import { authRepository } from './auth.repository.js';
 import { publishEvent } from '../../../events/bus';
 import { events } from '../../../events/catalog';
-import { env } from '../../../config/env';
+import { env } from '../../../config/env.js';
 import { RegisterInput, LoginInput } from './auth.schema.js';
+import { otpService } from './otp.service.js';
 
 export class AuthService {
-  async register(data: RegisterInput) {
-    const existing = await authRepository.findByEmail(data.email);
-    if (existing) {
-      throw new Error('Email already registered');
-    }
+  // Candidate registers: create a candidate record (isVerified defaults to false),
+  // generate registration OTP and email it. Do NOT issue token yet.
 
-    const candidate = await authRepository.create(data);
-    
-    // ENABLED — was dead/commented-out code in the original repo.
+  
+async register(data: RegisterInput) {
+  console.log("\n========== CANDIDATE REGISTRATION ==========");
+  console.log("Incoming Request:", data);
+
+  const existing = await authRepository.findByEmail(data.email);
+
+  console.log("findByEmail Result:", existing);
+
+  if (existing) {
+    console.log("Registration blocked. Email already exists.");
+    throw new Error("Email already registered");
+  }
+
+  console.log("Creating candidate...");
+
+  const candidate = await authRepository.create(data);
+
+  console.log("Candidate Created:", candidate);
+
+  console.log("Generating OTP...");
+
+  await otpService.generateAndSend({
+    email: candidate.email,
+    purpose: "REGISTRATION",
+    candidateId: candidate.id,
+  });
+
+  console.log("OTP sent successfully.");
+
+  return {
+    success: true,
+    message: "Verification OTP sent.",
+  };
+}
+
+  async verifyRegistration(email: string, otp: string) {
+    const candidate = await authRepository.findByEmail(email);
+    if (!candidate) throw new Error('Candidate not found');
+
+    await otpService.verify({ email, otp, purpose: 'REGISTRATION' });
+    await authRepository.markVerifiedByEmail(email);
+
+    // publish event now that account is verified
     await publishEvent(events.CandidateRegistered, {
       id: candidate.id,
       email: candidate.email,
@@ -23,16 +62,8 @@ export class AuthService {
     });
 
     const token = this.generateToken(candidate);
-    
-    return {
-      token,
-      candidate: {
-        id: candidate.id,
-        email: candidate.email,
-        firstName: candidate.firstName,
-        lastName: candidate.lastName,
-      },
-    };
+    const { passwordHash, ...candidateData } = candidate;
+    return { success: true, token, candidate: candidateData };
   }
 
   async login(data: LoginInput) {
@@ -46,17 +77,48 @@ export class AuthService {
       throw new Error('Invalid credentials');
     }
 
+    if (!candidate.isVerified) throw new Error('Email not verified');
+
+    // Generate login OTP
+    await otpService.generateAndSend({ email: candidate.email, purpose: 'LOGIN', candidateId: candidate.id });
+
+    return { requiresOtp: true };
+  }
+
+  async verifyLoginOtp(email: string, otp: string) {
+    const candidate = await authRepository.findByEmail(email);
+    if (!candidate) throw new Error('Candidate not found');
+
+    await otpService.verify({ email, otp, purpose: 'LOGIN' });
     const token = this.generateToken(candidate);
-    
-    return {
-      token,
-      candidate: {
-        id: candidate.id,
-        email: candidate.email,
-        firstName: candidate.firstName,
-        lastName: candidate.lastName,
-      },
-    };
+    const { passwordHash, ...candidateData } = candidate;
+    return { success: true, token, candidate: candidateData };
+  }
+
+  async resendOtp(email: string, purpose: string) {
+    const allowed = await otpService.canResend(email, purpose);
+    if (!allowed) throw new Error('Resend cooldown active');
+    const candidate = await authRepository.findByEmail(email);
+    const candidateId = candidate?.id;
+    await otpService.generateAndSend({ email, purpose, candidateId });
+    return { success: true, message: 'Verification OTP sent.' };
+  }
+
+  async forgotPassword(email: string) {
+    const candidate = await authRepository.findByEmail(email);
+    if (!candidate) throw new Error('Candidate not found');
+    await otpService.generateAndSend({ email, purpose: 'PASSWORD_RESET', candidateId: candidate.id });
+    return { success: true, message: 'Password reset OTP sent.' };
+  }
+
+  async verifyResetOtp(email: string, otp: string) {
+    await otpService.verify({ email, otp, purpose: 'PASSWORD_RESET' });
+    return { success: true };
+  }
+
+  async resetPassword(email: string, newPassword: string) {
+    await authRepository.updatePasswordByEmail(email, newPassword);
+    return { success: true };
   }
 
   async getProfile(id: number) {
@@ -70,12 +132,6 @@ export class AuthService {
   }
 
   private generateToken(candidate: { id: number; email: string }): string {
-    // CHANGED: was reading process.env.JWT_SECRET directly with a
-    // 'default_secret' fallback — the same env var name staff auth uses.
-    // Harmless as separate services, but dangerous once merged into one
-    // process: a leaked/guessed default could let a candidate token pass
-    // staff auth checks or vice versa. Uses its own dedicated secret now,
-    // and no insecure fallback — env.ts already fails startup if missing.
     return jwt.sign(
       { id: candidate.id, email: candidate.email },
       env.CANDIDATE_JWT_SECRET,

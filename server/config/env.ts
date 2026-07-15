@@ -54,6 +54,11 @@ const envSchema = z.object({
   S3_ACCESS_KEY: z.string().optional().default(""),
   S3_SECRET_KEY: z.string().optional().default(""),
   S3_BUCKET: z.string().optional().default(""),
+    MAIL_HOST: z.string().optional().default(""),
+    MAIL_PORT: z.string().optional().default(""),
+    MAIL_USER: z.string().optional().default(""),
+    MAIL_PASS: z.string().optional().default(""),
+    MAIL_FROM: z.string().optional().default(""),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
