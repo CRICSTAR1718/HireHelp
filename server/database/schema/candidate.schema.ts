@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, boolean, varchar, integer, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, boolean, varchar, integer, jsonb, uuid } from 'drizzle-orm/pg-core';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CANDIDATE MODULE — separate identity domain from staff (admin.users).
@@ -13,6 +13,7 @@ import { pgTable, serial, text, timestamp, boolean, varchar, integer, jsonb } fr
 
 export const candidates = pgTable('candidates', {
   id: serial('id').primaryKey(),
+  uuid: uuid('uuid').notNull().defaultRandom().unique(),
   email: varchar('email', { length: 255 }).notNull().unique(),
   passwordHash: varchar('password_hash', { length: 255 }).notNull(),
   firstName: varchar('first_name', { length: 100 }).notNull(),

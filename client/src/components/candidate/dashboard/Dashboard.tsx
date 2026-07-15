@@ -16,10 +16,13 @@ import Card from "../ui/Card";
 import PageTitle from "../ui/PageTitle";
 import Loader from "../ui/Loader";
 import { getDashboard } from "../../../api/candidate/dashboard.api";
+import { getApplications } from "../../../api/candidate/applications.api";
 import type { DashboardData } from "../../../types/candidate";
+import type { Application } from "../../../types/candidate";
 
 export default function Dashboard() {
     const [data, setData] = useState<DashboardData | null>(null);
+    const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -33,8 +36,14 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-        getDashboard()
-            .then(setData)
+        Promise.all([
+            getDashboard(),
+            getApplications()
+        ])
+            .then(([dashboardData, appsData]) => {
+                setData(dashboardData);
+                setApplications(appsData);
+            })
             .catch((err) =>
                 setError(err instanceof Error ? err.message : "Failed to load dashboard")
             )
@@ -53,6 +62,12 @@ export default function Dashboard() {
         );
     }
 
+    // Update stats with real application count
+    const updatedStats = {
+        ...data.stats,
+        totalApplications: applications.length
+    };
+
     return (
         <div className="space-y-8">
             <PageTitle
@@ -63,7 +78,7 @@ export default function Dashboard() {
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard
                     title="Applications"
-                    value={String(data.stats.totalApplications)}
+                    value={String(updatedStats.totalApplications)}
                     icon={BriefcaseBusiness}
                     color="bg-blue-600"
                 />
@@ -181,10 +196,9 @@ export default function Dashboard() {
 
             <div className="grid gap-6 xl:grid-cols-3">
                 <div className="space-y-6 xl:col-span-2">
-                    <RecentApplications applications={data.recentApplications ?? []} />
+                    <RecentApplications applications={applications} />
                     <RecommendedJobs jobs={data.recommendedJobs ?? []} />
                     <ActivityTimeline activities={data.activityTimeline ?? []} />
-
 
 
 

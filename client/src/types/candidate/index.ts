@@ -1,23 +1,41 @@
 export interface Job {
     id: string;
-    company: string;
-    role: string;
-    location: string;
-    type: string;
-    description?: string;
+    memo_no?: string;
+    title: string;
+    department?: string;
+    team?: string;
+    location?: string;
+    employment_type?: string;
+    work_mode?: string;
+    number_of_openings?: number;
+    about_role?: string;
+    responsibilities?: string;
+    required_skills?: string;
+    preferred_skills?: string;
+    experience_required?: string;
+    education_requirements?: string;
     salary?: string;
-    postedDate?: string;
+    benefits?: string;
+    hiring_manager?: string;
+    hiring_manager_email?: string;
+    application_deadline?: string;
+    published_at?: string;
 }
 
 export interface Application {
     id: string;
-    userId: string;
+    candidateId: number;
     jobId: string;
-    company: string;
-    role: string;
-    location: string;
+    jobTitle?: string;
+    department?: string;
+    company?: string;
+    location?: string;
     appliedDate: string;
-    status: "Applied" | "Interview" | "Rejected" | "Offer";
+    status: "applied" | "under_review" | "shortlisted" | "rejected" | "hired" | "interview" | "offer";
+    coverLetter?: string;
+    fitmentScore?: number;
+    recruiter?: string;
+    interviewStatus?: string;
 }
 
 export interface Interview {
@@ -126,4 +144,45 @@ export interface NotificationStats {
     unread: number;
     interviews: number;
     applications: number;
+}
+
+export interface FormField {
+    id: string;
+    label: string;
+    field_type: 'text' | 'textarea' | 'dropdown' | 'file' | 'checkbox' | 'date' | 'number' | 'url' | 'multi_select' | 'rating' | 'yes_no' | 'email' | 'phone' | 'time' | 'radio';
+    is_required: boolean;
+    position: number;
+    placeholder?: string;
+    helper_text?: string;
+    max_rating?: number;
+    options?: FieldOption[];
+}
+
+export interface FieldOption {
+    id: string;
+    label: string;
+    position: number;
+}
+
+export interface ApplicationForm {
+    id: string;
+    requisition_id: string;
+    is_published: boolean;
+    admin_remarks?: string;
+    created_at: string;
+    updated_at: string;
+    fields: FormField[];
+}
+
+export interface FormResponse {
+    field_id: string;
+    response_text?: string;
+    response_json?: any;
+    file_url?: string;
+}
+
+export interface ApplicationSubmission {
+    jobId: string;
+    resumeId?: number;
+    responses: FormResponse[];
 }
