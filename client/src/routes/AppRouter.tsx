@@ -55,6 +55,8 @@ import { ApprovalsPage as AdminApprovalsPage } from "@/pages/admin/Approvals/App
 import { AuditPage } from "@/pages/admin/Audit/AuditPage";
 import AdminRequisitionsPage from "@/pages/admin/AdminRequisitionsPage";
 import AdminRequisitionDetailPage from "@/pages/admin/AdminRequisitionDetailPage";
+import AdminRequisitionFormPage from "@/pages/admin/AdminRequisitionFormPage";
+import AdminRequisitionReviewPage from "@/pages/admin/AdminRequisitionReviewPage";
 import { ConfigurationPage } from "@/pages/admin/Configuration/ConfigurationPage";
 import { DashboardPage as AdminDashboardPage } from "@/pages/admin/Dashboard/DashboardPage";
 import { DepartmentsPage } from "@/pages/admin/Departments/DepartmentsPage";
@@ -179,11 +181,11 @@ export function AppRouter() {
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<AdminDashboardPage />} />
             <Route path="requisitions" element={<AdminRequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
-            <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/new" element={<AdminRequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
-            <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/edit" element={<AdminRequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id" element={<AdminRequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
-            <Route path="requisitions/review" element={<RequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/review" element={<AdminRequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="forms/approvals" element={<FormApprovalsPage />} />
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="candidates" element={<Candidates />} />
