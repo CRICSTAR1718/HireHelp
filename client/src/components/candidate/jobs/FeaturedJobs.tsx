@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 
 import JobCard from "./JobCard";
 import ApplicationForm from "./ApplicationForm";
+import JobDetailsModal from "./JobDetailsModal";
 import Loader from "../ui/Loader";
 import { getJobs, getJobForm } from "../../../api/candidate/jobs.api";
 import { submitApplication, checkApplicationStatus } from "../../../api/candidate/applications.api";
@@ -22,6 +23,9 @@ export default function FeaturedJobs() {
     const [submitting, setSubmitting] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    // Job Details Modal state
+    const [selectedJobForDetails, setSelectedJobForDetails] = useState<string | null>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -105,6 +109,20 @@ export default function FeaturedJobs() {
         setFormError(null);
     }
 
+    function handleViewDetails(jobId: string) {
+        console.log('View Details requested for job:', jobId);
+        setSelectedJobForDetails(jobId);
+    }
+
+    function handleCloseDetails() {
+        setSelectedJobForDetails(null);
+    }
+
+    function handleApplyFromDetails(jobId: string) {
+        setSelectedJobForDetails(null);
+        handleApply(jobId);
+    }
+
     return (
         <div className="space-y-6">
             <div className="rounded-2xl bg-slate-900/50 border border-slate-800/50 p-5">
@@ -150,6 +168,7 @@ export default function FeaturedJobs() {
                         salary={job.salary}
                         published_at={job.published_at}
                         onApply={handleApply}
+                        onViewDetails={handleViewDetails}
                         hasApplied={appliedJobIds.has(job.id)}
                     />
                 ))
@@ -186,6 +205,16 @@ export default function FeaturedJobs() {
                         </button>
                     </div>
                 </div>
+            )}
+
+            {/* Job Details Modal */}
+            {selectedJobForDetails && (
+                <JobDetailsModal
+                    jobId={selectedJobForDetails}
+                    onClose={handleCloseDetails}
+                    onApply={handleApplyFromDetails}
+                    hasApplied={appliedJobIds.has(selectedJobForDetails)}
+                />
             )}
         </div>
     );

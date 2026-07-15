@@ -3,11 +3,12 @@ import { profileService } from './profile.service';
 import { profileRepository } from './profile.repository';
 
 const mockProfileRepository = {
-  findByCandidateId: jest.fn() as any,
-  updateProfile: jest.fn() as any,
-  addExperience: jest.fn() as any,
-  addEducation: jest.fn() as any,
-  addSkill: jest.fn() as any,
+  findByCandidateId: jest.fn(),
+  updateProfile: jest.fn(),
+  updateCandidateIdentity: jest.fn(),
+  addExperience: jest.fn(),
+  addEducation: jest.fn(),
+  addSkill: jest.fn(),
 };
 
 jest.mock('./profile.repository', () => ({
@@ -28,7 +29,7 @@ describe('ProfileService', () => {
         skills: [],
       };
       
-      (mockProfileRepository.findByCandidateId as any).mockResolvedValue(mockProfile);
+      mockProfileRepository.findByCandidateId.mockResolvedValue(mockProfile);
       
       const result = await profileService.getProfile(1);
       expect(result).toEqual(mockProfile);
@@ -38,10 +39,27 @@ describe('ProfileService', () => {
   describe('updateProfile', () => {
     it('should update profile', async () => {
       const mockProfile = { id: 1, candidateId: 1, headline: 'Senior Developer' };
-      (mockProfileRepository.updateProfile as any).mockResolvedValue(mockProfile);
+      mockProfileRepository.updateProfile.mockResolvedValue(mockProfile);
       
       const result = await profileService.updateProfile(1, { headline: 'Senior Developer' });
       expect(result.headline).toBe('Senior Developer');
+    });
+
+    it('maps full name and portfolio into the correct persistence fields', async () => {
+      const mockProfile = { id: 1, candidateId: 1, headline: 'Senior Developer' };
+      mockProfileRepository.updateProfile.mockResolvedValue(mockProfile);
+
+      await profileService.updateProfile(1, {
+        fullName: 'Jane Doe',
+        headline: 'Senior Developer',
+        portfolio: 'https://janedoe.dev',
+      });
+
+      expect(mockProfileRepository.updateCandidateIdentity).toHaveBeenCalledWith(1, { fullName: 'Jane Doe', phone: undefined });
+      expect(mockProfileRepository.updateProfile).toHaveBeenCalledWith(1, {
+        headline: 'Senior Developer',
+        website: 'https://janedoe.dev',
+      });
     });
   });
 });

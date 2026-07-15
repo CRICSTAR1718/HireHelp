@@ -119,7 +119,7 @@ export function AppRouter() {
             <ProtectedRoute allowedRoles={["candidate"]} loginPath="/candidate" />
           }
         >
-          <Route path="/candidate" element={<div className="scope-candidate"><DashboardLayout /></div>}>
+          <Route path="/candidate/*" element={<div className="scope-candidate"><DashboardLayout /></div>}>
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<CandidateProfile />} />
             <Route path="resume" element={<CandidateResume />} />

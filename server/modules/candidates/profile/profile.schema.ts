@@ -1,12 +1,19 @@
 import { z } from 'zod';
 
+const optionalUrl = z.string().trim().max(500).optional().or(z.literal(''));
+
 export const updateProfileSchema = z.object({
-  headline: z.string().optional(),
-  summary: z.string().optional(),
-  location: z.string().optional(),
-  website: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  github: z.string().url().optional(),
+  fullName: z.string().trim().max(255).optional(),
+  phone: z.string().trim().max(20).optional(),
+  headline: z.string().trim().max(255).optional(),
+  summary: z.string().max(5000).optional(),
+  location: z.string().trim().max(255).optional(),
+  website: optionalUrl,
+  linkedin: optionalUrl,
+  github: optionalUrl,
+  portfolio: optionalUrl,
+  skills: z.array(z.string().trim().min(1).max(100)).optional(),
+  profilePictureUrl: z.string().trim().max(500).optional(),
 });
 
 export const experienceSchema = z.object({
