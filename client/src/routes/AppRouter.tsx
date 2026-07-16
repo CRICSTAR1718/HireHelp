@@ -152,6 +152,9 @@ export function AppRouter() {
           <Route path="/recruiter" element={<RecruiterLayout />}>
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<RecruiterDashboard />} />
+            <Route path="requisitions" element={<RequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="published-jobs" element={<PublishedJobsList />} />
+            <Route path="published-jobs/:id/applications" element={<ApplicationsListPage />} />
             <Route path="applications" element={<ApplicationsListPage />} />
             <Route path="applications/:aid" element={<ApplicationDetailPage />} />
             <Route path="jobs" element={<PublishedJobsList />} />

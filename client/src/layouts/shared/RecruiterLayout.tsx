@@ -6,15 +6,14 @@ import { useState } from "react";
 const navItems = [
   { to: "/recruiter/dashboard", label: "Dashboard", icon: Home, end: true },
   { 
-    to: "/recruiter/jobs", 
-    label: "Jobs", 
+    to: "/recruiter/requisitions", 
+    label: "Requisitions", 
     icon: Briefcase, 
     subItems: [
-      { to: "/recruiter/jobs", label: "All Jobs", icon: Briefcase },
-      { to: "/recruiter/requisitions/new", label: "Create Job", icon: Plus },
+      { to: "/recruiter/requisitions", label: "All Requisitions", icon: Briefcase },
+      { to: "/recruiter/requisitions/new", label: "Create Requisition", icon: Plus },
     ]
   },
-  { to: "/recruiter/applications", label: "Applications", icon: FileText },
   { to: "/recruiter/pipeline", label: "Pipeline", icon: GitPullRequest },
   { to: "/recruiter/candidates", label: "Candidates", icon: Users },
   { to: "/recruiter/talent-pool", label: "Talent Pool", icon: Star },
@@ -42,11 +41,11 @@ export const RecruiterLayout = () => {
   return (
     <div className="scope-recruiter min-h-screen flex">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg border-r flex flex-col fixed h-full z-50" style={{ borderColor: 'var(--border)' }}>
+      <aside className="w-64 bg-white shadow-lg border-r flex flex-col fixed h-screen" style={{ borderColor: 'var(--border)', zIndex: 9999 }}>
         {/* Logo */}
         <div className="p-5 border-b" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+            <div className="p-2 bg-white/20 rounded-lg">
               <LayoutDashboard className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -99,10 +98,10 @@ export const RecruiterLayout = () => {
                                   }`
                                 }
                                 style={({ isActive }) => ({
-                                  backgroundColor: isActive ? 'linear-gradient(135deg, var(--accent), #6366f1)' : 'transparent',
+                                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
                                   color: isActive ? 'white' : 'var(--text-secondary)'
                                 })}
-                                onMouseEnter={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                                onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                                 onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                               >
                                 {({ isActive }) => (
@@ -133,10 +132,10 @@ export const RecruiterLayout = () => {
                       }`
                     }
                     style={({ isActive }) => ({
-                      backgroundColor: isActive ? 'linear-gradient(135deg, var(--accent), #6366f1)' : 'transparent',
+                      backgroundColor: isActive ? 'var(--accent)' : 'transparent',
                       color: isActive ? 'white' : 'var(--text-secondary)'
                     })}
-                    onMouseEnter={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                    onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                     onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                   >
                     {({ isActive }) => (

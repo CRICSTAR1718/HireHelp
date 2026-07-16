@@ -220,7 +220,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
         ← Back
       </button>
 
-      <div className="glass-card fade-in" style={{ padding: '2rem' }}>
+      <div className="glass-card" style={{ padding: '2rem' }}>
         <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
           {mode === 'create' ? 'New Job Requisition' : 'Edit Requisition'}
         </h1>
