@@ -21,11 +21,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Correlation ID — carried over from api-gateway's tracing responsibility.
-app.use((req, res, next) => {
-  const correlationId = (req.headers['x-correlation-id'] as string) || randomUUID();
-  res.setHeader('x-correlation-id', correlationId);
-  next();
-});
+// app.use((req, res, next) => {
+//   const correlationId = (req.headers['x-correlation-id'] as string) || randomUUID();
+//   res.setHeader('x-correlation-id', correlationId);
+//   next();
+// });
 
 app.use('/api', routes);
 

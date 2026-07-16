@@ -19,7 +19,7 @@ export default function RecentApplications({ applications }: Props) {
                             className="flex justify-between items-center border-b border-slate-800 pb-4"
                         >
                             <div>
-                                <h3 className="text-white font-semibold">{job.jobTitle || 'Job Position'}</h3>
+                                <h3 className="text-white font-semibold">{job.jobTitle || job.job_title || 'Job Position'}</h3>
                                 <p className="text-slate-400">{job.company}</p>
                             </div>
 

@@ -18,6 +18,19 @@ export const login = async (
     return response.data;
 };
 
+export const verifyLoginOtp = async (
+    email: string,
+    otp: string
+): Promise<AuthResponse> => {
+
+    const response = await api.post<AuthResponse>(
+        "/auth/verify-login-otp",
+        { email, otp }
+    );
+
+    return response.data;
+};
+
 export const register = async (
     data: RegisterRequest
 ): Promise<{ success: boolean; message: string }> => {
@@ -58,6 +71,7 @@ export const resendOtp = async (
 
 export default {
     login,
+    verifyLoginOtp,
     register,
     verifyEmail,
     resendOtp,

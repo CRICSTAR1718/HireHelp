@@ -38,12 +38,16 @@ const response = await login({
       });
 
       const token = response.token ?? response.accessToken;
+      if (!token) {
+        throw new Error("Login succeeded but no token was returned.");
+      }
+
       const candidateUser = response.candidate ?? response.user;
 
       dispatch(
         loginSuccess({
           user: { ...candidateUser, role: "candidate" },
-          token: token as string,
+          token,
         })
       );
 

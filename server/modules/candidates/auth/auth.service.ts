@@ -79,10 +79,9 @@ async register(data: RegisterInput) {
 
     if (!candidate.isVerified) throw new Error('Email not verified');
 
-    // Generate login OTP
-    await otpService.generateAndSend({ email: candidate.email, purpose: 'LOGIN', candidateId: candidate.id });
-
-    return { requiresOtp: true };
+    const token = this.generateToken(candidate);
+    const { passwordHash, ...candidateData } = candidate;
+    return { success: true, token, candidate: candidateData };
   }
 
   async verifyLoginOtp(email: string, otp: string) {

@@ -23,6 +23,7 @@ export interface AuthResponse {
     accessToken?: string;
     token?: string;
     candidate?: User;
+    requiresOtp?: boolean;
 }
 
 export interface AuthState {

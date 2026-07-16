@@ -27,6 +27,7 @@ export interface Application {
     candidateId: number;
     jobId: string;
     jobTitle?: string;
+    job_title?: string;
     department?: string;
     company?: string;
     location?: string;

@@ -76,7 +76,7 @@ export async function findByCandidate(candidateId: string) {
     status: applications.status,
     ai_score: applications.ai_score,
     submitted_at: applications.submitted_at,
-    job_title: job_requisitions.title,
+    jobTitle: job_requisitions.title,
     department: job_requisitions.department,
     location: job_requisitions.location,
   })

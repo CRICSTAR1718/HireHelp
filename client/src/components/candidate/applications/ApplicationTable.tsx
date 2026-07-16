@@ -39,6 +39,9 @@ export default function ApplicationTable({ applications }: Props) {
     const [jobDetails, setJobDetails] = useState<Job | null>(null);
     const [loadingJob, setLoadingJob] = useState(false);
 
+    const getApplicationTitle = (application: Application) =>
+        application.jobTitle || application.job_title || jobDetails?.title || "Job Position";
+
     const handleView = async (application: Application) => {
         console.log('View button clicked for application:', application);
         setSelectedApplication(application);
@@ -81,7 +84,7 @@ export default function ApplicationTable({ applications }: Props) {
                 <ApplicationCard
                     key={app.id}
                     company={app.company || app.department || "Company"}
-                    role={app.jobTitle || "Role"}
+                    role={app.jobTitle || app.job_title || "Job Position"}
                     location={app.location || "Location"}
                     appliedDate={formatDate(app.appliedDate)}
                     status={formatStatus(app.status) as any}
@@ -107,7 +110,7 @@ export default function ApplicationTable({ applications }: Props) {
                             {/* Job Information */}
                             <div>
                                 <h3 className="text-lg font-semibold text-white mb-2">
-                                    {selectedApplication.jobTitle || "Role"}
+                                    {getApplicationTitle(selectedApplication)}
                                 </h3>
                                 <p className="text-slate-400">
                                     {selectedApplication.company || selectedApplication.department || "Company"}
