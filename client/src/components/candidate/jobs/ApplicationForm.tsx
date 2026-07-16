@@ -504,7 +504,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                             type="button"
                             onClick={onCancel}
                             disabled={submitting}
-                            className="rounded-lg border border-slate-700/50 px-6 py-3 text-white font-medium hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="rounded-lg border border-blue-500/50 bg-blue-600/10 px-6 py-3 text-blue-300 font-medium hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancel
                         </button>

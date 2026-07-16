@@ -26,8 +26,14 @@ function normalizeProfile(payload: any): Profile {
 }
 
 export async function getProfile(): Promise<Profile> {
-    const response = await api.get<any>("/profile");
-    return normalizeProfile(response.data);
+    try {
+        const response = await api.get<any>("/profile");
+        console.log('Profile API response:', response.data);
+        return normalizeProfile(response.data);
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+    }
 }
 
 export async function updateProfile(data: Partial<Profile>): Promise<Profile> {

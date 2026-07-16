@@ -107,7 +107,7 @@ export default function JobCard({
                         console.log('View Details button clicked for job:', id);
                         if (onViewDetails) onViewDetails(id);
                     }}
-                    className="rounded-lg border border-slate-700/50 px-5 py-2 text-white hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300"
+                    className="rounded-lg border border-blue-500/50 bg-blue-600/10 px-5 py-2 text-blue-300 hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300"
                 >
                     View Details
                 </button>
