@@ -66,6 +66,13 @@ const envSchema = z.object({
   MAIL_USER: z.string().optional(),
   MAIL_PASS: z.string().optional(),
   MAIL_FROM: z.string().optional(),
+
+  // Google Calendar integration for interview scheduling
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_REDIRECT_URI: z.string().optional(),
+  GOOGLE_REFRESH_TOKEN: z.string().optional(),
+  GOOGLE_CALENDAR_ID: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -104,6 +111,11 @@ export const env = parsedEnv.success
     MAIL_USER: undefined,
     MAIL_PASS: undefined,
     MAIL_FROM: undefined,
+    GOOGLE_CLIENT_ID: undefined,
+    GOOGLE_CLIENT_SECRET: undefined,
+    GOOGLE_REDIRECT_URI: undefined,
+    GOOGLE_REFRESH_TOKEN: undefined,
+    GOOGLE_CALENDAR_ID: undefined,
   } satisfies z.infer<typeof envSchema>);
 
 export type Env = typeof env;

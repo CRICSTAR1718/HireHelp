@@ -6,7 +6,6 @@ export const navigationGroups: NavigationGroup[] = [
   { label: "Recruitment", items: [
     { label: "Requisitions", href: "/admin/requisitions", icon: Briefcase },
     { label: "Create Requisition", href: "/admin/requisitions/new", icon: Plus },
-    { label: "Applications", href: "/admin/applications", icon: FileText },
     { label: "Pipeline", href: "/admin/pipeline", icon: GitPullRequest },
     { label: "Candidates", href: "/admin/candidates", icon: User },
     { label: "Talent Pool", href: "/admin/talent-pool", icon: Star },

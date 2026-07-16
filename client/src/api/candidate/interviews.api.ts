@@ -6,6 +6,11 @@ export async function getInterviews(): Promise<Interview[]> {
     return response.data;
 }
 
+export async function getUpcomingInterviews(candidateId: string): Promise<any[]> {
+    const response = await api.get<any[]>(`/interviews/scheduling/upcoming/${candidateId}`);
+    return response.data;
+}
+
 export async function getInterviewStats(): Promise<InterviewStats> {
     // TODO(backend): no /candidates/interview-status/stats route exists on
     // the merged server yet (module only has list / getById / update).

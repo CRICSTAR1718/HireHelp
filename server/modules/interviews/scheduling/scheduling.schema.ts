@@ -15,6 +15,11 @@ export const updateScheduleSchema = z.object({
   location: z.string().optional(),
   meetingLink: z.string().optional(),
   status: z.string().optional(),
+  googleEventId: z.string().optional(),
+  invitationSent: z.boolean().optional(),
+  calendarProvider: z.string().optional(),
+  calendarOwnerType: z.string().optional(),
+  calendarOwnerId: z.string().optional(),
 });
 
 // Combined schema for creating assignment + schedule in one call

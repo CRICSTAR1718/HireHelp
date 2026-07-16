@@ -62,6 +62,36 @@ export class SchedulingController {
       res.status(500).json({ error: 'Failed to delete schedule' });
     }
   }
+
+  async sendInvitation(req: Request, res: Response) {
+    try {
+      const scheduleId = parseInt(req.params.id);
+      const { interviewerId, candidateEmail, candidateName, interviewerEmail, interviewerName } = req.body;
+      
+      const updatedSchedule = await schedulingService.sendInvitation(
+        scheduleId,
+        interviewerId,
+        candidateEmail,
+        candidateName,
+        interviewerEmail,
+        interviewerName
+      );
+      
+      res.json(updatedSchedule);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message || 'Failed to send invitation' });
+    }
+  }
+
+  async getUpcoming(req: Request, res: Response) {
+    try {
+      const candidateId = req.params.candidateId;
+      const interviews = await schedulingService.getUpcomingInterviews(candidateId);
+      res.json(interviews);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get upcoming interviews' });
+    }
+  }
 }
 
 export const schedulingController = new SchedulingController();

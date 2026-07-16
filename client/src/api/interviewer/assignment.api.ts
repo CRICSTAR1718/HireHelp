@@ -5,12 +5,17 @@ export interface Assignment {
   interviewId: string;
   interviewerId: number;
   interviewerName?: string;
+  interviewerEmail?: string;
   candidateId: string;
   candidateName?: string;
+  candidateEmail?: string;
   role: string;
   status: string;
   assignedAt: Date;
   completedAt?: Date;
+  invitationSent?: boolean;
+  scheduleId?: number;
+  meetingLink?: string;
 }
 
 export const assignmentApi = {

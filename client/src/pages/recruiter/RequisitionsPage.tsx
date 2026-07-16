@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRequisitions, deleteRequisition } from "../../api/recruiter/requisitions"
-import StatusBadge from "../../components/recruiter/StatusBadge"
 
 interface User {
   id: string
@@ -17,10 +16,12 @@ interface RequisitionsPageProps {
 export default function RequisitionsPage({ user }: RequisitionsPageProps) {
   const navigate = useNavigate()
   const [requisitions, setRequisitions] = useState<any[]>([])
-  const [loading, setLoading]           = useState(true)
-  const [error, setError]               = useState('')
-  const [deleting, setDeleting]         = useState<string | null>(null)
-  const [hoveredCard, setHoveredCard]   = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [deleting, setDeleting] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const fetchAll = useCallback(async () => {
     setLoading(true)
@@ -51,144 +52,232 @@ export default function RequisitionsPage({ user }: RequisitionsPageProps) {
     }
   }
 
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case 'draft': return 'admin-status-draft'
+      case 'submitted': return 'admin-status-submitted'
+      case 'approved': return 'admin-status-approved'
+      case 'rejected': return 'admin-status-rejected'
+      case 'published': return 'admin-status-published'
+      default: return 'admin-status-draft'
+    }
+  }
+
+  const getPriorityClass = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'admin-priority-high'
+      case 'medium': return 'admin-priority-medium'
+      case 'low': return 'admin-priority-low'
+      default: return 'admin-priority-low'
+    }
+  }
+
+  const filteredRequisitions = requisitions.filter(req => {
+    const matchesSearch = req.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         req.department?.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesStatus = statusFilter === 'all' || req.status === statusFilter
+    const matchesTab = activeTab === 'all' || 
+                      (activeTab === 'pending' && (req.status === 'submitted' || req.status === 'under_review')) ||
+                      (activeTab === 'approved' && req.status === 'approved') ||
+                      (activeTab === 'rejected' && req.status === 'rejected')
+    return matchesSearch && matchesStatus && matchesTab
+  })
+
+  const getTabCount = (tab: string) => {
+    if (tab === 'all') return requisitions.length
+    if (tab === 'pending') return requisitions.filter(r => r.status === 'submitted' || r.status === 'under_review').length
+    if (tab === 'approved') return requisitions.filter(r => r.status === 'approved').length
+    if (tab === 'rejected') return requisitions.filter(r => r.status === 'rejected').length
+    return 0
+  }
+
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div className="spinner" style={{ margin: '0 auto 1rem' }} />
-          <p style={{ color: 'var(--text-muted)' }}>Loading requisitions…</p>
+      <div className="admin-page-container">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div className="spinner" style={{ margin: '0 auto 1rem' }} />
+            <p style={{ color: '#64748b' }}>Loading requisitions…</p>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="page-container">
-      <div className="page-header">
+    <div className="admin-page-container">
+      <div className="admin-page-header">
         <div>
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-            Job Requisitions
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+          <h1 className="admin-page-title">Job Requisitions</h1>
+          <p className="admin-page-subtitle">
             {requisitions.length} total requisition{requisitions.length !== 1 ? 's' : ''}
           </p>
         </div>
-        {(user?.role === 'hr' || user?.role === 'hiring_manager' || user?.role === 'admin') && (
-          <button id="new-requisition-btn" className="btn-primary" onClick={() => navigate('/recruiter/requisitions/new')}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 5v14M5 12h14" />
-            </svg>
-            New Requisition
-          </button>
-        )}
+        <button className="admin-btn-primary" onClick={() => navigate('/recruiter/requisitions/new')}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          New Requisition
+        </button>
       </div>
 
-      {error && <div className="alert-error" style={{ marginBottom: '1.5rem' }}>{error}</div>}
+      {/* Filter Bar */}
+      <div className="admin-filter-bar">
+        <input
+          type="text"
+          className="admin-search-input"
+          placeholder="Search requisitions..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <select
+          className="admin-filter-select"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">All Status</option>
+          <option value="draft">Draft</option>
+          <option value="submitted">Submitted</option>
+          <option value="under_review">Under Review</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="published">Published</option>
+        </select>
+      </div>
 
-      {requisitions.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-state-icon">📋</div>
-          <h3 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>No requisitions yet</h3>
-          <p>Create your first job requisition to get started.</p>
+      {/* Tabs */}
+      <div className="admin-tabs">
+        <button 
+          className={`admin-tab ${activeTab === 'all' ? 'admin-tab-active' : ''}`}
+          onClick={() => setActiveTab('all')}
+        >
+          All <span className="admin-badge-count">{getTabCount('all')}</span>
+        </button>
+        <button 
+          className={`admin-tab ${activeTab === 'pending' ? 'admin-tab-active' : ''}`}
+          onClick={() => setActiveTab('pending')}
+        >
+          Pending <span className="admin-badge-count">{getTabCount('pending')}</span>
+        </button>
+        <button 
+          className={`admin-tab ${activeTab === 'approved' ? 'admin-tab-active' : ''}`}
+          onClick={() => setActiveTab('approved')}
+        >
+          Approved <span className="admin-badge-count">{getTabCount('approved')}</span>
+        </button>
+        <button 
+          className={`admin-tab ${activeTab === 'rejected' ? 'admin-tab-active' : ''}`}
+          onClick={() => setActiveTab('rejected')}
+        >
+          Rejected <span className="admin-badge-count">{getTabCount('rejected')}</span>
+        </button>
+      </div>
+
+      {error && (
+        <div style={{ 
+          background: '#fee2e2', 
+          border: '1px solid #fecaca', 
+          color: '#dc2626', 
+          borderRadius: 8, 
+          padding: '0.75rem 1rem', 
+          marginBottom: '1.5rem',
+          fontSize: '0.875rem'
+        }}>
+          {error}
+        </div>
+      )}
+
+      {filteredRequisitions.length === 0 ? (
+        <div className="admin-empty-state">
+          <div className="admin-empty-icon">📋</div>
+          <h3 className="admin-empty-title">No requisitions found</h3>
+          <p className="admin-empty-text">Try adjusting your filters or create a new requisition.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1rem' }}>
-          {requisitions.map((req, idx) => (
+        <div className="admin-requisition-grid">
+          {filteredRequisitions.map((req) => (
             <div
               key={req.id}
-              className="glass-card fade-in"
+              className="admin-requisition-card"
               onClick={() => navigate(`/recruiter/requisitions/${req.id}`)}
-              onMouseEnter={() => setHoveredCard(req.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-              style={{
-                padding: '1.25rem',
-                cursor: 'pointer',
-                position: 'relative',
-                animationDelay: `${idx * 0.04}s`
-              }}
               role="button"
               aria-label={`View requisition ${req.title}`}
             >
-              {/* Memo No */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                <span
-                  style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    color: 'var(--accent)',
-                    background: 'var(--accent-light)',
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: 6,
-                    letterSpacing: '0.05em'
-                  }}
-                >
-                  {req.memo_no || 'Pending…'}
-                </span>
-                <StatusBadge status={req.status} />
-              </div>
-
-              {/* Title */}
-              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.375rem', lineHeight: 1.3 }}>
-                {req.title}
-              </h3>
-
-              {/* Department */}
-              {req.department && (
-                <p style={{ fontSize: '0.825rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                  🏢 {req.department}
-                </p>
+              {/* Priority Indicator */}
+              {req.hiring_priority && (
+                <div className={`admin-card-priority ${getPriorityClass(req.hiring_priority)}`} />
               )}
 
-              {/* Footer */}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingTop: '0.75rem',
-                  borderTop: '1px solid var(--border)'
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  👤 {req.hiring_manager || req.hiring_manager_email || 'Unknown'}
+              <div className="admin-card-content">
+                <div className="admin-card-header">
+                  <span className="admin-memo-badge">
+                    {req.memo_no || 'Pending…'}
+                  </span>
+                  <span className={`admin-status-badge ${getStatusClass(req.status)}`}>
+                    {req.status}
+                  </span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  {new Date(req.created_at).toLocaleDateString()}
-                </div>
-              </div>
 
-              {/* Hover Actions */}
-              {hoveredCard === req.id && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '1rem',
-                    right: '1rem',
-                    display: 'flex',
-                    gap: '0.5rem',
-                    animation: 'fadeIn 0.15s ease'
-                  }}
-                  onClick={e => e.stopPropagation()}
-                >
-                  <button
-                    id={`edit-req-${req.id}`}
-                    className="btn-secondary btn-sm"
-                    onClick={(e) => { e.stopPropagation(); navigate(`/recruiter/requisitions/${req.id}/edit`) }}
-                  >
-                    Edit
-                  </button>
-                  {user?.role === 'admin' && (
-                    <button
-                      id={`delete-req-${req.id}`}
-                      className="btn-danger btn-sm"
-                      onClick={(e) => handleDelete(e, req.id)}
-                      disabled={deleting === req.id}
-                    >
-                      {deleting === req.id ? '…' : 'Delete'}
-                    </button>
+                <h3 className="admin-card-title">{req.title}</h3>
+
+                <div className="admin-card-meta">
+                  {req.department && (
+                    <div className="admin-card-meta-item">
+                      🏢 {req.department}
+                    </div>
+                  )}
+                  {req.team && (
+                    <div className="admin-card-meta-item">
+                      👥 {req.team}
+                    </div>
+                  )}
+                  {req.location && (
+                    <div className="admin-card-meta-item">
+                      📍 {req.location}
+                    </div>
                   )}
                 </div>
-              )}
+
+                {/* User Info */}
+                {req.hiring_manager && (
+                  <div className="admin-card-user">
+                    <div className="admin-card-avatar">
+                      {req.hiring_manager.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="admin-card-user-info">
+                      <div className="admin-card-user-name">{req.hiring_manager}</div>
+                      <div className="admin-card-user-role">Hiring Manager</div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Stats */}
+                <div className="admin-card-stats">
+                  <div className="admin-stat-item">
+                    <span>📅</span>
+                    <span className="admin-stat-value">{new Date(req.created_at).toLocaleDateString()}</span>
+                  </div>
+                  {req.number_of_openings && (
+                    <div className="admin-stat-item">
+                      <span>👥</span>
+                      <span className="admin-stat-value">{req.number_of_openings} opening{req.number_of_openings !== 1 ? 's' : ''}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="admin-card-actions">
+                {user?.role === 'admin' && (
+                  <button
+                    className="admin-action-btn admin-action-btn-danger"
+                    onClick={(e) => handleDelete(e, req.id)}
+                    disabled={deleting === req.id}
+                  >
+                    {deleting === req.id ? 'Deleting…' : 'Delete'}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
