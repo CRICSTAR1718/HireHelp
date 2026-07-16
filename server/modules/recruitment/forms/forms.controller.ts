@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import * as service from './forms.service'
+import { getRoleNameById } from '../../admin-rbac/roles/roles.repository'
 
 function handleError(res: Response, err: unknown) {
   if (err instanceof Error) {
@@ -26,7 +27,12 @@ export async function getForm(req: Request, res: Response) {
 
 export async function publishForm(req: Request, res: Response) {
   try {
-    const data = await service.publishForm(req.params.requisitionId as string)
+    const roleName = (await getRoleNameById(req.user!.roleId)) ?? ''
+    const data = await service.publishForm(
+      req.params.requisitionId as string,
+      req.user!.userId,
+      roleName
+    )
     res.json(data)
   } catch (err) { handleError(res, err) }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import {
   DndContext,
   closestCenter,
@@ -18,6 +18,8 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { getForm, createForm, addField, updateField, deleteField, reorderFields, publishForm, getQuestionTemplates, saveQuestionTemplate } from "../../../api/recruiter/forms"
 import { getFormApprovalStatus } from "../../../api/recruiter/formApprovals"
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../store'
 
 interface Field {
   id: string
@@ -105,6 +107,11 @@ const SortableItem: React.FC<SortableItemProps> = ({ field, onEdit, onDelete }) 
 const FormBuilderPage: React.FC = () => {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const user = useSelector((state: RootState) => state.auth.user)
+  const isAdmin = user?.role === 'admin'
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
   const [form, setForm] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [editingField, setEditingField] = useState<Field | null>(null)
@@ -285,8 +292,15 @@ const FormBuilderPage: React.FC = () => {
     try {
       await publishForm(id || '')
       await fetchApprovalStatus()
-      setMessage('Approval request sent to admins')
-      setTimeout(() => setMessage(''), 3000)
+      if (isAdminRoute) {
+        setMessage('Form published automatically (admin)')
+        setTimeout(() => {
+          navigate(`/admin/requisitions/${id}`)
+        }, 1000)
+      } else {
+        setMessage('Approval request sent to admins')
+        setTimeout(() => setMessage(''), 3000)
+      }
     } catch (err: any) {
       console.error('Failed to request approval:', err)
       setMessage(err.message || 'Failed to request approval')
@@ -360,7 +374,7 @@ const FormBuilderPage: React.FC = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <button
-              onClick={() => navigate(`/recruiter/requisitions/${id}`)}
+              onClick={() => navigate(isAdminRoute ? `/admin/requisitions/${id}` : `/recruiter/requisitions/${id}`)}
               className="text-indigo-600 hover:text-indigo-800 mb-2 inline-flex items-center"
             >
               ← Back to Requisition
@@ -372,7 +386,7 @@ const FormBuilderPage: React.FC = () => {
                   Published
                 </span>
               )}
-              {approvalStatus && !approvalStatus.is_published && (
+              {!isAdminRoute && approvalStatus && !approvalStatus.is_published && (
                 <>
                   {approvalStatus.approvals?.some((a: any) => a.approval.status === 'pending') && (
                     <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
@@ -393,10 +407,10 @@ const FormBuilderPage: React.FC = () => {
           </div>
           <button
             onClick={handlePublish}
-            disabled={form.is_published || (approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending'))}
+            disabled={form.is_published || (!isAdminRoute && approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending'))}
             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {form.is_published ? 'Published' : approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending') ? 'Approval Pending' : 'Request Approval'}
+            {form.is_published ? 'Published' : isAdminRoute ? 'Publish Form' : approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending') ? 'Approval Pending' : 'Request Approval'}
           </button>
         </div>
 
