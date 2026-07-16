@@ -14,15 +14,15 @@ export default function Card({
             className={`
                 rounded-3xl
                 border
-                border-slate-800
-                bg-slate-900
+                border-blue-100
+                bg-white
                 p-6
-                shadow-xl
+                shadow-[0_12px_30px_rgba(37,99,235,0.08)]
                 transition-all
                 duration-300
                 hover:-translate-y-1
-                hover:border-blue-500/40
-                hover:shadow-blue-500/10
+                hover:border-blue-200
+                hover:shadow-[0_18px_40px_rgba(37,99,235,0.12)]
                 ${className}
             `}
         >

@@ -23,10 +23,10 @@ export default function Button({
                 "rounded-xl px-5 py-3 font-semibold transition-all duration-300",
 
                 variant === "primary" &&
-                "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02]",
+                "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02]",
 
                 variant === "secondary" &&
-                "bg-slate-700/50 hover:bg-slate-600/50 text-white border border-slate-600/50 hover:border-slate-500/50",
+                "bg-white hover:bg-blue-50 text-slate-700 border border-blue-200 hover:border-blue-300",
 
                 variant === "danger" &&
                 "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/30 hover:scale-[1.02]",

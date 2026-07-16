@@ -1,13 +1,13 @@
 export const theme = {
     colors: {
-        background: "bg-slate-950",
-        surface: "bg-slate-900",
-        card: "bg-slate-800",
+        background: "bg-white",
+        surface: "bg-slate-50",
+        card: "bg-white",
         primary: "bg-blue-600",
         primaryHover: "hover:bg-blue-700",
-        border: "border-slate-700",
-        text: "text-white",
-        muted: "text-slate-400",
+        border: "border-blue-100",
+        text: "text-slate-900",
+        muted: "text-slate-500",
     },
 
     radius: {

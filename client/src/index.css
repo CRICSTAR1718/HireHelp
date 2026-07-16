@@ -768,23 +768,48 @@
 
 /* ── Candidate portal tokens (ex-CandidatePortal) ───────────────────── */
 .scope-candidate {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-  --shadow-lg: rgba(0, 0, 0, 0.15) 0 20px 25px -5px, rgba(0, 0, 0, 0.1) 0 10px 10px -5px;
-  --shadow-xl: rgba(0, 0, 0, 0.25) 0 25px 50px -12px;
-  font: 18px/145% system-ui, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: 0.18px;
+  --text: #334155;
+  --text-h: #0f172a;
+  --bg: #f8fbff;
+  --border: #d8e3f0;
+  --code-bg: #eef6ff;
+  --accent: #2563eb;
+  --accent-bg: rgba(37, 99, 235, 0.08);
+  --accent-border: rgba(37, 99, 235, 0.3);
+  --social-bg: rgba(255, 255, 255, 0.75);
+  --shadow: rgba(15, 23, 42, 0.08) 0 10px 15px -3px, rgba(15, 23, 42, 0.04) 0 4px 6px -2px;
+  --shadow-lg: rgba(15, 23, 42, 0.12) 0 20px 25px -5px, rgba(15, 23, 42, 0.08) 0 10px 10px -5px;
+  --shadow-xl: rgba(15, 23, 42, 0.18) 0 25px 50px -12px;
+  font: 16px/150% "Segoe UI", Roboto, system-ui, sans-serif;
+  letter-spacing: 0.08px;
   color: var(--text);
-  background: var(--bg);
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
   min-height: 100vh;
+}
+
+.scope-candidate :where([class*="bg-slate-950"], [class*="bg-slate-900"], [class*="bg-slate-800"]) {
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+.scope-candidate :where([class*="border-slate-800"], [class*="border-slate-700"]) {
+  border-color: #d8e3f0 !important;
+}
+
+.scope-candidate :where([class*="text-white"], [class*="text-slate-100"], [class*="text-slate-300"]) {
+  color: #0f172a !important;
+}
+
+.scope-candidate :where([class*="text-slate-400"], [class*="text-slate-500"]) {
+  color: #64748b !important;
+}
+
+.scope-candidate :where([class*="placeholder:text-slate-500"], [class*="placeholder:text-slate-400"]) {
+  color: #94a3b8 !important;
+}
+
+.scope-candidate button:is([class*="text-white"], [class*="text-slate-100"], [class*="text-slate-300"], [class*="text-slate-400"], [class*="text-slate-500"]) {
+  color: #ffffff !important;
 }
 
 /* Auth/landing pages (no role scope yet) fall back to a neutral shared look */

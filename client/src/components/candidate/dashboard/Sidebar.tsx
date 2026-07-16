@@ -68,17 +68,17 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="flex h-full w-72 flex-col bg-slate-900/95 border-r border-slate-800/50">
+        <aside className="flex h-full w-72 flex-col bg-white/95 border-r border-blue-100">
 
             {/* Logo */}
 
-            <div className="border-b border-slate-800/50 px-8 py-8 bg-gradient-to-r from-blue-600/10 to-transparent">
+            <div className="border-b border-blue-100 px-8 py-8 bg-gradient-to-r from-blue-50 to-transparent">
 
-                <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-extrabold tracking-tight text-blue-700">
                     HireHelp
                 </h1>
 
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-sm text-slate-500">
                     Candidate Portal
                 </p>
 
@@ -103,7 +103,7 @@ export default function Sidebar() {
                                 transition-all duration-300 ease-out
                                 ${isActive
                                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25"
-                                    : "text-slate-400 hover:bg-slate-800/50 hover:text-white hover:scale-[1.02]"
+                                    : "text-slate-600 hover:bg-blue-50 hover:text-blue-700 hover:scale-[1.02]"
                                 }
                                 `
                             }
@@ -122,7 +122,7 @@ export default function Sidebar() {
 
             {/* User */}
 
-            <div className="border-t border-slate-800/50 p-5 bg-gradient-to-t from-slate-950/50 to-transparent">
+            <div className="border-t border-blue-100 p-5 bg-gradient-to-t from-slate-50 to-transparent">
 
                 <div className="mb-4 flex items-center gap-3">
 
@@ -132,11 +132,11 @@ export default function Sidebar() {
 
                     <div>
 
-                        <h3 className="font-semibold text-white">
+                        <h3 className="font-semibold text-slate-900">
                             {displayName}
                         </h3>
 
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-slate-500">
                             {user?.email ?? ""}
                         </p>
 

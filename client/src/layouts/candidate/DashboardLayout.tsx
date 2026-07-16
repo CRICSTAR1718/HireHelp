@@ -4,11 +4,11 @@ import Header from "../../components/candidate/dashboard/Header";
 
 export default function DashboardLayout() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+        <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-slate-100 text-slate-900">
             <div className="flex h-screen overflow-hidden">
 
                 {/* Sidebar */}
-                <aside className="hidden lg:flex w-72 shrink-0 border-r border-slate-800/50 bg-slate-900/95 backdrop-blur-xl">
+                <aside className="hidden lg:flex w-72 shrink-0 border-r border-blue-100 bg-white/95 backdrop-blur-xl shadow-[8px_0_30px_rgba(37,99,235,0.06)]">
                     <Sidebar />
                 </aside>
 
@@ -16,12 +16,12 @@ export default function DashboardLayout() {
                 <div className="flex flex-1 flex-col overflow-hidden">
 
                     {/* Header */}
-                    <header className="sticky top-0 z-30 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl shadow-lg">
+                    <header className="sticky top-0 z-30 border-b border-blue-100 bg-white/90 backdrop-blur-xl shadow-sm">
                         <Header />
                     </header>
 
                     {/* Page Content */}
-                    <main className="flex-1 overflow-y-auto">
+                    <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-50 to-white">
                         <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
                             <Outlet />
                         </div>

@@ -11,7 +11,7 @@ export default function Input({
     return (
         <div className="space-y-2">
             {label && (
-                <label className="text-sm text-slate-300 hover:text-blue-400 transition-colors">
+                <label className="text-sm text-slate-700 hover:text-blue-600 transition-colors">
                     {label}
                 </label>
             )}
@@ -22,18 +22,18 @@ export default function Input({
           w-full
           rounded-xl
           border
-          border-slate-600/50
-          bg-slate-800/50
+                    border-blue-200
+                    bg-white
           px-4
           py-3
-          text-white
+                    text-slate-900
           outline-none
-          focus:border-blue-500/50
+                    focus:border-blue-500
           focus:shadow-lg
           focus:shadow-blue-500/10
           transition-all
           duration-300
-          placeholder:text-slate-500
+                    placeholder:text-slate-400
         "
             />
         </div>
