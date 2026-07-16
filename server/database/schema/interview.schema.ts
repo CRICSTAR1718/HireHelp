@@ -48,6 +48,11 @@ export const schedules = pgTable('schedules', {
   location: text('location'),
   meetingLink: text('meeting_link'),
   status: text('status').notNull(),
+  googleEventId: text('google_event_id'),
+  invitationSent: boolean('invitation_sent').default(false),
+  calendarProvider: text('calendar_provider').default('google'),
+  calendarOwnerType: text('calendar_owner_type').default('company'),
+  calendarOwnerId: text('calendar_owner_id'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });

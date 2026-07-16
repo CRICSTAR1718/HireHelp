@@ -14,5 +14,7 @@ router.get('/:id', schedulingController.getById.bind(schedulingController));
 router.get('/assignment/:assignmentId', schedulingController.getByAssignment.bind(schedulingController));
 router.put('/:id', validate(updateScheduleSchema), schedulingController.update.bind(schedulingController));
 router.delete('/:id', schedulingController.delete.bind(schedulingController));
+router.post('/:id/send-invite', schedulingController.sendInvitation.bind(schedulingController));
+router.get('/upcoming/:candidateId', schedulingController.getUpcoming.bind(schedulingController));
 
 export { router as schedulingRoutes };

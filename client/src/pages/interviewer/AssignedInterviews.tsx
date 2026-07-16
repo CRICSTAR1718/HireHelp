@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Button } from "../../components/interviewer";
 import { assignmentApi, type Assignment } from "../../api/interviewer";
+import { Video, Mail, CheckCircle } from 'lucide-react';
 
 export const AssignedInterviews: React.FC = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sendingInvitation, setSendingInvitation] = useState<number | null>(null);
 
   useEffect(() => {
     loadAssignments();
@@ -18,6 +20,38 @@ export const AssignedInterviews: React.FC = () => {
       console.error('Failed to load assignments:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSendInvitation = async (assignmentId: number, candidateEmail: string, candidateName: string, interviewerEmail: string, interviewerName: string) => {
+    try {
+      setSendingInvitation(assignmentId);
+      
+      // Get the schedule ID from assignment (this would need to be fetched from the assignment data)
+      // For now, we'll assume the assignment has a scheduleId property
+      const scheduleId = assignmentId; // This should be the actual schedule ID
+      
+      await fetch(`/api/interviews/scheduling/${scheduleId}/send-invite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interviewerId: 1, // Should come from current user
+          candidateEmail,
+          candidateName,
+          interviewerEmail,
+          interviewerName,
+        }),
+      });
+      
+      // Refresh assignments to update invitation status
+      await loadAssignments();
+    } catch (error) {
+      console.error('Failed to send invitation:', error);
+      alert('Failed to send calendar invitation');
+    } finally {
+      setSendingInvitation(null);
     }
   };
 
@@ -92,10 +126,50 @@ export const AssignedInterviews: React.FC = () => {
                   )}
                 </div>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="flex flex-col gap-2">
                 <Button variant="primary" className="w-full">
                   View Details
                 </Button>
+                {assignment.status === 'pending' && !assignment.invitationSent && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => handleSendInvitation(
+                      assignment.scheduleId || assignment.id,
+                      assignment.candidateEmail || 'candidate@example.com',
+                      assignment.candidateName || 'Candidate',
+                      assignment.interviewerEmail || 'interviewer@example.com',
+                      assignment.interviewerName || 'Interviewer'
+                    )}
+                    disabled={sendingInvitation === assignment.id}
+                  >
+                    {sendingInvitation === assignment.id ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-4 h-4 mr-2" />
+                        Send Invitation
+                      </>
+                    )}
+                  </Button>
+                )}
+                {assignment.invitationSent && assignment.meetingLink && (
+                  <Button variant="outline" className="w-full bg-blue-50 border-blue-200 text-blue-700">
+                    <Video className="w-4 h-4 mr-2" />
+                    <a href={assignment.meetingLink} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                      Join Meeting
+                    </a>
+                  </Button>
+                )}
+                {assignment.invitationSent && !assignment.meetingLink && (
+                  <Button variant="outline" className="w-full bg-green-50 border-green-200 text-green-700" disabled>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Invitation Sent
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           ))}
