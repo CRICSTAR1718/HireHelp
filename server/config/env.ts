@@ -53,6 +53,13 @@ const envSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().min(1, "CLOUDINARY_CLOUD_NAME is required"),
   CLOUDINARY_API_KEY: z.string().min(1, "CLOUDINARY_API_KEY is required"),
   CLOUDINARY_API_SECRET: z.string().min(1, "CLOUDINARY_API_SECRET is required"),
+
+  // Email/SMTP configuration for OTP verification
+  MAIL_HOST: z.string().optional(),
+  MAIL_PORT: z.string().optional(),
+  MAIL_USER: z.string().optional(),
+  MAIL_PASS: z.string().optional(),
+  MAIL_FROM: z.string().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -82,6 +89,11 @@ export const env = parsedEnv.success
     CLOUDINARY_CLOUD_NAME: "",
     CLOUDINARY_API_KEY: "",
     CLOUDINARY_API_SECRET: "",
+    MAIL_HOST: undefined,
+    MAIL_PORT: undefined,
+    MAIL_USER: undefined,
+    MAIL_PASS: undefined,
+    MAIL_FROM: undefined,
   } satisfies z.infer<typeof envSchema>);
 
 export type Env = typeof env;

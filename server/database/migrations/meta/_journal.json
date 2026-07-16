@@ -29,6 +29,13 @@
       "when": 1784144698036,
       "tag": "0003_chief_miracleman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784155368094,
+      "tag": "0004_burly_nomad",
+      "breakpoints": true
     }
   ]
 }

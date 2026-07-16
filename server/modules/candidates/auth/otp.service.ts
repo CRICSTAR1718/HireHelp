@@ -11,12 +11,6 @@ const MAX_ATTEMPTS = 5;
 const RESEND_COOLDOWN_SECONDS = 60;
 
 function generateNumericOtp() {
-    console.log("================================");
-    console.log("OTP GENERATED");
-    console.log("Email:", email);
-    console.log("OTP:", otp);
-    console.log("Purpose:", purpose);
-    console.log("================================");
   const min = 0; const max = 10 ** OTP_LENGTH - 1;
   const n = crypto.randomInt(min, max + 1);
   return n.toString().padStart(OTP_LENGTH, '0');
