@@ -14,6 +14,7 @@ const navItems = [
       { to: "/recruiter/requisitions/new", label: "Create Job", icon: Plus },
     ]
   },
+  { to: "/recruiter/applications", label: "Applications", icon: FileText },
   { to: "/recruiter/pipeline", label: "Pipeline", icon: GitPullRequest },
   { to: "/recruiter/candidates", label: "Candidates", icon: Users },
   { to: "/recruiter/talent-pool", label: "Talent Pool", icon: Star },

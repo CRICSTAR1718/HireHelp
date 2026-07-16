@@ -121,6 +121,7 @@ export default function AdminRequisitionDetailPage({ user }: AdminRequisitionDet
   const canReject = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
   const canRequestChanges = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
   const canPublish = req && req.status === 'approved' && user?.role === 'admin'
+  const canViewApplications = req && (req.status === 'published' || req.status === 'closed') && user?.role === 'admin'
 
   const getStatusClass = (status: string) => {
     switch (status) {
@@ -263,6 +264,14 @@ export default function AdminRequisitionDetailPage({ user }: AdminRequisitionDet
               style={{ background: '#2563eb' }}
             >
               {actionLoading ? 'Publishing…' : 'Publish Job'}
+            </button>
+          )}
+          {canViewApplications && (
+            <button
+              className="admin-btn-secondary"
+              onClick={() => navigate(`/admin/requisitions/${id}/applications`)}
+            >
+              View Applications
             </button>
           )}
         </div>

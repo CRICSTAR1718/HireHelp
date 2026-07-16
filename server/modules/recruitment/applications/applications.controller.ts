@@ -10,21 +10,24 @@ function handleError(res: Response, err: unknown) {
 
 export async function listApplications(req: Request, res: Response) {
   try {
-    const data = await service.listApplications(req.params.reqId as string)
+    const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
+    const data = await service.listApplications(requisitionId)
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
 
 export async function getApplication(req: Request, res: Response) {
   try {
-    const data = await service.getApplication(req.params.aid as string, req.params.reqId as string)
+    const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
+    const data = await service.getApplication(req.params.aid as string, requisitionId)
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
 
 export async function updateStatus(req: Request, res: Response) {
   try {
-    const data = await service.updateStatus(req.params.aid as string, req.params.reqId as string, req.body.status)
+    const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
+    const data = await service.updateStatus(req.params.aid as string, req.body.status, requisitionId)
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
@@ -80,7 +83,8 @@ export async function checkApplicationStatus(req: Request, res: Response) {
 
 export async function recalculateFitment(req: Request, res: Response) {
   try {
-    const data = await service.recalculateFitment(req.params.aid as string, req.params.reqId as string)
+    const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
+    const data = await service.recalculateFitment(req.params.aid as string, requisitionId)
     res.json(data)
   } catch (err) { handleError(res, err) }
 }

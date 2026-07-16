@@ -1,55 +1,70 @@
 import { db } from '../../../database'
 import {
   applications,
+  candidates,
   field_responses,
   form_fields,
   job_requisitions
 } from '../../../database/schema'
-import { eq, and, asc } from 'drizzle-orm'
+import { eq, and, asc, desc } from 'drizzle-orm'
 import type { InferSelectModel } from 'drizzle-orm'
 
 type ApplicationStatus = InferSelectModel<typeof applications>['status']
 
-export async function findByRequisition(requisitionId: string) {
-  return db.select({
-    id:             applications.id,
-    candidate_id:   applications.candidate_id,
-    status:         applications.status,
-    ai_score:       applications.ai_score,
+function baseApplicationSelect() {
+  return {
+    id: applications.id,
+    requisition_id: applications.requisition_id,
+    requisition_title: job_requisitions.title,
+    department: job_requisitions.department,
+    location: job_requisitions.location,
+    candidate_id: applications.candidate_id,
+    candidate_first_name: candidates.firstName,
+    candidate_last_name: candidates.lastName,
+    candidate_email: candidates.email,
+    status: applications.status,
+    ai_score: applications.ai_score,
     recommendation: applications.recommendation,
-    strengths:      applications.strengths,
-    weaknesses:     applications.weaknesses,
+    strengths: applications.strengths,
+    weaknesses: applications.weaknesses,
     matched_skills: applications.matched_skills,
     missing_skills: applications.missing_skills,
-    ai_status:      applications.ai_status,
-    processed_at:   applications.processed_at,
-    submitted_at:   applications.submitted_at
-  })
-  .from(applications)
-  .where(eq(applications.requisition_id, requisitionId))
-  .orderBy(asc(applications.submitted_at))
+    ai_status: applications.ai_status,
+    processed_at: applications.processed_at,
+    submitted_at: applications.submitted_at
+  }
 }
 
-export async function findOne(applicationId: string, requisitionId: string) {
-  const [app] = await db.select({
-    id:             applications.id,
-    candidate_id:   applications.candidate_id,
-    status:         applications.status,
-    ai_score:       applications.ai_score,
-    recommendation: applications.recommendation,
-    strengths:      applications.strengths,
-    weaknesses:     applications.weaknesses,
-    matched_skills: applications.matched_skills,
-    missing_skills: applications.missing_skills,
-    ai_status:      applications.ai_status,
-    processed_at:   applications.processed_at,
-    submitted_at:   applications.submitted_at
-  })
-  .from(applications)
-  .where(and(
-    eq(applications.id, applicationId),
-    eq(applications.requisition_id, requisitionId)
-  ))
+export async function findAll(requisitionId?: string) {
+  const query = db.select(baseApplicationSelect())
+    .from(applications)
+    .innerJoin(job_requisitions, eq(applications.requisition_id, job_requisitions.id))
+    .leftJoin(candidates, eq(applications.candidate_id, candidates.uuid))
+    .orderBy(desc(applications.submitted_at))
+
+  if (requisitionId) {
+    return query.where(eq(applications.requisition_id, requisitionId))
+  }
+
+  return query
+}
+
+export async function findByRequisition(requisitionId: string) {
+  return findAll(requisitionId)
+}
+
+export async function findOne(applicationId: string, requisitionId?: string) {
+  const query = db.select(baseApplicationSelect())
+    .from(applications)
+    .innerJoin(job_requisitions, eq(applications.requisition_id, job_requisitions.id))
+    .leftJoin(candidates, eq(applications.candidate_id, candidates.uuid))
+
+  const conditions = [eq(applications.id, applicationId)]
+  if (requisitionId) {
+    conditions.push(eq(applications.requisition_id, requisitionId))
+  }
+
+  const [app] = await query.where(and(...conditions))
   return app ?? null
 }
 
@@ -134,13 +149,15 @@ export async function findResponses(applicationId: string) {
   .orderBy(asc(form_fields.position))
 }
 
-export async function updateStatus(applicationId: string, requisitionId: string, status: ApplicationStatus) {
+export async function updateStatus(applicationId: string, status: ApplicationStatus, requisitionId?: string) {
+  const conditions = [eq(applications.id, applicationId)]
+  if (requisitionId) {
+    conditions.push(eq(applications.requisition_id, requisitionId))
+  }
+
   const [updated] = await db.update(applications)
     .set({ status })
-    .where(and(
-      eq(applications.id, applicationId),
-      eq(applications.requisition_id, requisitionId)
-    ))
+    .where(and(...conditions))
     .returning()
   return updated ?? null
 }

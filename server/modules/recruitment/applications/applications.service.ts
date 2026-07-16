@@ -4,11 +4,11 @@ import { db } from '../../../database'
 import { job_requisitions } from '../../../database/schema'
 import { eq } from 'drizzle-orm'
 
-export async function listApplications(requisitionId: string) {
-  return repo.findByRequisition(requisitionId)
+export async function listApplications(requisitionId?: string) {
+  return repo.findAll(requisitionId)
 }
 
-export async function getApplication(applicationId: string, requisitionId: string) {
+export async function getApplication(applicationId: string, requisitionId?: string) {
   const app = await repo.findOne(applicationId, requisitionId)
   if (!app) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
 
@@ -16,8 +16,8 @@ export async function getApplication(applicationId: string, requisitionId: strin
   return { ...app, responses }
 }
 
-export async function updateStatus(applicationId: string, requisitionId: string, status: string) {
-  const updated = await repo.updateStatus(applicationId, requisitionId, status as any)
+export async function updateStatus(applicationId: string, status: string, requisitionId?: string) {
+  const updated = await repo.updateStatus(applicationId, status as any, requisitionId)
   if (!updated) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
   return updated
 }
@@ -134,12 +134,12 @@ Education Requirements: ${requisition.education_requirements || ''}
   }
 }
 
-export async function recalculateFitment(applicationId: string, requisitionId: string) {
+export async function recalculateFitment(applicationId: string, requisitionId?: string) {
   const app = await repo.findOne(applicationId, requisitionId)
   if (!app) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
 
   // Reuse the same trigger logic
-  await triggerAiEvaluation(applicationId, requisitionId, app.candidate_id as string)
+  await triggerAiEvaluation(applicationId, app.requisition_id as string, app.candidate_id as string)
 
   return repo.findOne(applicationId, requisitionId)
 }

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getApplication, updateApplicationStatus } from "../../../api/recruiter/applications"
 import ApplicationStatusBadge from "../../../components/recruiter/ApplicationStatusBadge"
 import ResponseRenderer from "../../../components/recruiter/ResponseRenderer"
 
 const ApplicationDetailPage: React.FC = () => {
   const { id, aid } = useParams()
+  const location = useLocation()
   const navigate = useNavigate()
   const [application, setApplication] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [status, setStatus] = useState('')
   const [updating, setUpdating] = useState(false)
+  const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter'
+  const isScopedView = Boolean(id)
+  const backTarget = isScopedView ? `${basePath}/requisitions/${id}/applications` : `${basePath}/applications`
 
   useEffect(() => {
     fetchApplication()
@@ -18,7 +22,7 @@ const ApplicationDetailPage: React.FC = () => {
 
   const fetchApplication = async () => {
     try {
-      const data = await getApplication(id || '', aid || '')
+      const data = await getApplication(aid || '', id || undefined)
       setApplication(data)
       setStatus(data.status)
     } catch (err) {
@@ -31,7 +35,7 @@ const ApplicationDetailPage: React.FC = () => {
   const handleStatusUpdate = async () => {
     setUpdating(true)
     try {
-      const updated = await updateApplicationStatus(id || '', aid || '', status)
+      const updated = await updateApplicationStatus(aid || '', status, id || undefined)
       setApplication({ ...application, status: updated.status })
     } catch (err) {
       console.error('Failed to update status:', err)
@@ -54,7 +58,7 @@ const ApplicationDetailPage: React.FC = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Not Found</h2>
           <button
-            onClick={() => navigate(`/recruiter/requisitions/${id}/applications`)}
+            onClick={() => navigate(backTarget)}
             className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
           >
             Back to Applications
@@ -69,7 +73,7 @@ const ApplicationDetailPage: React.FC = () => {
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <button
-            onClick={() => navigate(`/recruiter/requisitions/${id}/applications`)}
+            onClick={() => navigate(backTarget)}
             className="text-indigo-600 hover:text-indigo-800 mb-4 inline-flex items-center"
           >
             ← Back to Applications
@@ -81,9 +85,18 @@ const ApplicationDetailPage: React.FC = () => {
         <div className="bg-white shadow rounded-lg p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Candidate Information</h2>
           <div className="grid grid-cols-2 gap-4">
+            {application.requisition_title && (
+              <div>
+                <label className="block text-sm font-medium text-gray-500">Requisition</label>
+                <p className="mt-1 text-gray-900">{application.requisition_title}</p>
+              </div>
+            )}
             <div>
-              <label className="block text-sm font-medium text-gray-500">Candidate ID</label>
-              <p className="mt-1 text-gray-900">{application.candidate_id || 'N/A'}</p>
+              <label className="block text-sm font-medium text-gray-500">Candidate</label>
+              <p className="mt-1 text-gray-900">
+                {[application.candidate_first_name, application.candidate_last_name].filter(Boolean).join(' ') || application.candidate_email || application.candidate_id || 'N/A'}
+              </p>
+              <p className="mt-1 text-sm text-gray-500">{application.candidate_email || application.candidate_id || 'N/A'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-500">Submitted</label>

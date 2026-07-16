@@ -146,6 +146,8 @@ export function AppRouter() {
           <Route path="/recruiter" element={<RecruiterLayout />}>
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<RecruiterDashboard />} />
+            <Route path="applications" element={<ApplicationsListPage />} />
+            <Route path="applications/:aid" element={<ApplicationDetailPage />} />
             <Route path="jobs" element={<PublishedJobsList />} />
             <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
@@ -181,6 +183,10 @@ export function AppRouter() {
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<AdminDashboardPage />} />
+            <Route path="applications" element={<ApplicationsListPage />} />
+            <Route path="applications/:aid" element={<ApplicationDetailPage />} />
+            <Route path="requisitions/:id/applications" element={<ApplicationsListPage />} />
+            <Route path="requisitions/:id/applications/:aid" element={<ApplicationDetailPage />} />
             <Route path="requisitions" element={<AdminRequisitionsPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/new" element={<AdminRequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />

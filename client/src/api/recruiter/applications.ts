@@ -1,11 +1,4 @@
-import axios from 'axios'
-
-const API_BASE = 'http://localhost:5000/api'
-
-const api = axios.create({
-  baseURL: API_BASE,
-  withCredentials: true
-})
+import api from './index'
 
 export const getPublicJobs = async () => {
   const res = await api.get('/jobs')
@@ -27,17 +20,23 @@ export const getMyApplications = async () => {
   return res.data
 }
 
-export const getApplications = async (reqId: string) => {
-  const res = await api.get(`/requisitions/${reqId}/applications`)
+export const getApplications = async (reqId?: string) => {
+  const res = await api.get('/applications', {
+    params: reqId ? { requisitionId: reqId } : undefined,
+  })
   return res.data
 }
 
-export const getApplication = async (reqId: string, aid: string) => {
-  const res = await api.get(`/requisitions/${reqId}/applications/${aid}`)
+export const getApplication = async (aid: string, reqId?: string) => {
+  const res = await api.get(`/applications/${aid}`, {
+    params: reqId ? { requisitionId: reqId } : undefined,
+  })
   return res.data
 }
 
-export const updateApplicationStatus = async (reqId: string, aid: string, status: string) => {
-  const res = await api.patch(`/requisitions/${reqId}/applications/${aid}/status`, { status })
+export const updateApplicationStatus = async (aid: string, status: string, reqId?: string) => {
+  const res = await api.patch(`/applications/${aid}/status`, { status }, {
+    params: reqId ? { requisitionId: reqId } : undefined,
+  })
   return res.data
 }
