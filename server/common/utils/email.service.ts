@@ -26,6 +26,38 @@ interface WelcomeEmailParams {
   loginUrl: string;
 }
 
+interface RoleUpdatedEmailParams {
+  to: string;
+  name: string;
+  previousRole: string;
+  newRole: string;
+  loginUrl: string;
+}
+
+interface PasswordResetEmailParams {
+  to: string;
+  name: string;
+  resetLink?: string;
+  otp?: string;
+  expirationMinutes: number;
+  loginUrl: string;
+}
+
+interface OfferEmailParams {
+  to: string;
+  candidateName: string;
+  jobTitle: string;
+  loginUrl: string;
+  offerLetterUrl?: string;
+}
+
+interface RejectionEmailParams {
+  to: string;
+  candidateName: string;
+  jobTitle: string;
+  loginUrl: string;
+}
+
 /**
  * Generic email sending function using AWS SES
  * @param params - Email parameters (to, subject, text, html)
@@ -279,6 +311,692 @@ If you have any questions or need assistance, please contact your administrator.
     console.error(`❌ Failed to send welcome email to ${to}:`, error);
     // Do not throw - email failure should not prevent user creation
     // Log the error for monitoring purposes
+  }
+}
+
+/**
+ * Generate HTML template for role updated email
+ */
+function generateRoleUpdatedEmailTemplate(params: RoleUpdatedEmailParams): string {
+  const { name, previousRole, newRole, loginUrl } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role Updated - HireHelp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .role-change-box {
+      background-color: #f1f5f9;
+      border-left: 4px solid #2563eb;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .role-item {
+      margin: 15px 0;
+      color: #475569;
+    }
+    .role-item strong {
+      color: #1e293b;
+    }
+    .arrow {
+      text-align: center;
+      font-size: 24px;
+      color: #2563eb;
+      margin: 10px 0;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    .footer {
+      background-color: #f8fafc;
+      padding: 20px 30px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Role Updated</h1>
+    </div>
+    
+    <div class="content">
+      <p style="font-size: 18px; color: #1e293b; margin-bottom: 20px;">
+        Dear <strong>${name}</strong>,
+      </p>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        Your role in the HireHelp platform has been updated. Please review the changes below:
+      </p>
+      
+      <div class="role-change-box">
+        <div class="role-item">
+          <strong>Previous Role:</strong> ${previousRole}
+        </div>
+        <div class="arrow">↓</div>
+        <div class="role-item">
+          <strong>New Role:</strong> ${newRole}
+        </div>
+      </div>
+      
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${loginUrl}" class="button">Login to HireHelp</a>
+      </p>
+      
+      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
+        If you have any questions about this change, please contact your administrator.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2024 HireHelp. All rights reserved.</p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Send role updated email to users when their role is changed
+ * @param params - Role updated email parameters
+ * @returns Promise that resolves when email is sent (or fails gracefully)
+ */
+export async function sendRoleUpdatedEmail(params: RoleUpdatedEmailParams): Promise<void> {
+  const { to, name, previousRole, newRole, loginUrl } = params;
+
+  const subject = 'Your HireHelp Role Has Been Updated';
+  const text = `
+Dear ${name},
+
+Your role in the HireHelp platform has been updated.
+
+Previous Role: ${previousRole}
+New Role: ${newRole}
+
+Please login to review your new permissions and access.
+
+Login URL: ${loginUrl}
+
+If you have any questions about this change, please contact your administrator.
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generateRoleUpdatedEmailTemplate(params);
+
+  try {
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Role updated email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send role updated email to ${to}:`, error);
+    // Do not throw - email failure should not prevent role update
+  }
+}
+
+/**
+ * Generate HTML template for password reset email
+ */
+function generatePasswordResetEmailTemplate(params: PasswordResetEmailParams): string {
+  const { name, resetLink, otp, expirationMinutes, loginUrl } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Your Password - HireHelp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .reset-box {
+      background-color: #fef3c7;
+      border: 2px solid #f59e0b;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .reset-code {
+      font-size: 32px;
+      font-weight: bold;
+      color: #1e293b;
+      letter-spacing: 3px;
+      margin: 15px 0;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    .warning {
+      background-color: #fee2e2;
+      border-left: 4px solid #dc2626;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+      color: #991b1b;
+    }
+    .footer {
+      background-color: #f8fafc;
+      padding: 20px 30px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Reset Your Password</h1>
+    </div>
+    
+    <div class="content">
+      <p style="font-size: 18px; color: #1e293b; margin-bottom: 20px;">
+        Dear <strong>${name}</strong>,
+      </p>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        We received a request to reset your password. ${resetLink ? 'Click the button below to reset your password:' : 'Use the verification code below to reset your password:'}
+      </p>
+      
+      ${otp ? `
+      <div class="reset-box">
+        <p style="margin: 0; color: #92400e; font-weight: 600;">🔐 Your Verification Code</p>
+        <div class="reset-code">${otp}</div>
+        <p style="color: #92400e; font-size: 14px;">Valid for ${expirationMinutes} minutes</p>
+      </div>
+      ` : ''}
+      
+      ${resetLink ? `
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${resetLink}" class="button">Reset Password</a>
+      </p>
+      ` : ''}
+      
+      <div class="warning">
+        <strong>⚠️ Security Notice:</strong> If you did not request this password reset, please ignore this email and contact support immediately.
+      </div>
+      
+      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
+        This link/code will expire in ${expirationMinutes} minutes for your security.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2024 HireHelp. All rights reserved.</p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Send password reset email
+ * @param params - Password reset email parameters
+ * @returns Promise that resolves when email is sent (or fails gracefully)
+ */
+export async function sendPasswordResetEmail(params: PasswordResetEmailParams): Promise<void> {
+  const { to, name, resetLink, otp, expirationMinutes, loginUrl } = params;
+
+  const subject = 'Reset Your HireHelp Password';
+  const text = `
+Dear ${name},
+
+We received a request to reset your password.
+
+${otp ? `Your verification code is: ${otp}` : `Reset your password at: ${resetLink}`}
+
+This code/link will expire in ${expirationMinutes} minutes for your security.
+
+⚠️ Security Notice: If you did not request this password reset, please ignore this email and contact support immediately.
+
+Login URL: ${loginUrl}
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generatePasswordResetEmailTemplate(params);
+
+  try {
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Password reset email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send password reset email to ${to}:`, error);
+    // Do not throw - email failure should not prevent password reset flow
+  }
+}
+
+/**
+ * Generate HTML template for offer email
+ */
+function generateOfferEmailTemplate(params: OfferEmailParams): string {
+  const { candidateName, jobTitle, loginUrl, offerLetterUrl } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Congratulations! - HireHelp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .congrats-box {
+      background-color: #d1fae5;
+      border-left: 4px solid #10b981;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .job-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1e293b;
+      margin: 15px 0;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    .offer-letter {
+      background-color: #f1f5f9;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .footer {
+      background-color: #f8fafc;
+      padding: 20px 30px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Congratulations!</h1>
+    </div>
+    
+    <div class="content">
+      <p style="font-size: 18px; color: #1e293b; margin-bottom: 20px;">
+        Dear <strong>${candidateName}</strong>,
+      </p>
+      
+      <div class="congrats-box">
+        <p style="margin: 0; color: #065f46; font-weight: 600;">
+          We are pleased to inform you that you have been selected for the position!
+        </p>
+      </div>
+      
+      <div class="job-title">
+        Position: ${jobTitle}
+      </div>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        After careful consideration of your application and interview performance, we are delighted to extend this offer to join our team. Your skills and experience impressed us, and we believe you will be a valuable addition to our organization.
+      </p>
+      
+      ${offerLetterUrl ? `
+      <div class="offer-letter">
+        <p style="margin: 0 0 10px 0; color: #1e293b; font-weight: 600;">📄 Your Offer Letter</p>
+        <a href="${offerLetterUrl}" style="color: #2563eb; text-decoration: none;">Download Offer Letter</a>
+      </div>
+      ` : ''}
+      
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${loginUrl}" class="button">Login to View Offer Details</a>
+      </p>
+      
+      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
+        Please login to your portal to review the complete offer details and take the next steps. We look forward to welcoming you to our team!
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2024 HireHelp. All rights reserved.</p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Send offer email to candidates when status changes to "Offered"
+ * @param params - Offer email parameters
+ * @returns Promise that resolves when email is sent (or fails gracefully)
+ */
+export async function sendOfferEmail(params: OfferEmailParams): Promise<void> {
+  const { to, candidateName, jobTitle, loginUrl, offerLetterUrl } = params;
+
+  const subject = 'Congratulations! Your Offer from HireHelp';
+  const text = `
+Dear ${candidateName},
+
+We are pleased to inform you that you have been selected for the position!
+
+Position: ${jobTitle}
+
+After careful consideration of your application and interview performance, we are delighted to extend this offer to join our team. Your skills and experience impressed us, and we believe you will be a valuable addition to our organization.
+
+${offerLetterUrl ? `You can download your formal offer letter at: ${offerLetterUrl}` : ''}
+
+Please login to your portal to review the complete offer details and take the next steps.
+
+Login URL: ${loginUrl}
+
+We look forward to welcoming you to our team!
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generateOfferEmailTemplate(params);
+
+  try {
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Offer email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send offer email to ${to}:`, error);
+    // Do not throw - email failure should not prevent status update
+  }
+}
+
+/**
+ * Generate HTML template for rejection email
+ */
+function generateRejectionEmailTemplate(params: RejectionEmailParams): string {
+  const { candidateName, jobTitle, loginUrl } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Update - HireHelp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .thank-you {
+      background-color: #f1f5f9;
+      border-left: 4px solid #64748b;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .job-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1e293b;
+      margin: 15px 0;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+      color: #ffffff;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    .footer {
+      background-color: #f8fafc;
+      padding: 20px 30px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Application Update</h1>
+    </div>
+    
+    <div class="content">
+      <p style="font-size: 18px; color: #1e293b; margin-bottom: 20px;">
+        Dear <strong>${candidateName}</strong>,
+      </p>
+      
+      <div class="thank-you">
+        <p style="margin: 0; color: #475569; font-weight: 600;">
+          Thank you for your interest in joining our team and for the time you invested in the application process.
+        </p>
+      </div>
+      
+      <div class="job-title">
+        Position Applied: ${jobTitle}
+      </div>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        After careful consideration of your application and qualifications, we regret to inform you that we are not able to proceed with your candidacy at this time. This was a difficult decision as we received many qualified applications.
+      </p>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        We were impressed by your skills and experience, and we encourage you to apply for future positions that match your qualifications. Your profile will remain in our talent pool for consideration.
+      </p>
+      
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${loginUrl}" class="button">View Other Opportunities</a>
+      </p>
+      
+      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
+        We wish you the best in your job search and hope to have the opportunity to work with you in the future.
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2024 HireHelp. All rights reserved.</p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Send rejection email to candidates when status changes to "Rejected"
+ * @param params - Rejection email parameters
+ * @returns Promise that resolves when email is sent (or fails gracefully)
+ */
+export async function sendRejectionEmail(params: RejectionEmailParams): Promise<void> {
+  const { to, candidateName, jobTitle, loginUrl } = params;
+
+  const subject = 'Update Regarding Your Application';
+  const text = `
+Dear ${candidateName},
+
+Thank you for your interest in joining our team and for the time you invested in the application process.
+
+Position Applied: ${jobTitle}
+
+After careful consideration of your application and qualifications, we regret to inform you that we are not able to proceed with your candidacy at this time. This was a difficult decision as we received many qualified applications.
+
+We were impressed by your skills and experience, and we encourage you to apply for future positions that match your qualifications. Your profile will remain in our talent pool for consideration.
+
+We wish you the best in your job search and hope to have the opportunity to work with you in the future.
+
+Login URL: ${loginUrl}
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generateRejectionEmailTemplate(params);
+
+  try {
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Rejection email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send rejection email to ${to}:`, error);
+    // Do not throw - email failure should not prevent status update
   }
 }
 

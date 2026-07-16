@@ -1,7 +1,10 @@
 import * as repo from './applications.repository'
 import { aiEvaluationClient } from '../../../clients/ai-evaluation.client'
+import { sendOfferEmail, sendRejectionEmail } from '../../../common/utils/email.service'
+import { env } from '../../../config/env'
 import { db } from '../../../database'
 import { job_requisitions } from '../../../database/schema'
+import { candidates } from '../../../database/schema/candidate.schema'
 import { eq } from 'drizzle-orm'
 
 export async function listApplications(requisitionId?: string) {
@@ -19,6 +22,61 @@ export async function getApplication(applicationId: string, requisitionId?: stri
 export async function updateStatus(applicationId: string, status: string, requisitionId?: string) {
   const updated = await repo.updateStatus(applicationId, status as any, requisitionId)
   if (!updated) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
+
+  // Send email notifications based on status change
+  try {
+    // Get candidate details
+    const [candidate] = await db.select({
+      email: candidates.email,
+      firstName: candidates.firstName,
+      lastName: candidates.lastName
+    })
+    .from(candidates)
+    .where(eq(candidates.uuid, updated.candidate_id as string))
+    .limit(1)
+
+    if (!candidate) {
+      console.warn(`Candidate not found for application ${applicationId}`)
+      return updated
+    }
+
+    // Get job requisition details
+    const [requisition] = await db.select({
+      title: job_requisitions.title
+    })
+    .from(job_requisitions)
+    .where(eq(job_requisitions.id, updated.requisition_id as string))
+    .limit(1)
+
+    const candidateName = `${candidate.firstName} ${candidate.lastName}`
+    const jobTitle = requisition?.title || 'Position'
+    const loginUrl = `${env.CLIENT_ORIGIN}/login`
+
+    // Send offer email when status changes to "Offered"
+    if (status === 'Offered') {
+      await sendOfferEmail({
+        to: candidate.email,
+        candidateName,
+        jobTitle,
+        loginUrl,
+        // offerLetterUrl can be added later when offer letter generation is implemented
+      })
+    }
+
+    // Send rejection email when status changes to "Rejected"
+    if (status === 'Rejected') {
+      await sendRejectionEmail({
+        to: candidate.email,
+        candidateName,
+        jobTitle,
+        loginUrl,
+      })
+    }
+  } catch (error) {
+    // Email failure is logged but does not prevent status update
+    console.error('Failed to send status update email:', error)
+  }
+
   return updated
 }
 

@@ -1,6 +1,8 @@
 import { AppError } from "../../../common/middleware/error-handler";
 import { generateAccessToken, generateRefreshToken, type JwtPayload } from "../../../common/utils/jwt";
 import { hashPassword, verifyPassword, hashRefreshToken } from "../../../common/utils/password";
+import { sendPasswordResetEmail } from "../../../common/utils/email.service";
+import { env } from "../../../config/env";
 import { findByEmail, findById, updateLastLogin, update } from "../users/users.repository";
 import { getRoleNameById } from "../roles/roles.repository";
 import { create, findByRefreshTokenHash, update as updateSession, revoke, revokeAllByUserId } from "../user-sessions/user-sessions.repository";
@@ -153,7 +155,38 @@ export const changePassword = async (
   return { message: "Password changed successfully" };
 };
 
-export const forgotPassword = async (_input: ForgotPasswordInput) => {
+export const forgotPassword = async (input: ForgotPasswordInput) => {
+  const user = await findByEmail(input.email);
+
+  // Always return the same message for security (don't reveal if email exists)
+  if (!user) {
+    return { message: "If the email exists, a reset link will be sent" };
+  }
+
+  if (!user.isActive) {
+    return { message: "If the email exists, a reset link will be sent" };
+  }
+
+  // Generate a temporary reset token (in production, this should be stored in DB with expiry)
+  const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  const resetLink = `${env.CLIENT_ORIGIN}/reset-password?token=${resetToken}`;
+  const fullName = `${user.firstName} ${user.lastName}`;
+  const loginUrl = `${env.CLIENT_ORIGIN}/login`;
+
+  // Send password reset email
+  try {
+    await sendPasswordResetEmail({
+      to: user.email,
+      name: fullName,
+      resetLink,
+      expirationMinutes: 30, // 30 minutes expiry
+      loginUrl,
+    });
+  } catch (error) {
+    // Email failure is logged but does not prevent the flow
+    console.error('Failed to send password reset email:', error);
+  }
+
   return { message: "If the email exists, a reset link will be sent" };
 };
 

@@ -1,6 +1,6 @@
 import { AppError } from "../../../common/middleware/error-handler";
 import { hashPassword } from "../../../common/utils/password";
-import { sendWelcomeEmail } from "../../../common/utils/email.service";
+import { sendWelcomeEmail, sendRoleUpdatedEmail } from "../../../common/utils/email.service";
 import { env } from "../../../config/env";
 import {
   create,
@@ -130,6 +130,10 @@ export const updateUser = async (id: string, input: UpdateUserInput): Promise<Us
     throw new AppError("User not found", 404);
   }
 
+  // Check if role is being changed
+  const isRoleChanged = input.roleId !== undefined && input.roleId !== user.roleId;
+  const previousRoleId = user.roleId;
+
   if (input.roleId !== undefined) {
     await ensureRoleExists(input.roleId);
   }
@@ -148,6 +152,27 @@ export const updateUser = async (id: string, input: UpdateUserInput): Promise<Us
 
   if (!updatedUser) {
     throw new AppError("User not found", 404);
+  }
+
+  // Send role updated email if role was changed
+  if (isRoleChanged) {
+    try {
+      const previousRole = await findRoleById(previousRoleId);
+      const newRole = await findRoleById(input.roleId!);
+      const fullName = `${updatedUser.firstName} ${updatedUser.lastName}`;
+      const loginUrl = `${env.CLIENT_ORIGIN}/login`;
+
+      await sendRoleUpdatedEmail({
+        to: updatedUser.email,
+        name: fullName,
+        previousRole: previousRole?.name || 'Previous Role',
+        newRole: newRole?.name || 'New Role',
+        loginUrl,
+      });
+    } catch (error) {
+      // Email failure is logged but does not prevent user update
+      console.error('Failed to send role updated email:', error);
+    }
   }
 
   return toUserResponse(updatedUser);
