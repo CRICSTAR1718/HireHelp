@@ -112,7 +112,9 @@ Education Requirements: ${requisition.education_requirements || ''}
       candidate_id: candidateId,
       job_id: requisitionId,
       resume_url: resumeResponse.file_url,
-      job_description: jobDescription
+      job_description: jobDescription,
+      required_skills: requisition.required_skills ? requisition.required_skills.split(',').map(s => s.trim()) : [],
+      required_experience_years: requisition.experience_required ? parseFloat(requisition.experience_required) : undefined
     })
 
     // Update application with AI results

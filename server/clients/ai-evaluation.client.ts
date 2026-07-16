@@ -20,6 +20,8 @@ export interface EvaluationRequest {
   job_id: string
   resume_url: string
   job_description: string
+  required_skills?: string[]
+  required_experience_years?: number
 }
 
 export interface EvaluationResponse {
@@ -33,16 +35,6 @@ export interface EvaluationResponse {
 }
 
 export const aiEvaluationClient = {
-  async getFitmentScore(applicationId: number | string) {
-    const response = await fetch(
-      `${env.AI_EVALUATION_SERVICE_URL}/fitment/${applicationId}`
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch fitment score for ${applicationId}`);
-    }
-    return response.json();
-  },
-
   async evaluateApplication(request: EvaluationRequest): Promise<EvaluationResponse> {
     if (!env.AI_EVALUATION_SERVICE_URL) {
       throw new Error('AI_EVALUATION_SERVICE_URL not configured')
