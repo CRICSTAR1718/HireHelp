@@ -15,7 +15,7 @@ export async function getForm(requisitionId: string) {
   return { ...form, fields }
 }
 
-export async function publishForm(requisitionId: string) {
+export async function publishForm(requisitionId: string, userId?: string, userRole?: string) {
   const form = await repo.findFormByRequisition(requisitionId)
   if (!form) throw Object.assign(new Error('Form not found'), { statusCode: 404 })
   if (form.is_published) throw Object.assign(new Error('Form is already published'), { statusCode: 400 })
@@ -30,6 +30,13 @@ export async function publishForm(requisitionId: string) {
     throw Object.assign(new Error('Cannot publish form with no fields'), { statusCode: 400 })
   }
 
+  // Auto-publish for admin users
+  if (userRole === 'admin') {
+    await repo.setFormPublished(form.id, true)
+    return { message: 'Form published automatically (admin)' }
+  }
+
+  // Regular approval flow for HR users
   const admins = await repo.getAdmins()
   if (admins.length === 0) {
     throw Object.assign(new Error('No admin users found to approve the form'), { statusCode: 400 })
