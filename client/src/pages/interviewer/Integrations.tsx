@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link as LinkIcon, Calendar, Mail, Video, Phone, CheckCircle, XCircle, RefreshCw, Settings, ChevronRight, Zap, Shield, Globe } from 'lucide-react'
+import { Link as LinkIcon, Calendar, Mail, Video, Phone, CheckCircle, XCircle, RefreshCw, Settings, ChevronRight, Zap, Shield, Globe, ExternalLink } from 'lucide-react'
 
 interface Integration {
   id: string
@@ -10,6 +10,7 @@ interface Integration {
   category: 'calendar' | 'communication' | 'video' | 'productivity'
   lastSynced?: Date
   features: string[]
+  meetingLink?: string
 }
 
 export default function InterviewerIntegrations() {
@@ -40,6 +41,15 @@ export default function InterviewerIntegrations() {
       connected: false,
       category: 'communication',
       features: ['Email templates', 'Auto-reminders', 'Tracking']
+    },
+    {
+      id: 'google-meet',
+      name: 'Google Meet',
+      icon: <Video className="w-6 h-6" />,
+      description: 'Create Google Meet links for video interviews',
+      connected: false,
+      category: 'video',
+      features: ['Instant meeting links', 'Calendar integration', 'Recording']
     },
     {
       id: 'zoom',
@@ -75,6 +85,39 @@ export default function InterviewerIntegrations() {
 
   const handleConnect = (id: string) => {
     setSyncing(id)
+    
+    // For video integrations, generate real meeting links
+    if (id === 'google-meet') {
+      // Open Google Meet instant meeting
+      window.open('https://meet.google.com/new', '_blank')
+      setIntegrations(prev => prev.map(int => 
+        int.id === id ? { ...int, connected: true, lastSynced: new Date(), meetingLink: 'https://meet.google.com/new' } : int
+      ))
+      setSyncing(null)
+      return
+    }
+    
+    if (id === 'zoom') {
+      // Open Zoom meeting creation (requires Zoom API for real implementation)
+      window.open('https://zoom.us/meeting/schedule', '_blank')
+      setIntegrations(prev => prev.map(int => 
+        int.id === id ? { ...int, connected: true, lastSynced: new Date(), meetingLink: 'https://zoom.us/meeting/schedule' } : int
+      ))
+      setSyncing(null)
+      return
+    }
+    
+    if (id === 'teams') {
+      // Open Teams meeting creation (requires Microsoft Graph API for real implementation)
+      window.open('https://teams.microsoft.com/l/meeting/new', '_blank')
+      setIntegrations(prev => prev.map(int => 
+        int.id === id ? { ...int, connected: true, lastSynced: new Date(), meetingLink: 'https://teams.microsoft.com/l/meeting/new' } : int
+      ))
+      setSyncing(null)
+      return
+    }
+    
+    // For non-video integrations, use dummy connection
     setTimeout(() => {
       setIntegrations(prev => prev.map(int => 
         int.id === id ? { ...int, connected: true, lastSynced: new Date() } : int
@@ -243,6 +286,37 @@ export default function InterviewerIntegrations() {
                   <span className="font-medium text-gray-900">
                     {new Date(integration.lastSynced).toLocaleString()}
                   </span>
+                </div>
+              </div>
+            )}
+
+            {/* Meeting Link Section for Video Integrations */}
+            {integration.connected && integration.meetingLink && ['google-meet', 'zoom', 'teams'].includes(integration.id) && (
+              <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="text-xs font-medium text-blue-900 uppercase tracking-wide mb-2">Meeting Link</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={integration.meetingLink}
+                      readOnly
+                      className="flex-1 text-sm bg-white border border-blue-300 rounded px-2 py-1 text-blue-900"
+                    />
+                    <button
+                      onClick={() => window.open(integration.meetingLink, '_blank')}
+                      className="p-1.5 hover:bg-blue-100 rounded transition-colors"
+                      title="Open link"
+                    >
+                      <ExternalLink className="w-4 h-4 text-blue-600" />
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => window.open(integration.meetingLink, '_blank')}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                  >
+                    <Video className="w-4 h-4" />
+                    Open Meeting
+                  </button>
                 </div>
               </div>
             )}
