@@ -1,12 +1,15 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { ClipboardList, Calendar, LogOut, LayoutDashboard, Users, FileText, Settings, Home } from "lucide-react";
+import { Calendar, LogOut, LayoutDashboard, FileText, Settings, Home, Clock, Bell, Link } from "lucide-react";
 
 const navItems = [
   { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
   { to: "/interviewer/interviews", label: "My Interviews", icon: Calendar },
-  { to: "/interviewer/candidates", label: "Candidates", icon: Users },
+  { to: "/interviewer/calendar", label: "Calendar", icon: Calendar },
+  { to: "/interviewer/history", label: "History", icon: Clock },
   { to: "/interviewer/feedback", label: "Feedback", icon: FileText },
+  { to: "/interviewer/notifications", label: "Notifications", icon: Bell },
+  { to: "/interviewer/integrations", label: "Integrations", icon: Link },
   { to: "/interviewer/settings", label: "Settings", icon: Settings },
 ];
 

@@ -48,6 +48,12 @@ import { ScheduleCalendarView } from "@/pages/interviewer/ScheduleCalendarView";
 import { FeedbackForm } from "@/pages/interviewer/FeedbackForm";
 import { CalendarSync } from "@/pages/interviewer/CalendarSync";
 import { InterviewHistory } from "@/pages/interviewer/InterviewHistory";
+import InterviewerDashboard from "@/pages/interviewer/Dashboard";
+import InterviewerSettings from "@/pages/interviewer/Settings";
+import InterviewerNotifications from "@/pages/interviewer/Notifications";
+import InterviewerCalendar from "@/pages/interviewer/InterviewerCalendar";
+import InterviewerIntegrations from "@/pages/interviewer/Integrations";
+import ScheduleInterview from "@/pages/interviewer/ScheduleInterview";
 
 // ── Admin ──────────────────────────────────────────────────────
 import { AppLayout as AdminAppLayout } from "@/layouts/admin/AppLayout";
@@ -168,14 +174,16 @@ export function AppRouter() {
         {/* Interviewer */}
         <Route element={<ProtectedRoute allowedRoles={["interviewer"]} />}>
           <Route path="/interviewer" element={<InterviewerLayout />}>
-            <Route index element={<AssignedInterviews />} />
+            <Route index element={<InterviewerDashboard />} />
             <Route path="interviews" element={<AssignedInterviews />} />
-            <Route path="candidates" element={<AssignedInterviews />} />
-            <Route path="feedback" element={<FeedbackForm />} />
-            <Route path="settings" element={<AssignedInterviews />} />
-            <Route path="schedule" element={<ScheduleCalendarView />} />
-            <Route path="calendar" element={<CalendarSync />} />
+            <Route path="calendar" element={<InterviewerCalendar />} />
+            <Route path="schedule" element={<ScheduleInterview />} />
             <Route path="history" element={<InterviewHistory />} />
+            <Route path="feedback" element={<FeedbackForm />} />
+            <Route path="notifications" element={<InterviewerNotifications />} />
+            <Route path="integrations" element={<InterviewerIntegrations />} />
+            <Route path="settings" element={<InterviewerSettings />} />
+            <Route path="schedule-calendar" element={<ScheduleCalendarView />} />
           </Route>
         </Route>
 
