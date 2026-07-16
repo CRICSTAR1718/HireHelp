@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { otpRepository } from './otp.repository.js';
-import { sendMail } from '../../../common/utils/mailer.js';
+import { sendEmail } from '../../../common/utils/email.service.js';
 import { addMinutes } from 'date-fns';
 import { env } from '../../../config/env.js';
 
@@ -27,16 +27,15 @@ export class OtpService {
 
     const record = await otpRepository.create({ candidateId, email, otpHash, purpose, expiresAt });
 
-    // send email
+    // send email via SES
     const subject = purpose === 'REGISTRATION' ? 'Verify your HireHelp account' : purpose === 'LOGIN' ? 'HireHelp Login Verification' : 'Reset Your Password';
     const text = `Your verification code is:\n\n${otp}\n\nValid for ${OTP_EXPIRY_MINUTES} minutes.`;
-    // await sendMail(email, subject, text);
+    
+    console.log("➡️ Sending OTP email via SES...");
 
-    console.log("➡️ Calling sendMail()...");
+    await sendEmail({ to: email, subject, text });
 
-    await sendMail(email, subject, text);
-
-    console.log("✅ sendMail() finished");
+    console.log("✅ OTP email sent successfully");
 
     return { id: record.id, otpSent: true };
   }

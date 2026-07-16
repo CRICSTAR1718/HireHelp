@@ -18,6 +18,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.490.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.3",
@@ -33,7 +34,6 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^1.4.5-lts.2",
     "multer-storage-cloudinary": "^4.0.0",
-    "nodemailer": "^9.0.3",
     "pg": "^8.22.0",
     "winston": "^3.11.0",
     "zod": "^3.22.4"
@@ -48,7 +48,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^1.4.13",
     "@types/node": "^20.10.6",
-    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.0",
     "@typescript-eslint/eslint-plugin": "^8.63.0",

@@ -54,7 +54,13 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string().min(1, "CLOUDINARY_API_KEY is required"),
   CLOUDINARY_API_SECRET: z.string().min(1, "CLOUDINARY_API_SECRET is required"),
 
-  // Email/SMTP configuration for OTP verification
+  // AWS SES configuration for email
+  AWS_REGION: z.string().default("us-east-1"),
+  AWS_ACCESS_KEY_ID: z.string().optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().optional(),
+  SES_FROM_EMAIL: z.string().optional(),
+
+  // Legacy SMTP configuration (deprecated, will be removed)
   MAIL_HOST: z.string().optional(),
   MAIL_PORT: z.string().optional(),
   MAIL_USER: z.string().optional(),
@@ -96,6 +102,10 @@ export const env = parsedEnv.success
     CLOUDINARY_CLOUD_NAME: "",
     CLOUDINARY_API_KEY: "",
     CLOUDINARY_API_SECRET: "",
+    AWS_REGION: "us-east-1",
+    AWS_ACCESS_KEY_ID: undefined,
+    AWS_SECRET_ACCESS_KEY: undefined,
+    SES_FROM_EMAIL: undefined,
     MAIL_HOST: undefined,
     MAIL_PORT: undefined,
     MAIL_USER: undefined,

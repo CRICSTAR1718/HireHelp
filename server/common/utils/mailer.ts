@@ -1,61 +1,18 @@
-import nodemailer from 'nodemailer';
-import { env } from '../../config/env';
+// DEPRECATED: This file is deprecated and will be removed in a future version.
+// Please use email.service.ts with AWS SES instead.
+// This file is kept for backward compatibility during migration.
 
-let transporter: nodemailer.Transporter | null = null;
+import { sendEmail } from './email.service.js';
 
-if (env.MAIL_HOST && env.MAIL_HOST.length) {
-  transporter = nodemailer.createTransport({
-    host: env.MAIL_HOST,
-    port: env.MAIL_PORT ? Number(env.MAIL_PORT) : 587,
-    auth: env.MAIL_USER ? { user: env.MAIL_USER, pass: env.MAIL_PASS } : undefined,
-  });
-}
-
-// export async function sendMail(to: string, subject: string, text: string, html?: string) {
-//   if (!transporter) {
-//     console.warn('Mailer not configured — skipping email to', to);
-//     return;
-//   }
-
-//   await transporter.sendMail({
-//     from: env.MAIL_FROM || 'no-reply@hirehelp.local',
-//     to,
-//     subject,
-//     text,
-//     html,
-//   });
-// }
-
-
+/**
+ * @deprecated Use sendEmail() from email.service.ts instead
+ */
 export async function sendMail(
   to: string,
   subject: string,
   text: string,
   html?: string
 ) {
-  if (!transporter) {
-    console.log("❌ Mailer not configured");
-    return;
-  }
-
-  try {
-    console.log("📨 Connecting to Gmail...");
-    console.log("Sending email to:", to);
-
-    const info = await transporter.sendMail({
-      from: env.MAIL_FROM,
-      to,
-      subject,
-      text,
-      html,
-    });
-
-    console.log("✅ Email sent successfully!");
-    console.log(info.response);
-
-  } catch (err) {
-    console.error("❌ EMAIL ERROR");
-    console.error(err);
-    throw err;
-  }
+  console.warn('⚠️  sendMail() from mailer.ts is deprecated. Use sendEmail() from email.service.ts');
+  await sendEmail({ to, subject, text, html });
 }
