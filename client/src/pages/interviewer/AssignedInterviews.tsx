@@ -23,15 +23,11 @@ export const AssignedInterviews: React.FC = () => {
     }
   };
 
-  const handleSendInvitation = async (assignmentId: number, candidateEmail: string, candidateName: string, interviewerEmail: string, interviewerName: string) => {
+  const handleSendInvitation = async (scheduleId: number, candidateEmail: string, candidateName: string, interviewerEmail: string, interviewerName: string) => {
     try {
-      setSendingInvitation(assignmentId);
+      setSendingInvitation(scheduleId);
       
-      // Get the schedule ID from assignment (this would need to be fetched from the assignment data)
-      // For now, we'll assume the assignment has a scheduleId property
-      const scheduleId = assignmentId; // This should be the actual schedule ID
-      
-      await fetch(`/api/interviews/scheduling/${scheduleId}/send-invite`, {
+      await fetch('/api/interviews/scheduling/' + scheduleId + '/send-invite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
