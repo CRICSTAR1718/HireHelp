@@ -8,6 +8,7 @@ import "./index.css";
 import { store, persistor } from "./store";
 import { sessionResolved } from "./store/authSlice";
 import { AppRouter } from "./routes/AppRouter";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,13 +22,15 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor} onBeforeLift={() => { store.dispatch(sessionResolved()); }}>
-        <QueryClientProvider client={queryClient}>
-          <AppRouter />
-          <Toaster closeButton position="top-right" richColors />
-        </QueryClientProvider>
-      </PersistGate>
-    </Provider>
+    <ThemeProvider>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor} onBeforeLift={() => { store.dispatch(sessionResolved()); }}>
+          <QueryClientProvider client={queryClient}>
+            <AppRouter />
+            <Toaster closeButton position="top-right" richColors />
+          </QueryClientProvider>
+        </PersistGate>
+      </Provider>
+    </ThemeProvider>
   </StrictMode>,
 );

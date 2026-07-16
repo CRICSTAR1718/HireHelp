@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { Calendar, LogOut, LayoutDashboard, FileText, Settings, Home, Clock, Bell, Link } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Calendar, LogOut, LayoutDashboard, FileText, Settings, Home, Clock, Bell, Link, Moon, Sun } from "lucide-react";
 
 const navItems = [
   { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
@@ -16,10 +17,21 @@ const navItems = [
 export const InterviewerLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { theme, setTheme, effectiveTheme } = useTheme();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+
+  const toggleTheme = () => {
+    if (theme === 'light') {
+      setTheme('dark');
+    } else if (theme === 'dark') {
+      setTheme('system');
+    } else {
+      setTheme('light');
+    }
   };
 
   return (
@@ -71,7 +83,19 @@ export const InterviewerLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="p-4 border-t border-slate-200 bg-slate-50 space-y-2">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 group"
+            title={`Current theme: ${theme}`}
+          >
+            {effectiveTheme === 'dark' ? (
+              <Sun className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
+            ) : (
+              <Moon className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
+            )}
+            <span>{effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"

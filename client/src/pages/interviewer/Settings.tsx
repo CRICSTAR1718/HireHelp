@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Settings, User, Bell, Shield, Palette, LogOut } from 'lucide-react'
+import { useTheme } from '@/contexts/ThemeContext'
+import { Settings, User, Bell, Shield, Palette, LogOut, Moon, Sun, Monitor } from 'lucide-react'
 
 export default function InterviewerSettings() {
   const navigate = useNavigate()
+  const { theme, setTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('profile')
   const [loading, setLoading] = useState(false)
 
@@ -234,19 +236,51 @@ export default function InterviewerSettings() {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-4">Theme</label>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="p-4 border-2 border-blue-500 rounded-lg cursor-pointer bg-white">
-                      <div className="w-full h-20 bg-gradient-to-br from-blue-50 to-indigo-50 rounded mb-2"></div>
-                      <p className="text-sm font-medium text-center">Light</p>
-                    </div>
-                    <div className="p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 bg-white">
-                      <div className="w-full h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded mb-2"></div>
-                      <p className="text-sm font-medium text-center">Dark</p>
-                    </div>
-                    <div className="p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-gray-300 bg-white">
-                      <div className="w-full h-20 bg-gradient-to-br from-blue-100 to-gray-100 rounded mb-2"></div>
-                      <p className="text-sm font-medium text-center">System</p>
-                    </div>
+                    <button
+                      onClick={() => setTheme('light')}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        theme === 'light' 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <Sun className="w-6 h-6 text-yellow-500" />
+                        <span className="text-sm font-medium">Light</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setTheme('dark')}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        theme === 'dark' 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <Moon className="w-6 h-6 text-blue-600" />
+                        <span className="text-sm font-medium">Dark</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setTheme('system')}
+                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        theme === 'system' 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-2">
+                        <Monitor className="w-6 h-6 text-gray-600" />
+                        <span className="text-sm font-medium">System</span>
+                      </div>
+                    </button>
                   </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    {theme === 'system' 
+                      ? 'Theme will match your system preferences' 
+                      : `Currently using ${theme} theme`}
+                  </p>
                 </div>
 
                 <div>
