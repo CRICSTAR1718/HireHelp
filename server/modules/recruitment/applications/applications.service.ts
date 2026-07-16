@@ -56,7 +56,7 @@ export async function submitApplication(candidateId: string, jobId: string, resp
   }
 
   // Trigger AI evaluation asynchronously
-  triggerAiEvaluation(application.id, jobId, candidateId).catch(error => {
+  triggerAiEvaluation(application.id, jobId, candidateId, resumeId).catch(error => {
     console.error('[Application Service] AI evaluation failed:', error)
   })
 
@@ -66,7 +66,8 @@ export async function submitApplication(candidateId: string, jobId: string, resp
 async function triggerAiEvaluation(
   applicationId: string,
   requisitionId: string,
-  candidateId: string
+  candidateId: string,
+  resumeId?: number
 ) {
   try {
     // Update status to processing
@@ -99,11 +100,23 @@ Experience Required: ${requisition.experience_required || ''}
 Education Requirements: ${requisition.education_requirements || ''}
     `.trim()
 
-    // Get resume URL from field responses
-    const responses = await repo.findResponses(applicationId)
-    const resumeResponse = responses.find(r => r.field_type === 'file')
-    if (!resumeResponse || !resumeResponse.file_url) {
-      throw Object.assign(new Error('Resume not found in application'), { statusCode: 400 })
+    // Get resume URL from candidates.resumes table
+    let resumeUrl: string
+    if (resumeId) {
+      const { resumes } = await import('../../../database/schema/candidate.schema')
+      const [resume] = await db.select({
+        s3_url: resumes.s3Url
+      })
+      .from(resumes)
+      .where(eq(resumes.id, resumeId))
+      .limit(1)
+
+      if (!resume || !resume.s3_url) {
+        throw Object.assign(new Error('Resume not found'), { statusCode: 404 })
+      }
+      resumeUrl = resume.s3_url
+    } else {
+      throw Object.assign(new Error('Resume ID not provided'), { statusCode: 400 })
     }
 
     // Call AI Evaluation Service
@@ -111,7 +124,7 @@ Education Requirements: ${requisition.education_requirements || ''}
       application_id: applicationId,
       candidate_id: candidateId,
       job_id: requisitionId,
-      resume_url: resumeResponse.file_url,
+      resume_url: resumeUrl,
       job_description: jobDescription,
       required_skills: requisition.required_skills ? requisition.required_skills.split(',').map(s => s.trim()) : [],
       required_experience_years: requisition.experience_required ? parseFloat(requisition.experience_required) : undefined
@@ -140,8 +153,29 @@ export async function recalculateFitment(applicationId: string, requisitionId?: 
   const app = await repo.findOne(applicationId, requisitionId)
   if (!app) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
 
+  // Get candidate's most recent resume ID
+  const { resumes } = await import('../../../database/schema/candidate.schema')
+  const { candidates } = await import('../../../database/schema/candidate.schema')
+  
+  const [candidate] = await db.select({
+    id: candidates.id
+  })
+  .from(candidates)
+  .where(eq(candidates.uuid, app.candidate_id as string))
+  .limit(1)
+  
+  if (!candidate) throw Object.assign(new Error('Candidate not found'), { statusCode: 404 })
+  
+  const [resume] = await db.select({
+    id: resumes.id
+  })
+  .from(resumes)
+  .where(eq(resumes.candidateId, candidate.id))
+  .orderBy(resumes.createdAt)
+  .limit(1)
+  
   // Reuse the same trigger logic
-  await triggerAiEvaluation(applicationId, app.requisition_id as string, app.candidate_id as string)
+  await triggerAiEvaluation(applicationId, app.requisition_id as string, app.candidate_id as string, resume?.id)
 
   return repo.findOne(applicationId, requisitionId)
 }

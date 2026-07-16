@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getApplication, updateApplicationStatus } from "../../../api/recruiter/applications"
 import ApplicationStatusBadge from "../../../components/recruiter/ApplicationStatusBadge"
 import ResponseRenderer from "../../../components/recruiter/ResponseRenderer"
+import FitmentScore from "../../../components/recruiter/FitmentScore"
 
 const ApplicationDetailPage: React.FC = () => {
   const { id, aid } = useParams()
@@ -114,6 +115,12 @@ const ApplicationDetailPage: React.FC = () => {
               <label className="block text-sm font-medium text-gray-500">Current Status</label>
               <div className="mt-1">
                 <ApplicationStatusBadge status={application.status} />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-500">AI Fitment Score</label>
+              <div className="mt-1">
+                <FitmentScore score={application.ai_score} status={application.ai_status} />
               </div>
             </div>
           </div>

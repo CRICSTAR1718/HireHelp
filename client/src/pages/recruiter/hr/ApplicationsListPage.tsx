@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getApplications } from "../../../api/recruiter/applications"
 import ApplicationStatusBadge from "../../../components/recruiter/ApplicationStatusBadge"
+import FitmentScore from "../../../components/recruiter/FitmentScore"
 
 const ApplicationsListPage: React.FC = () => {
   const { id } = useParams()
@@ -146,6 +147,9 @@ const ApplicationsListPage: React.FC = () => {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Fitment
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -168,6 +172,9 @@ const ApplicationsListPage: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <ApplicationStatusBadge status={app.status} />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <FitmentScore score={app.ai_score} status={app.ai_status} compact />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
