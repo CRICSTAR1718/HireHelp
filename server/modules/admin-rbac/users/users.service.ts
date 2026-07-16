@@ -1,5 +1,7 @@
 import { AppError } from "../../../common/middleware/error-handler";
 import { hashPassword } from "../../../common/utils/password";
+import { sendWelcomeEmail } from "../../../common/utils/email.service";
+import { env } from "../../../config/env";
 import {
   create,
   deleteById,
@@ -98,6 +100,26 @@ export const createUser = async (input: CreateUserInput): Promise<UserData> => {
     departmentId: input.departmentId ?? null,
     isActive: true,
   });
+
+  // Send welcome email after successful user creation
+  try {
+    const role = await findRoleById(input.roleId);
+    const roleName = role?.name || 'Staff Member';
+    const fullName = `${input.firstName} ${input.lastName}`;
+    const loginUrl = `${env.CLIENT_ORIGIN}/login`;
+
+    await sendWelcomeEmail({
+      to: input.email,
+      name: fullName,
+      role: roleName,
+      email: input.email,
+      temporaryPassword: input.password,
+      loginUrl,
+    });
+  } catch (error) {
+    // Email failure is logged but does not prevent user creation
+    console.error('Failed to send welcome email:', error);
+  }
 
   return toUserResponse(user);
 };
