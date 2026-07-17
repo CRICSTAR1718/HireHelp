@@ -6,7 +6,7 @@ import { validate } from '../../../common/middleware/validate';
 import { createInterviewerSchema, updateInterviewerSchema } from './interviewer.schema';
 
 const router = Router();
-router.use(authenticate, requireRole('hr', 'admin'));
+router.use(authenticate, requireRole('recruiter', 'hr', 'admin'));
 
 router.post('/', validate(createInterviewerSchema), interviewerController.create.bind(interviewerController));
 router.get('/available', interviewerController.getAvailable.bind(interviewerController));

@@ -20,7 +20,7 @@ export class InterviewerRepository {
   }
 
   async findAll() {
-    // 1. Fetch staff users with hr, domain, or interviewer roles
+    // 1. Fetch staff users with hr, admin, or interviewer roles
     const staffUsers = await db
       .select({
         id: users.id,
@@ -31,7 +31,7 @@ export class InterviewerRepository {
       })
       .from(users)
       .innerJoin(roles, eq(users.roleId, roles.id))
-      .where(inArray(roles.name, ['hr', 'domain', 'interviewer']));
+      .where(inArray(roles.name, ['hr', 'admin', 'interviewer']));
 
     // 2. Fetch all existing interviewers
     const existing = await db.select().from(interviewers);

@@ -9,6 +9,7 @@ const router = Router();
 router.use(authenticate);
 
 router.post('/', requireRole('hr', 'admin'), validate(createAssignmentSchema), assignmentController.create.bind(assignmentController));
+router.get('/', requireRole('hr', 'admin', 'recruiter'), assignmentController.getAll.bind(assignmentController));
 router.get('/:id', requireRole('hr', 'admin', 'interviewer'), assignmentController.getById.bind(assignmentController));
 router.get('/interviewer/:interviewerId', requireRole('hr', 'admin', 'interviewer'), assignmentController.getByInterviewer.bind(assignmentController));
 router.put('/:id', requireRole('hr', 'admin'), validate(updateAssignmentSchema), assignmentController.update.bind(assignmentController));

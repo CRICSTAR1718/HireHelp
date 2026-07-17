@@ -168,6 +168,7 @@ export function AppRouter() {
             <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<AssignedInterviews />} />
             <Route path="interviews/schedule" element={<RecruiterInterviewSchedulingPage />} />
+            <Route path="schedule-interview" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />
@@ -211,6 +212,7 @@ export function AppRouter() {
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="schedule-interview" element={<InterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />

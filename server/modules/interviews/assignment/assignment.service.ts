@@ -6,6 +6,10 @@ export class AssignmentService {
     return assignmentRepository.create(data);
   }
 
+  async getAllAssignments() {
+    return assignmentRepository.findAll();
+  }
+
   async getAssignment(id: number) {
     return assignmentRepository.findById(id);
   }
