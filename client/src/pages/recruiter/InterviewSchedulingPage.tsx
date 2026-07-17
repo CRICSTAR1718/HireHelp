@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Video, User, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { interviewSchedulingApi } from '../../api/admin/interviewScheduling.api';
-import { scheduleApi } from '../../api/interviewer';
 import type { Interviewer, Candidate } from '../../api/admin/interviewScheduling.api';
-import type { InterviewSchedule } from '../../api/interviewer';
 
 const INTERVIEW_TYPES = [
   'Technical Interview',
@@ -17,6 +15,9 @@ const INTERVIEW_TYPES = [
 
 const InterviewSchedulingPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const preselectedCandidateId = searchParams.get('candidateId');
+  
   const [interviewers, setInterviewers] = useState<Interviewer[]>([]);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ const InterviewSchedulingPage = () => {
   const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
-    candidateId: '',
+    candidateId: preselectedCandidateId || '',
     interviewerId: '',
     role: '',
     interviewType: INTERVIEW_TYPES[0],
@@ -45,12 +46,11 @@ const InterviewSchedulingPage = () => {
     try {
       setLoading(true);
       const [interviewersData, candidatesData] = await Promise.all([
-        interviewSchedulingApi.getAvailableInterviewers(),
+        interviewSchedulingApi.getInterviewersByRoles(),
         interviewSchedulingApi.getShortlistedCandidates(),
       ]);
       setInterviewers(interviewersData);
       setCandidates(candidatesData);
-
     } catch (err) {
       setError('Failed to load data. Please try again.');
       console.error('Error loading data:', err);
@@ -116,7 +116,7 @@ const InterviewSchedulingPage = () => {
       setSuccess(true);
       
       setTimeout(() => {
-        navigate('/admin/dashboard');
+        navigate('/recruiter/interviews');
       }, 2000);
     } catch (err) {
       setError('Failed to schedule interview. Please try again.');
@@ -141,7 +141,7 @@ const InterviewSchedulingPage = () => {
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900">Schedule Interview</h1>
-        <p className="mt-2 text-slate-600">Assign an interviewer and schedule an interview with a candidate</p>
+        <p className="mt-2 text-slate-600">Assign an interviewer and schedule an interview with a shortlisted candidate</p>
       </div>
 
       {success && (
@@ -149,7 +149,7 @@ const InterviewSchedulingPage = () => {
           <CheckCircle className="h-5 w-5 text-emerald-600" />
           <div>
             <p className="font-medium text-emerald-800">Interview scheduled successfully!</p>
-            <p className="text-sm text-emerald-600">Redirecting to dashboard...</p>
+            <p className="text-sm text-emerald-600">Redirecting to interviews...</p>
           </div>
         </div>
       )}
@@ -311,7 +311,7 @@ const InterviewSchedulingPage = () => {
         <div className="flex justify-end gap-4">
           <button
             type="button"
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => navigate('/recruiter/interviews')}
             className="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors"
           >
             Cancel

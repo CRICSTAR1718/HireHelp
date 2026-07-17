@@ -246,3 +246,21 @@ export async function checkApplicationStatus(candidateId: string, requisitionId:
   const application = await repo.findByCandidateAndJob(candidateId, requisitionId)
   return application ? { applied: true, status: application.status } : { applied: false }
 }
+
+export async function getShortlistedCandidates() {
+  const applications = await repo.findByStatus('shortlisted')
+  
+  // The repository already joins with candidates, so we can map directly
+  return applications.map((app: any) => ({
+    id: app.id,
+    firstName: app.candidate_first_name || 'Candidate',
+    lastName: app.candidate_last_name || `#${app.candidate_id?.substring(0, 8)}`,
+    email: app.candidate_email || 'candidate@example.com',
+    phone: null,
+    profile: {
+      headline: null,
+      location: null,
+      summary: null
+    }
+  }))
+}

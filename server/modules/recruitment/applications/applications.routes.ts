@@ -15,6 +15,7 @@ const router = Router({ mergeParams: true })
 
 // Admin/HR routes
 router.get('/',           authenticate, requireRole('hr', 'admin'), ctrl.listApplications)
+router.get('/shortlisted', authenticate, requireRole('hr', 'admin'), ctrl.getShortlistedCandidates)
 router.get('/:aid',       authenticate, requireRole('hr', 'admin'), ctrl.getApplication)
 router.patch('/:aid/status', authenticate, requireRole('hr', 'admin'), validate(UpdateStatusSchema), ctrl.updateStatus)
 router.post('/:aid/recalculate', authenticate, requireRole('hr', 'admin'), ctrl.recalculateFitment)

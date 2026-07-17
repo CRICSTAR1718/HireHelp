@@ -1,4 +1,6 @@
-import { apiClient } from "./client";
+import { apiClient } from "../shared/client";
+
+
 
 export interface Interviewer {
   id: number;
@@ -29,6 +31,21 @@ export const interviewSchedulingApi = {
   async getAvailableInterviewers(): Promise<Interviewer[]> {
     const response = await apiClient.get(`/interviews/interviewers/available`);
     return response.data;
+  },
+
+  async getInterviewersByRoles(): Promise<Interviewer[]> {
+    // Get users with interviewer, hr, or admin roles
+    const response = await apiClient.get(`/admin/users/by-roles?roleIds=interviewer,hr,admin`);
+    return response.data.data.map((user: any) => ({
+      id: user.id,
+      userId: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      expertise: [],
+      availability: null,
+      createdAt: new Date(user.createdAt),
+      updatedAt: new Date(user.updatedAt),
+    }));
   },
 
   async getShortlistedCandidates(): Promise<Candidate[]> {

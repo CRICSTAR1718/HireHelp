@@ -51,9 +51,25 @@ export class InterviewerController {
       const interviewers = await interviewerService.getAvailableInterviewers();
       res.json(interviewers);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to get available interviewers' });
+      const e = error as any;
+      // Return underlying error details so the frontend/console shows the real cause.
+      console.error('getAvailableInterviewers failed:', {
+        message: e?.message,
+        stack: e?.stack,
+        name: e?.name,
+      });
+
+      res.status(500).json({
+        error: e?.message || 'Failed to get available interviewers',
+        details: {
+          name: e?.name,
+          stack: e?.stack,
+        },
+      });
     }
   }
+
+
 
   async update(req: Request, res: Response) {
     try {

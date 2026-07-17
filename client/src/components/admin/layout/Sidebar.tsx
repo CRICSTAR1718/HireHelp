@@ -27,7 +27,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle }: Side
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-white transition-transform duration-200 lg:static lg:translate-x-0",
-          collapsed ? "w-[76px]" : "w-[280px]",
+          collapsed ? "w-19" : "w-70",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >

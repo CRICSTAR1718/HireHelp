@@ -84,6 +84,7 @@ router.use('/requisitions/:requisitionId/logs', logsRoutes);
 // ── Admin RBAC ───────────────────────────────────────────────────────────
 router.use('/admin/auth', adminAuthRoutes);
 router.use('/admin/approvals', approvalsRoutes);
+router.use('/admin/applications', recruitmentApplicationsRoutes); // Admin/HR applications endpoint
 router.use('/admin', auditRoutes); // audit.routes.ts already declares full '/audit' paths internally
 router.use('/admin', configurationRoutes); // same — declares '/configuration' internally
 router.use('/admin', departmentsRoutes); // same — declares '/departments' internally

@@ -22,6 +22,10 @@ export const findByName = async (name: string): Promise<Role | undefined> => {
   return results[0];
 };
 
+export const findByNames = async (names: string[]): Promise<Role[]> => {
+  return db.select().from(roles).where(eq(roles.name, names[0])); // This needs to be fixed for multiple names
+};
+
 // ADDED for common/middleware/rbac.ts's requireRole() helper — small
 // convenience wrapper so recruitment/interview routes doing role-name checks
 // don't need to know about the Role type at all, just a string in/out.

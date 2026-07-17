@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 import { db } from "../../../database";
@@ -20,6 +20,10 @@ export const findById = async (id: string): Promise<User | undefined> => {
 export const findByEmail = async (email: string): Promise<User | undefined> => {
   const results = await db.select().from(users).where(eq(users.email, email));
   return results[0];
+};
+
+export const findByRoleIds = async (roleIds: string[]): Promise<User[]> => {
+  return db.select().from(users).where(inArray(users.roleId, roleIds));
 };
 
 export const create = async (data: NewUser): Promise<User> => {

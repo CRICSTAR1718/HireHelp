@@ -40,6 +40,7 @@ import ApplicationsListPage from "@/pages/recruiter/hr/ApplicationsListPage";
 import ApplicationDetailPage from "@/pages/recruiter/hr/ApplicationDetailPage";
 import FormApprovalsPage from "@/pages/recruiter/admin/FormApprovalsPage";
 import RequisitionReviewPage from "@/pages/recruiter/admin/RequisitionReviewPage";
+import RecruiterInterviewSchedulingPage from "@/pages/recruiter/InterviewSchedulingPage";
 
 // ── Interviewer ──────────────────────────────────────────────────────
 import { InterviewerLayout } from "@/layouts/shared/InterviewerLayout";
@@ -166,6 +167,7 @@ export function AppRouter() {
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="interviews/schedule" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />

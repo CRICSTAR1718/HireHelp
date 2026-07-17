@@ -156,6 +156,20 @@ const ApplicationDetailPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Schedule Interview Button - Show when shortlisted */}
+        {status === 'shortlisted' && (
+          <div className="bg-white shadow rounded-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Interview Scheduling</h2>
+            <p className="text-gray-600 mb-4">This candidate has been shortlisted. You can schedule an interview with them.</p>
+            <button
+              onClick={() => navigate(`${basePath}/interviews/schedule?candidateId=${application.candidate_id}`)}
+              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Schedule Interview
+            </button>
+          </div>
+        )}
+
         {/* Responses */}
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Application Responses</h2>

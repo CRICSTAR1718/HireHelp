@@ -75,3 +75,34 @@ export const deactivateUser = async (req: Request, res: Response<MessageResponse
     next(error);
   }
 };
+
+export const getUsersByRoleIds = async (req: Request, res: Response<ListUsersResponse>, next: NextFunction): Promise<void> => {
+  try {
+    const { roleIds: roleNamesParam } = req.query;
+    if (!roleNamesParam || typeof roleNamesParam !== 'string') {
+      throw new AppError('roleIds query parameter is required', 400);
+    }
+    const roleNames = roleNamesParam.split(',');
+    
+    // Get role IDs from role names
+    const { findByName } = await import("../roles/roles.repository");
+    const roleIdsArray: string[] = [];
+    
+    for (const roleName of roleNames) {
+      const role = await findByName(roleName.trim());
+      if (role) {
+        roleIdsArray.push(role.id);
+      }
+    }
+    
+    if (roleIdsArray.length === 0) {
+      res.status(200).json({ success: true, data: [] });
+      return;
+    }
+    
+    const users = await usersService.getUsersByRoleIds(roleIdsArray);
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    next(error);
+  }
+};

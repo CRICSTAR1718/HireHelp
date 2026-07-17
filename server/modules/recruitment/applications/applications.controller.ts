@@ -88,3 +88,10 @@ export async function recalculateFitment(req: Request, res: Response) {
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
+
+export async function getShortlistedCandidates(req: Request, res: Response) {
+  try {
+    const data = await service.getShortlistedCandidates()
+    res.json(data)
+  } catch (err) { handleError(res, err) }
+}

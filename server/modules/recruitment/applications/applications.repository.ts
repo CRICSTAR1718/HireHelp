@@ -102,6 +102,15 @@ export async function findByCandidateAndJob(candidateId: string, requisitionId: 
   return app ?? null
 }
 
+export async function findByStatus(status: string) {
+  return db.select(baseApplicationSelect())
+    .from(applications)
+    .innerJoin(job_requisitions, eq(applications.requisition_id, job_requisitions.id))
+    .leftJoin(candidates, eq(applications.candidate_id, candidates.uuid))
+    .where(eq(applications.status, status as any))
+    .orderBy(desc(applications.submitted_at))
+}
+
 export async function createApplication(data: {
   requisition_id: string
   candidate_id: string

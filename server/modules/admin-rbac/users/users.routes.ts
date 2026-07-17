@@ -8,6 +8,7 @@ import {
   createUser,
   deactivateUser,
   getUserById,
+  getUsersByRoleIds,
   listUsers,
   updateUser,
 } from "./users.controller";
@@ -16,6 +17,7 @@ import { createUserSchema, updateUserSchema, changeUserPasswordSchema } from "./
 const router = Router();
 
 router.get("/users", authenticate, authorize("users:manage"), listUsers);
+router.get("/users/by-roles", authenticate, authorize("users:manage"), getUsersByRoleIds);
 router.get("/users/:id", authenticate, authorize("users:manage"), getUserById);
 router.post("/users", authenticate, authorize("users:manage"), validate(createUserSchema), createUser);
 router.patch("/users/:id", authenticate, authorize("users:manage"), validate(updateUserSchema), updateUser);

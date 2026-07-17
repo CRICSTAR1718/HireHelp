@@ -8,6 +8,7 @@ import {
   findAll,
   findByEmail,
   findById,
+  findByRoleIds,
   update,
   type User,
 } from "./users.repository";
@@ -68,6 +69,11 @@ const ensureDepartmentExists = async (departmentId: string | null | undefined): 
 
 export const listUsers = async (): Promise<UserData[]> => {
   const users = await findAll();
+  return users.map(toUserResponse);
+};
+
+export const getUsersByRoleIds = async (roleIds: string[]): Promise<UserData[]> => {
+  const users = await findByRoleIds(roleIds);
   return users.map(toUserResponse);
 };
 
