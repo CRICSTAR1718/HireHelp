@@ -137,6 +137,7 @@ export function AppRouter() {
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<CandidateProfile />} />
             <Route path="jobs" element={<CandidateJobs />} />
+            <Route path="jobs/:jobId" element={<CandidateJobs />} />
             <Route path="applications" element={<CandidateApplications />} />
             <Route path="settings" element={<CandidateSettings />} />
           </Route>

@@ -23,6 +23,7 @@ import candidateJobsRoutes from './modules/candidates/jobs/routes/jobs.routes';
 
 // Recruitment
 import requisitionsRoutes from './modules/recruitment/requisitions/requisitions.routes';
+import bulkUploadRoutes from './modules/recruitment/bulk-upload/bulk-upload.routes';
 import jobsRoutes from './modules/recruitment/jobs/jobs.routes';
 import { reqFormRouter, approvalsRouter as formsApprovalsRouter, templatesRouter } from './modules/recruitment/forms/forms.routes';
 import pipelineRoutes from './modules/recruitment/pipeline/pipeline.routes';
@@ -31,6 +32,7 @@ import offersRoutes from './modules/recruitment/offers/offers.routes';
 import recruitmentApplicationsRoutes from './modules/recruitment/applications/applications.routes';
 import { approvalsRouter as requisitionApprovalsRouter, rulebooksRouter } from './modules/recruitment/approvals/approvals.routes';
 import logsRoutes from './modules/recruitment/logs/logs.routes';
+import talentPoolRoutes from './modules/recruitment/talent-pool/talent-pool.routes';
 
 // Admin RBAC
 import adminAuthRoutes from './modules/admin-rbac/auth/auth.routes';
@@ -69,6 +71,7 @@ router.use('/candidates/jobs', candidateJobsRoutes); // public browse — no aut
 
 // ── Recruitment ─────────────────────────────────────────────────────────
 router.use('/requisitions', requisitionsRoutes);
+router.use('/requisitions', bulkUploadRoutes);
 router.use('/jobs', jobsRoutes); // public published-jobs feed, consumed by candidates/jobs module in-process too
 router.use('/requisitions/:requisitionId/form', reqFormRouter);
 router.use('/form-approvals', formsApprovalsRouter);
@@ -80,6 +83,7 @@ router.use('/applications', recruitmentApplicationsRoutes);
 router.use('/requisitions/:requisitionId/approvals', requisitionApprovalsRouter);
 router.use('/requisitions/:requisitionId/rulebooks', rulebooksRouter);
 router.use('/requisitions/:requisitionId/logs', logsRoutes);
+router.use('/talent-pool', talentPoolRoutes);
 
 // ── Admin RBAC ───────────────────────────────────────────────────────────
 router.use('/admin/auth', adminAuthRoutes);

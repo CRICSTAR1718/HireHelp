@@ -1,19 +1,57 @@
 import { useState, useEffect } from "react";
-import { MapPin, Clock, Building2, DollarSign, X, ArrowLeft } from "lucide-react";
+import { MapPin, Clock, Building2, DollarSign, X, ArrowLeft, Zap } from "lucide-react";
 import type { Job } from "../../../types/candidate";
 import { getJob } from "../../../api/candidate/jobs.api";
+import { checkCandidateInTalentPool, applyForJobFromTalentPool } from "../../../api/recruiter/talent-pool.api";
+import { useAuth as useCandidateAuth } from "../../../hooks/candidate/useAuth";
 
 interface Props {
     jobId: string;
     onClose: () => void;
     onApply?: (jobId: string) => void;
+    onTalentPoolApply?: (jobId: string) => void;
     hasApplied?: boolean;
 }
 
-export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = false }: Props) {
+export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolApply, hasApplied = false }: Props) {
     const [job, setJob] = useState<Job | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [checkingTalentPool, setCheckingTalentPool] = useState(false);
+    const [isTalentPoolCandidate, setIsTalentPoolCandidate] = useState(false);
+    const [applying, setApplying] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const { auth } = useCandidateAuth();
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const checkTalentPool = async () => {
+            if (!auth.user?.id) {
+                return;
+            }
+
+            setCheckingTalentPool(true);
+            try {
+                const inPool = await checkCandidateInTalentPool(auth.user.id);
+                if (isMounted) {
+                    setIsTalentPoolCandidate(inPool);
+                }
+            } catch (err) {
+                console.error('Failed to check Talent Pool status:', err);
+            } finally {
+                if (isMounted) {
+                    setCheckingTalentPool(false);
+                }
+            }
+        };
+
+        checkTalentPool();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [auth.user?.id]);
 
     useEffect(() => {
         const fetchJobDetails = async () => {
@@ -44,6 +82,33 @@ export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = 
             day: "numeric",
             year: "numeric",
         });
+    };
+
+    const handleApply = async () => {
+        if (!job) {
+            return;
+        }
+
+        if (isTalentPoolCandidate && auth.user?.id) {
+            setApplying(true);
+            setError(null);
+            setSuccessMessage(null);
+
+            try {
+                await applyForJobFromTalentPool(auth.user.id, job.id);
+                setSuccessMessage('Application submitted successfully.');
+                onTalentPoolApply?.(job.id);
+            } catch (err) {
+                console.error('Failed to apply from Talent Pool:', err);
+                setError(err instanceof Error ? err.message : 'Failed to submit application');
+            } finally {
+                setApplying(false);
+            }
+
+            return;
+        }
+
+        onApply?.(job.id);
     };
 
     if (loading) {
@@ -102,6 +167,12 @@ export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = 
 
                 {/* Content */}
                 <div className="p-6 space-y-6">
+                    {successMessage && (
+                        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                            {successMessage}
+                        </div>
+                    )}
+
                     {/* Job Title and Basic Info */}
                     <div>
                         <h3 className="text-2xl font-bold text-white mb-2">{job.title}</h3>
@@ -224,15 +295,15 @@ export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = 
                     {onApply && (
                         <div className="flex gap-3 pt-4 border-t border-slate-800">
                             <button
-                                onClick={() => onApply(job.id)}
-                                disabled={hasApplied}
+                                onClick={handleApply}
+                                disabled={hasApplied || applying || checkingTalentPool}
                                 className={`flex-1 rounded-lg px-6 py-3 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 ${
                                     hasApplied
                                         ? "bg-slate-700 cursor-not-allowed"
-                                        : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/25 hover:shadow-blue-500/30"
+                                        : "bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/25 hover:shadow-blue-500/30"
                                 }`}
                             >
-                                {hasApplied ? "Already Applied" : "Apply Now"}
+                                {hasApplied ? "Already Applied" : applying ? "Applying..." : "Apply Now"}
                             </button>
                             <button
                                 onClick={onClose}

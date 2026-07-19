@@ -4,8 +4,9 @@ import { sendOfferEmail, sendRejectionEmail } from '../../../common/utils/email.
 import { env } from '../../../config/env'
 import { db } from '../../../database'
 import { job_requisitions } from '../../../database/schema'
-import { candidates } from '../../../database/schema/candidate.schema'
+import { candidates, resumes } from '../../../database/schema/candidate.schema'
 import { eq } from 'drizzle-orm'
+import * as talentPoolService from '../talent-pool/talent-pool.service'
 
 export async function listApplications(requisitionId?: string) {
   return repo.findAll(requisitionId)
@@ -83,6 +84,18 @@ export async function updateStatus(applicationId: string, status: string, requis
         loginUrl,
       })
       console.log(`✅ Status update email sent to ${candidate.email}`)
+
+      // Automatically add candidate to Talent Pool
+      try {
+        await talentPoolService.archiveRejectedApplicationToTalentPool(
+          updated.id,
+          'Application rejected after interview process'
+        )
+          console.log(`✅ Candidate ${updated.candidate_id} added to Talent Pool`)
+      } catch (error) {
+        console.error('Failed to add candidate to Talent Pool:', error)
+        // Don't throw - Talent Pool addition failure should not prevent status update
+      }
     }
   } catch (error) {
     // Email failure is logged but does not prevent status update

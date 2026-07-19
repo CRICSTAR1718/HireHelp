@@ -4,6 +4,7 @@ import { getRequisition, updateRequisition, submitRequisition, approveRequisitio
 import { getForm } from "../../api/recruiter/forms"
 import api from "../../api/recruiter/requisitions"
 import StatusBadge from "../../components/recruiter/StatusBadge"
+import { TOKEN_KEY } from "../../api/shared/client"
 
 interface User {
   id: string
@@ -32,6 +33,10 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
   const [adminRemarks, setAdminRemarks] = useState('')
   const [showRejectModal, setShowRejectModal] = useState(false)
   const [showRequestChangesModal, setShowRequestChangesModal] = useState(false)
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [uploading, setUploading] = useState(false)
+  const [uploadResults, setUploadResults] = useState<any>(null)
 
   const fetchAll = async () => {
     setLoading(true)
@@ -132,6 +137,57 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
     }
   }
 
+  const handleBulkUpload = async () => {
+    if (selectedFiles.length === 0) {
+      alert('Please select at least one file')
+      return
+    }
+
+    // Validate file types
+    const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword']
+    const invalidFiles = selectedFiles.filter(f => !validTypes.includes(f.type))
+    if (invalidFiles.length > 0) {
+      alert(`Invalid file types: ${invalidFiles.map(f => f.name).join(', ')}. Only PDF, DOC, and DOCX files are allowed.`)
+      return
+    }
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      selectedFiles.forEach(file => {
+        formData.append('resumes', file)
+      })
+
+      const token = localStorage.getItem(TOKEN_KEY)
+      const response = await fetch(`/api/requisitions/${id}/bulk-resumes`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed')
+      }
+
+      setUploadResults(data)
+      setSelectedFiles([])
+      setShowBulkUploadModal(false)
+      
+      // Refresh requisition data to show new applications
+      await fetchAll()
+      
+      alert(`Upload complete: ${data.succeeded} succeeded, ${data.failed} failed`)
+    } catch (err: any) {
+      alert(err.message || 'Upload failed')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const canEdit = req && (req.status === 'draft' || req.status === 'needs_changes') && (user?.role === 'hr' || user?.role === 'hiring_manager')
   const canSubmit = req && (req.status === 'draft' || req.status === 'needs_changes') && (user?.role === 'hr' || user?.role === 'hiring_manager')
   const canApprove = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
@@ -139,6 +195,7 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
   const canRequestChanges = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
   const canPublish = req && req.status === 'approved' && user?.role === 'admin'
   const canViewApplications = req && (req.status === 'published' || req.status === 'closed') && (user?.role === 'hr' || user?.role === 'hiring_manager' || user?.role === 'admin')
+  const canBulkUpload = req && (req.status === 'published' || req.status === 'approved') && (user?.role === 'hr' || user?.role === 'admin')
 
   if (loading) {
     return (
@@ -319,6 +376,15 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
               style={{ background: 'rgba(34,197,94,0.1)', borderColor: 'rgba(34,197,94,0.3)', color: '#22c55e' }}
             >
               {actionLoading ? 'Publishing…' : 'Publish Job'}
+            </button>
+          )}
+          {canBulkUpload && (
+            <button
+              className="btn-primary"
+              onClick={() => setShowBulkUploadModal(true)}
+              style={{ background: 'rgba(59,130,246,0.1)', borderColor: 'rgba(59,130,246,0.3)', color: '#3b82f6' }}
+            >
+              Bulk Upload Resumes
             </button>
           )}
         </div>
@@ -534,6 +600,128 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
                 {actionLoading ? 'Requesting…' : 'Request Changes'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Upload Modal */}
+      {showBulkUploadModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div className="glass-card" style={{ padding: '2rem', maxWidth: 600, width: '90%' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem' }}>
+              Bulk Upload Resumes
+            </h2>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Upload multiple resume files (PDF, DOC, DOCX) to create candidate records and applications for this requisition.
+              Maximum 50 files, 10MB each.
+            </p>
+            
+            <div
+              style={{
+                border: '2px dashed rgba(59,130,246,0.3)',
+                borderRadius: 8,
+                padding: '2rem',
+                textAlign: 'center',
+                marginBottom: '1rem',
+                cursor: 'pointer',
+                background: 'rgba(59,130,246,0.05)'
+              }}
+              onClick={() => document.getElementById('file-input')?.click()}
+            >
+              <input
+                id="file-input"
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length > 50) {
+                    alert('Maximum 50 files allowed');
+                    return;
+                  }
+                  setSelectedFiles(files);
+                }}
+              />
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📄</div>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                {selectedFiles.length > 0 
+                  ? `${selectedFiles.length} file${selectedFiles.length !== 1 ? 's' : ''} selected`
+                  : 'Click to select files or drag and drop'
+                }
+              </p>
+            </div>
+
+            {selectedFiles.length > 0 && (
+              <div style={{ marginBottom: '1rem', maxHeight: '150px', overflowY: 'auto' }}>
+                {selectedFiles.map((file, index) => (
+                  <div key={index} style={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    padding: '0.5rem',
+                    background: 'rgba(255,255,255,0.5)',
+                    borderRadius: 4,
+                    marginBottom: '0.25rem'
+                  }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                    </span>
+                    <button
+                      onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== index))}
+                      style={{ 
+                        background: 'none', 
+                        border: 'none', 
+                        color: '#ef4444', 
+                        cursor: 'pointer',
+                        fontSize: '1.2rem'
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+              <button
+                className="btn-secondary"
+                onClick={() => { setShowBulkUploadModal(false); setSelectedFiles([]); setUploadResults(null) }}
+                disabled={uploading}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleBulkUpload}
+                disabled={uploading || selectedFiles.length === 0}
+                style={{ background: 'rgba(59,130,246,0.1)', borderColor: 'rgba(59,130,246,0.3)', color: '#3b82f6' }}
+              >
+                {uploading ? 'Uploading…' : 'Upload Resumes'}
+              </button>
+            </div>
+
+            {uploadResults && (
+              <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(34,197,94,0.1)', borderRadius: 8 }}>
+                <p style={{ fontSize: '0.9rem', color: '#16a34a', marginBottom: '0.5rem' }}>
+                  Upload Results: {uploadResults.succeeded} succeeded, {uploadResults.failed} failed
+                </p>
+                {uploadResults.results.some((r: any) => r.status === 'failed') && (
+                  <div style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                    {uploadResults.results.filter((r: any) => r.status === 'failed').map((result: any, index: number) => (
+                      <div key={index} style={{ fontSize: '0.8rem', color: '#ef4444', marginBottom: '0.25rem' }}>
+                        {result.fileName}: {result.error}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

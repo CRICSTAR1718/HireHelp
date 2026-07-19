@@ -1,155 +1,307 @@
 import React, { useState, useEffect } from 'react';
-import { Star, User, Briefcase, Mail, MapPin, Calendar, Award } from 'lucide-react';
-import { getApplications } from '../../api/recruiter/applications';
-
-interface Application {
-  id: string;
-  requisition_id: string;
-  requisition_title: string;
-  department: string;
-  location: string;
-  candidate_id: string;
-  candidate_first_name: string;
-  candidate_last_name: string;
-  candidate_email: string;
-  status: string;
-  ai_score: string;
-  submitted_at: string;
-}
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Star, User, Briefcase, Mail, Calendar, Award, Download, Trash2, FileText, X, Eye, Phone, Building2 } from 'lucide-react';
+import { getTalentPoolCandidates, getTalentPoolStats, removeCandidateFromTalentPool, downloadCandidateResume, type TalentPoolCandidate } from '../../api/recruiter/talent-pool.api';
+import { Card } from '../../components/admin/ui/card';
+import { Button } from '../../components/admin/ui/button';
 
 export const TalentPool: React.FC = () => {
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [candidates, setCandidates] = useState<TalentPoolCandidate[]>([]);
+  const [stats, setStats] = useState({ total: 0, candidates: 0 });
   const [loading, setLoading] = useState(true);
+  const [selectedCandidate, setSelectedCandidate] = useState<TalentPoolCandidate | null>(null);
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter';
 
   useEffect(() => {
-    loadApplications();
+    loadData();
   }, []);
 
-  const loadApplications = async () => {
+  const loadData = async () => {
     try {
-      const data = await getApplications();
-      // Filter for shortlisted candidates and those in interview stages
-      const talentPoolCandidates = data.filter((app: Application) =>
-        app.status === 'shortlisted' ||
-        app.status === 'under_review' ||
-        app.status === 'hired'
-      );
-      setApplications(talentPoolCandidates);
+      const [candidatesData, statsData] = await Promise.all([
+        getTalentPoolCandidates(),
+        getTalentPoolStats()
+      ]);
+      setCandidates(candidatesData);
+      setStats(statsData);
     } catch (error) {
-      console.error('Failed to load applications:', error);
+      console.error('Failed to load Talent Pool data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'shortlisted': return 'bg-green-100 text-green-800 border-green-200';
-      case 'under_review': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'hired': return 'bg-purple-100 text-purple-800 border-purple-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  const handleRemoveCandidate = async (id: string) => {
+    try {
+      await removeCandidateFromTalentPool(id);
+      await loadData();
+      setShowRemoveConfirm(false);
+      setSelectedCandidate(null);
+    } catch (error) {
+      console.error('Failed to remove candidate:', error);
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'shortlisted': return <Star className="w-4 h-4 fill-current" />;
-      case 'hired': return <Award className="w-4 h-4" />;
-      default: return <Calendar className="w-4 h-4" />;
+  const handleDownloadResume = async (id: string) => {
+    try {
+      const { resumeUrl } = await downloadCandidateResume(id);
+      if (resumeUrl) {
+        window.open(resumeUrl, '_blank');
+      }
+    } catch (error) {
+      console.error('Failed to download resume:', error);
     }
   };
+
+  const buildCandidateProfilePath = (candidate: TalentPoolCandidate) =>
+    `${basePath}/requisitions/${candidate.previous_job_id}/pipeline/candidate/${candidate.candidate_id}?applicationId=${candidate.application_id}`;
+
+  const buildApplicationPath = (candidate: TalentPoolCandidate) =>
+    `${basePath}/requisitions/${candidate.previous_job_id}/applications/${candidate.application_id}`;
+
+  const buildApplicationsListPath = (candidate: TalentPoolCandidate) =>
+    `${basePath}/requisitions/${candidate.previous_job_id}/applications`;
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-slate-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Talent Pool</h1>
-          <p className="text-gray-600">Shortlisted candidates and interview-ready talent for your organization</p>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Talent Pool</h1>
+          <p className="text-slate-600">Rejected candidates retained for future opportunities</p>
         </div>
 
-        {applications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <Star className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates in talent pool</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              Shortlisted candidates will appear here once they advance through the pipeline.
+        <div className="mb-6 grid grid-cols-3 gap-4">
+          <Card className="p-6">
+            <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
+            <div className="text-sm text-slate-600">Total Candidates</div>
+          </Card>
+          <Card className="p-6">
+            <div className="text-3xl font-bold text-blue-600">{stats.candidates}</div>
+            <div className="text-sm text-slate-600">Active in Pool</div>
+          </Card>
+          <Card className="p-6">
+            <div className="text-3xl font-bold text-green-600">{candidates.filter(c => c.ai_score).length}</div>
+            <div className="text-sm text-slate-600">With AI Scores</div>
+          </Card>
+        </div>
+
+        {candidates.length === 0 ? (
+          <Card className="text-center py-12">
+            <User className="mx-auto h-12 w-12 text-slate-400" />
+            <h3 className="mt-2 text-sm font-medium text-slate-900">No candidates in Talent Pool</h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Rejected candidates will be automatically added here.
             </p>
-          </div>
+          </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {applications.map((application) => (
-              <div
-                key={application.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                      <User className="w-6 h-6 text-indigo-600" />
+          <div className="space-y-4">
+            {candidates.map((candidate) => (
+              <Card key={candidate.id} className="p-6">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                      <User className="w-6 h-6 text-blue-600" />
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">
-                        {application.candidate_first_name} {application.candidate_last_name}
-                      </h3>
-                      <p className="text-sm text-gray-500">{application.candidate_email}</p>
-                    </div>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 border ${getStatusColor(application.status)}`}>
-                    {getStatusIcon(application.status)}
-                    {application.status.replace('_', ' ')}
-                  </span>
-                </div>
 
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Briefcase className="w-4 h-4 text-gray-400" />
-                    <span className="font-medium text-gray-900">{application.requisition_title}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <span className="font-medium">{application.department}</span>
-                    <span>•</span>
-                    <div className="flex items-center">
-                      <MapPin className="w-3 h-3 mr-1" />
-                      {application.location}
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                        <h3 className="font-semibold text-slate-900">{candidate.candidateName}</h3>
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
+                          Current Status: {candidate.status}
+                        </span>
+                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                          Added {new Date(candidate.added_at).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 mb-4">
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <Mail className="w-4 h-4" />
+                          <span>{candidate.email || 'Not specified'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <Phone className="w-4 h-4" />
+                          <span>{candidate.phone || 'Not specified'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <Briefcase className="w-4 h-4" />
+                          <span>{candidate.previousJobTitle || 'Previous job not available'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <Building2 className="w-4 h-4" />
+                          <span>{candidate.previousJobDepartment || 'Department not specified'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <Calendar className="w-4 h-4" />
+                          <span>{candidate.previousJobLocation || 'Location not specified'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-slate-600">
+                          <FileText className="w-4 h-4" />
+                          <span>{candidate.resumeFileName || 'Resume available'}</span>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 mb-4">
+                        {candidate.ai_score != null && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <Award className="w-4 h-4 text-slate-400" />
+                            <span className="text-slate-600">AI Score:</span>
+                            <span className="font-semibold text-blue-600">{Number(candidate.ai_score).toFixed(1)}%</span>
+                          </div>
+                        )}
+                        {candidate.interview_score != null && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <Star className="w-4 h-4 text-slate-400" />
+                            <span className="text-slate-600">Interview Score:</span>
+                            <span className="font-semibold text-green-600">{Number(candidate.interview_score).toFixed(1)}</span>
+                          </div>
+                        )}
+                        {candidate.resumeUrl && (
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Download className="w-4 h-4" />
+                            <span>Resume is available</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {candidate.rejection_reason && (
+                        <div className="text-sm text-slate-600 mb-3">
+                          <span className="font-medium">Rejection Reason:</span> {candidate.rejection_reason}
+                        </div>
+                      )}
+
+                      {candidate.interview_feedback && (
+                        <div className="text-sm text-slate-600 mb-3">
+                          <span className="font-medium">Interview Feedback:</span>
+                          <div className="mt-1 rounded bg-slate-50 p-3 text-xs max-h-24 overflow-y-auto">
+                            {typeof candidate.interview_feedback === 'string'
+                              ? candidate.interview_feedback.substring(0, 240) + (candidate.interview_feedback.length > 240 ? '...' : '')
+                              : JSON.stringify(candidate.interview_feedback).substring(0, 240) + '...'
+                            }
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="text-sm">
-                    <span className="text-gray-500">AI Fitment Score:</span>
-                    <span className="ml-2 font-semibold text-indigo-600">
-                      {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    <div className="flex items-center">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {new Date(application.submitted_at).toLocaleDateString()}
-                    </div>
+                  <div className="flex flex-wrap gap-2 lg:flex-col lg:items-stretch lg:min-w-55">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(buildCandidateProfilePath(candidate))}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View Candidate Profile
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => candidate.resumeUrl && window.open(candidate.resumeUrl, '_blank', 'noopener,noreferrer')}
+                      disabled={!candidate.resumeUrl}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Resume
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadResume(candidate.id)}
+                      disabled={!candidate.resumeUrl}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download Resume
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(buildApplicationPath(candidate))}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Interview Feedback
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(buildApplicationsListPath(candidate))}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Previous Applications
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCandidate(candidate);
+                        setShowRemoveConfirm(true);
+                      }}
+                      className="flex items-center justify-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Remove Candidate from Talent Pool
+                    </Button>
                   </div>
                 </div>
-
-                {application.status === 'shortlisted' && (
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
-                      Schedule Interview
-                    </button>
-                  </div>
-                )}
-              </div>
+              </Card>
             ))}
           </div>
         )}
       </div>
+
+      {/* Remove Confirmation Modal */}
+      {showRemoveConfirm && selectedCandidate && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <Card className="max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-slate-900">Remove from Talent Pool</h3>
+              <button
+                onClick={() => {
+                  setShowRemoveConfirm(false);
+                  setSelectedCandidate(null);
+                }}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-slate-600 mb-6">
+              Are you sure you want to remove <strong>{selectedCandidate.candidateName}</strong> from the Talent Pool? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowRemoveConfirm(false);
+                  setSelectedCandidate(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => handleRemoveCandidate(selectedCandidate.id)}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Remove
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
