@@ -25,9 +25,7 @@ export default function RecentApplications({ applications }: Props) {
 
                             <span
                                 className={`px-3 py-1 rounded-full text-sm ${
-                                    job.status === "interview"
-                                        ? "bg-green-600"
-                                        : job.status === "applied"
+                                    job.status === "applied"
                                         ? "bg-blue-600"
                                         : job.status === "offer"
                                         ? "bg-purple-600"

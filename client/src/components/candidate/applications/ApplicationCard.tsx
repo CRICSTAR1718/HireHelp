@@ -8,7 +8,6 @@ interface Props {
     appliedDate: string;
     status: "Applied" | "Interview" | "Rejected" | "Offer";
     onView?: () => void;
-    onWithdraw?: () => void;
 }
 
 export default function ApplicationCard({
@@ -18,7 +17,6 @@ export default function ApplicationCard({
     appliedDate,
     status,
     onView,
-    onWithdraw,
 }: Props) {
     return (
         <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
@@ -51,7 +49,7 @@ export default function ApplicationCard({
 
             <div className="mt-6 flex gap-3">
 
-                <button 
+                <button
                     onClick={() => {
                         console.log('View button clicked directly in ApplicationCard');
                         if (onView) onView();
@@ -59,16 +57,6 @@ export default function ApplicationCard({
                     className="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105"
                 >
                     View
-                </button>
-
-                <button 
-                    onClick={() => {
-                        console.log('Withdraw button clicked directly in ApplicationCard');
-                        if (onWithdraw) onWithdraw();
-                    }}
-                    className="rounded-lg border border-blue-500/50 bg-blue-600/10 px-4 py-2 text-blue-300 hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300"
-                >
-                    Withdraw
                 </button>
 
             </div>

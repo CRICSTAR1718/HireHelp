@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import {
     BriefcaseBusiness,
-    FileText,
-    CalendarDays,
-    Bell,
 } from "lucide-react";
 
 import StatCard from "./StatCard";
 import RecentApplications from "./RecentApplications";
-import RecommendedJobs from "./RecommendedJobs";
 import ActivityTimeline from "./ActivityTimeline";
-import NotificationsPanel from "./NotificationsPanel";
 
 import Card from "../ui/Card";
 import PageTitle from "../ui/PageTitle";
@@ -25,15 +20,6 @@ export default function Dashboard() {
     const [applications, setApplications] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
-    const resumeStatus =
-        data?.resumeStatus ?? ({
-            uploaded: false,
-            score: 0,
-            fileName: null,
-            lastUpdated: null,
-        } as DashboardData["resumeStatus"]);
-
 
     useEffect(() => {
         Promise.all([
@@ -82,30 +68,9 @@ export default function Dashboard() {
                     icon={BriefcaseBusiness}
                     color="bg-blue-600"
                 />
-
-                <StatCard
-                    title="Resume Score"
-                    value={`${data.stats.resumeScore}%`}
-                    icon={FileText}
-                    color="bg-green-600"
-                />
-
-                <StatCard
-                    title="Interviews"
-                    value={String(data.stats.interviewsScheduled)}
-                    icon={CalendarDays}
-                    color="bg-purple-600"
-                />
-
-                <StatCard
-                    title="Notifications"
-                    value={String(data.stats.unreadNotifications)}
-                    icon={Bell}
-                    color="bg-orange-600"
-                />
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card>
                     <h2 className="mb-5 text-lg font-semibold text-white">
                         Profile Completion
@@ -162,51 +127,11 @@ export default function Dashboard() {
                         <p className="text-slate-400">No upcoming interviews.</p>
                     )}
                 </Card>
-
-                <Card>
-                    <h2 className="mb-5 text-lg font-semibold text-white">
-                        Resume Status
-                    </h2>
-
-                    <div className="space-y-3">
-                        <p className="font-semibold text-green-400">
-                            {resumeStatus.uploaded
-                                ? "✓ Resume Uploaded"
-                                : "No resume uploaded yet"}
-                        </p>
-
-                        {resumeStatus.uploaded && (
-                            <>
-                                <p className="text-slate-400">
-                                    ATS Score:{" "}
-                                    <span className="font-semibold text-white">
-                                        {resumeStatus.score}%
-                                    </span>
-                                </p>
-
-                                <p className="text-slate-400">
-                                    {resumeStatus.fileName}
-                                </p>
-                            </>
-                        )}
-                    </div>
-
-                </Card>
             </div>
 
-            <div className="grid gap-6 xl:grid-cols-3">
-                <div className="space-y-6 xl:col-span-2">
-                    <RecentApplications applications={applications} />
-                    <RecommendedJobs jobs={data.recommendedJobs ?? []} />
-                    <ActivityTimeline activities={data.activityTimeline ?? []} />
-
-
-
-                </div>
-
-                <div>
-                    <NotificationsPanel notifications={data.notifications ?? []} />
-                </div>
+            <div className="space-y-6">
+                <RecentApplications applications={applications} />
+                <ActivityTimeline activities={data.activityTimeline ?? []} />
             </div>
         </div>
     );

@@ -60,10 +60,6 @@ export default function ApplicationTable({ applications }: Props) {
         }
     };
 
-    const handleWithdraw = (application: Application) => {
-        // TODO: Implement withdraw functionality
-        console.log('Withdraw button clicked for application:', application.id);
-    };
 
     const handleCloseModal = () => {
         setSelectedApplication(null);
@@ -89,7 +85,6 @@ export default function ApplicationTable({ applications }: Props) {
                     appliedDate={formatDate(app.appliedDate)}
                     status={formatStatus(app.status) as any}
                     onView={() => handleView(app)}
-                    onWithdraw={() => handleWithdraw(app)}
                 />
             ))}
 

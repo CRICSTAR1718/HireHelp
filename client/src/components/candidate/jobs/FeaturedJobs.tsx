@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
 
 import JobCard from "./JobCard";
 import ApplicationForm from "./ApplicationForm";
@@ -11,7 +10,6 @@ import type { Job, FormResponse } from "../../../types/candidate";
 
 export default function FeaturedJobs() {
     const [jobs, setJobs] = useState<Job[]>([]);
-    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [appliedJobIds, setAppliedJobIds] = useState<Set<string>>(new Set());
@@ -28,20 +26,16 @@ export default function FeaturedJobs() {
     const [selectedJobForDetails, setSelectedJobForDetails] = useState<string | null>(null);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(true);
-            setError(null);
-            getJobs(search || undefined)
-                .then(setJobs)
-                .catch((err) => {
-                    setError(err instanceof Error ? err.message : "Failed to load jobs");
-                    setJobs([]);
-                })
-                .finally(() => setLoading(false));
-        }, 300);
-
-        return () => clearTimeout(timer);
-    }, [search]);
+        setLoading(true);
+        setError(null);
+        getJobs()
+            .then(setJobs)
+            .catch((err) => {
+                setError(err instanceof Error ? err.message : "Failed to load jobs");
+                setJobs([]);
+            })
+            .finally(() => setLoading(false));
+    }, []);
 
     // Check application status for all jobs on load
     useEffect(() => {
@@ -76,7 +70,7 @@ export default function FeaturedJobs() {
         }
     }
 
-    async function handleFormSubmit(responses: FormResponse[], resumeId?: number) {
+    async function handleFormSubmit(responses: FormResponse[]) {
         if (!selectedJobId) return;
 
         setSubmitting(true);
@@ -85,7 +79,6 @@ export default function FeaturedJobs() {
         try {
             await submitApplication({
                 jobId: selectedJobId,
-                resumeId,
                 responses
             });
 
@@ -125,20 +118,6 @@ export default function FeaturedJobs() {
 
     return (
         <div className="space-y-6">
-            <div className="rounded-2xl bg-slate-900/50 border border-slate-800/50 p-5">
-                <div className="flex items-center gap-3">
-                    <Search className="text-slate-400" />
-
-                    <input
-                        type="text"
-                        placeholder="Search jobs..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-transparent outline-none text-white placeholder:text-slate-500"
-                    />
-                </div>
-            </div>
-
             {successMessage && (
                 <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-200">
                     {successMessage}

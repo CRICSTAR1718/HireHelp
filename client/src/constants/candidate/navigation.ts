@@ -1,11 +1,8 @@
 import {
     LayoutDashboard,
     User,
-    FileText,
     Briefcase,
     ClipboardList,
-    Calendar,
-    Bell,
     Settings,
 } from "lucide-react";
 
@@ -21,11 +18,6 @@ export const navigation = [
         path: "/profile",
     },
     {
-        name: "Resume",
-        icon: FileText,
-        path: "/resume",
-    },
-    {
         name: "Jobs",
         icon: Briefcase,
         path: "/jobs",
@@ -34,16 +26,6 @@ export const navigation = [
         name: "Applications",
         icon: ClipboardList,
         path: "/applications",
-    },
-    {
-        name: "Interviews",
-        icon: Calendar,
-        path: "/interviews",
-    },
-    {
-        name: "Notifications",
-        icon: Bell,
-        path: "/notifications",
     },
     {
         name: "Settings",

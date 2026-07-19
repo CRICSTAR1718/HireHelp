@@ -21,7 +21,6 @@ function normalizeProfile(payload: any): Profile {
         skills: Array.isArray(payload?.skills) ? payload.skills : profile.skills ?? [],
         education: Array.isArray(payload?.education) ? payload.education : profile.education ?? [],
         experience: Array.isArray(payload?.experience) ? payload.experience : profile.experience ?? [],
-        resume: payload?.resume ?? profile.resume ?? null,
     };
 }
 

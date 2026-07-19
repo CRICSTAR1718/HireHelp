@@ -32,11 +32,10 @@ export interface Application {
     company?: string;
     location?: string;
     appliedDate: string;
-    status: "applied" | "under_review" | "shortlisted" | "rejected" | "hired" | "interview" | "offer";
+    status: "applied" | "under_review" | "shortlisted" | "rejected" | "hired" | "offer";
     coverLetter?: string;
     fitmentScore?: number;
     recruiter?: string;
-    interviewStatus?: string;
 }
 
 export interface Interview {
@@ -96,60 +95,16 @@ export interface Profile {
     skills: string[];
     education: Education[];
     experience: Experience[];
-    resume?: Resume | null;
-}
-
-export interface Resume {
-    id: string;
-    userId: string;
-    fileName: string;
-    fileUrl: string;
-    uploadedAt: string;
-    score?: number;
-}
-
-export interface ResumeAnalytics {
-    score: number;
-    keywordsMatched: number;
-    keywordsMissing: number;
-    sections: { name: string; score: number }[];
-    suggestions: string[];
 }
 
 export interface DashboardData {
     stats: {
         totalApplications: number;
-        resumeScore: number;
-        interviewsScheduled: number;
-        unreadNotifications: number;
     };
     profileCompletion: number;
     upcomingInterview: Interview | null;
-    resumeStatus: {
-        uploaded: boolean;
-        score: number;
-        fileName: string | null;
-        lastUpdated: string | null;
-    };
     recentApplications: Application[];
-    recommendedJobs: { id: string; title: string; company: string }[];
-
     activityTimeline: string[];
-    notifications: string[];
-
-}
-
-export interface InterviewStats {
-    scheduled: number;
-    completed: number;
-    offers: number;
-}
-
-export interface NotificationStats {
-    total: number;
-    unread: number;
-    interviews: number;
-    applications: number;
 }
 
 export interface FormField {
@@ -189,6 +144,5 @@ export interface FormResponse {
 
 export interface ApplicationSubmission {
     jobId: string;
-    resumeId?: number;
     responses: FormResponse[];
 }

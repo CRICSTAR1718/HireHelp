@@ -26,14 +26,6 @@ export default function NotificationSettings() {
 
                 </label>
 
-                <label className="flex items-center justify-between text-white">
-
-                    Interview Reminders
-
-                    <input type="checkbox" defaultChecked />
-
-                </label>
-
             </div>
 
         </Card>

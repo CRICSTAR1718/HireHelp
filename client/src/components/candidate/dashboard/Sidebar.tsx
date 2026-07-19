@@ -1,11 +1,8 @@
 import {
     LayoutDashboard,
     User,
-    FileText,
     BriefcaseBusiness,
     ClipboardList,
-    CalendarDays,
-    Bell,
     Settings,
     LogOut,
 } from "lucide-react";
@@ -25,11 +22,6 @@ const menu = [
         path: "/candidate/profile",
     },
     {
-        title: "Resume",
-        icon: FileText,
-        path: "/candidate/resume",
-    },
-    {
         title: "Jobs",
         icon: BriefcaseBusiness,
         path: "/candidate/jobs",
@@ -38,16 +30,6 @@ const menu = [
         title: "Applications",
         icon: ClipboardList,
         path: "/candidate/applications",
-    },
-    {
-        title: "Interviews",
-        icon: CalendarDays,
-        path: "/candidate/interviews",
-    },
-    {
-        title: "Notifications",
-        icon: Bell,
-        path: "/candidate/notifications",
     },
     {
         title: "Settings",
