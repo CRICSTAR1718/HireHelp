@@ -81,8 +81,45 @@ export class AssignmentRepository {
     }));
   }
 
-  async findAll() {
-    const assignmentsData = await db.select().from(assignments);
+  async findAll(userId?: string, roleId?: string) {
+    let assignmentsData = await db.select().from(assignments);
+    
+    console.log('[Assignment Repository] findAll called with userId:', userId, 'roleId:', roleId);
+    console.log('[Assignment Repository] Total assignments before filter:', assignmentsData.length);
+    
+    // If user is provided, filter by their job requisitions OR where they are the interviewer
+    if (userId && roleId) {
+      // Get job requisitions where this user is the recruiter
+      const { job_requisitions } = await import('../../../database/schema');
+      const userRequisitions = await db.select({ id: job_requisitions.id })
+        .from(job_requisitions)
+        .where(eq(job_requisitions.recruiter_id, userId));
+      
+      const requisitionIds = userRequisitions.map(r => r.id);
+      console.log('[Assignment Repository] User requisitions:', requisitionIds);
+      
+      // Get interviewer record for this user
+      const interviewer = await db.select({ id: interviewers.id })
+        .from(interviewers)
+        .where(eq(interviewers.userId, userId))
+        .limit(1);
+      
+      const interviewerId = interviewer[0]?.id;
+      console.log('[Assignment Repository] User interviewer ID:', interviewerId);
+      
+      // Filter assignments by requisitionId OR interviewerId
+      if (requisitionIds.length > 0 || interviewerId) {
+        const beforeFilter = assignmentsData.length;
+        assignmentsData = assignmentsData.filter(a => 
+          (a.requisitionId && requisitionIds.includes(a.requisitionId)) ||
+          (interviewerId && a.interviewerId === interviewerId)
+        );
+        console.log('[Assignment Repository] Filtered assignments:', beforeFilter, '->', assignmentsData.length);
+      } else {
+        console.log('[Assignment Repository] No requisitions or interviewer record found, returning empty');
+        return [];
+      }
+    }
     
     // Enrich with candidate, interviewer, and schedule data
     return await Promise.all(assignmentsData.map(async (assignment) => {

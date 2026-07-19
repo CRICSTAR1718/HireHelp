@@ -17,7 +17,15 @@ const navItems = [
   { to: "/recruiter/pipeline", label: "Pipeline", icon: GitPullRequest },
   { to: "/recruiter/candidates", label: "Candidates", icon: Users },
   { to: "/recruiter/talent-pool", label: "Talent Pool", icon: Star },
-  { to: "/recruiter/interviews", label: "Interviews", icon: Calendar },
+  { 
+    to: "/recruiter/interviews", 
+    label: "Interviews", 
+    icon: Calendar,
+    subItems: [
+      { to: "/recruiter/interviews", label: "My Interviews", icon: Calendar },
+      { to: "/recruiter/interviews/all", label: "All Interviews", icon: Users },
+    ]
+  },
   { to: "/recruiter/schedule-interview", label: "Schedule Interview", icon: Plus },
   { to: "/recruiter/analytics", label: "Analytics", icon: BarChart2 },
   { to: "/recruiter/reports", label: "Reports", icon: FileText },

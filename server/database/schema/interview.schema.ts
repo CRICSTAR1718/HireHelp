@@ -29,6 +29,7 @@ export const assignments = pgTable('assignments', {
   interviewId: text('interview_id').notNull(),
   interviewerId: integer('interviewer_id').references(() => interviewers.id),
   candidateId: text('candidate_id').notNull(), // logical ref -> candidate.candidates.id (serial, stored as text)
+  requisitionId: text('requisition_id'), // logical ref -> recruitment.job_requisitions.id (uuid, stored as text)
   role: text('role').notNull(),
   // CHANGED: was notNull() with no default. createAssignmentSchema (Zod)
   // never included a status field, so every create-assignment call path —

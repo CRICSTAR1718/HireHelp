@@ -107,6 +107,7 @@ export const interviewSchedulingApi = {
     interviewerId: number;
     candidateId: string;
     role: string;
+    requisitionId?: string;
     startTime: string;
     endTime: string;
     location?: string;

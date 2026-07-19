@@ -39,6 +39,7 @@ export class SchedulingService {
       interviewerId: data.interviewerId,
       candidateId: data.candidateId,
       role: data.role,
+      requisitionId: data.requisitionId,
       interviewId: data.interviewId || `int-${Date.now()}`, // Generate interview ID if not provided
     });
 

@@ -57,6 +57,13 @@
       "when": 1784496730098,
       "tag": "0007_normal_richard_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784498942494,
+      "tag": "0008_curly_mathemanic",
+      "breakpoints": true
     }
   ]
 }

@@ -5,6 +5,7 @@ export const createAssignmentSchema = z.object({
   interviewerId: z.number(),
   candidateId: z.string(),
   role: z.string(),
+  requisitionId: z.string().optional(),
 });
 
 export const updateAssignmentSchema = z.object({
@@ -22,6 +23,7 @@ export const assignAndScheduleSchema = z.object({
   interviewerId: z.number(),
   candidateId: z.string(),
   role: z.string(),
+  requisitionId: z.string().optional(),
   startTime: z.coerce.date(),
   endTime: z.coerce.date(),
   location: z.string().optional(),

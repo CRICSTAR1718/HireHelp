@@ -23,6 +23,25 @@ export class AssignmentController {
 
   async getAll(req: Request, res: Response) {
     try {
+      // If user is HR, filter by their job requisitions
+      const userRole = req.user?.roleId;
+      const userId = req.user?.userId;
+      
+      if (userRole && userId) {
+        const assignments = await assignmentService.getAllAssignments(userId, userRole);
+        res.json(assignments);
+      } else {
+        // Fallback to all assignments for admin
+        const assignments = await assignmentService.getAllAssignments();
+        res.json(assignments);
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get assignments' });
+    }
+  }
+
+  async getAllUnfiltered(req: Request, res: Response) {
+    try {
       const assignments = await assignmentService.getAllAssignments();
       res.json(assignments);
     } catch (error) {

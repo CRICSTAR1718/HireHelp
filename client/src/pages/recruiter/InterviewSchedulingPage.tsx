@@ -17,6 +17,7 @@ const InterviewSchedulingPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const preselectedCandidateId = searchParams.get('candidateId');
+  const requisitionId = searchParams.get('requisitionId');
   
   const [interviewers, setInterviewers] = useState<Interviewer[]>([]);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
@@ -29,6 +30,7 @@ const InterviewSchedulingPage = () => {
     candidateId: preselectedCandidateId || '',
     interviewerId: '',
     role: '',
+    requisitionId: requisitionId || '',
     interviewType: INTERVIEW_TYPES[0],
     date: '',
     startTime: '',
@@ -86,6 +88,7 @@ const InterviewSchedulingPage = () => {
         interviewerId: parseInt(formData.interviewerId),
         candidateId: formData.candidateId,
         role: formData.interviewType,
+        requisitionId: formData.requisitionId || undefined,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         location: formData.interviewMode === 'in-person' ? formData.location : undefined,

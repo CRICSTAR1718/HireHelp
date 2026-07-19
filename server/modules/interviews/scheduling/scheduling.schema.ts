@@ -27,6 +27,7 @@ export const createInterviewScheduleSchema = z.object({
   interviewerId: z.number(),
   candidateId: z.string(),
   role: z.string(),
+  requisitionId: z.string().optional(),
   interviewId: z.string().optional(), // Optional interview ID
   startTime: z.string().transform((str) => new Date(str)),
   endTime: z.string().transform((str) => new Date(str)),

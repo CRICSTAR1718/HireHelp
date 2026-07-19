@@ -42,8 +42,8 @@ export class AssignmentService {
     return { assignment, schedule: updatedSchedule };
   }
 
-  async getAllAssignments() {
-    return assignmentRepository.findAll();
+  async getAllAssignments(userId?: string, roleId?: string) {
+    return assignmentRepository.findAll(userId, roleId);
   }
 
   async getAssignment(id: number) {

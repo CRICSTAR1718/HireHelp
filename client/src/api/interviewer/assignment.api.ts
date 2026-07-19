@@ -52,6 +52,11 @@ export const assignmentApi = {
     return response.json();
   },
 
+  async getAllAssignmentsUnfiltered(): Promise<Assignment[]> {
+    const response = await apiFetch(`/assignments/all`);
+    return response.json();
+  },
+
   async updateAssignment(id: number, data: Partial<Assignment>): Promise<Assignment> {
     const response = await apiFetch(`/assignments/${id}`, {
       method: 'PUT',

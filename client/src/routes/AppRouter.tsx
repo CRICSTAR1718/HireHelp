@@ -39,6 +39,7 @@ import FormApprovalsPage from "@/pages/recruiter/admin/FormApprovalsPage";
 import RequisitionReviewPage from "@/pages/recruiter/admin/RequisitionReviewPage";
 import RecruiterInterviewSchedulingPage from "@/pages/recruiter/InterviewSchedulingPage";
 import InterviewPanel from "@/pages/recruiter/InterviewPanel";
+import AllInterviews from "@/pages/recruiter/AllInterviews";
 
 // ── Interviewer ──────────────────────────────────────────────────────
 import { InterviewerLayout } from "@/layouts/shared/InterviewerLayout";
@@ -162,6 +163,7 @@ export function AppRouter() {
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<InterviewPanel />} />
+            <Route path="interviews/all" element={<AllInterviews />} />
             <Route path="interviews/schedule" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="schedule-interview" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
@@ -208,6 +210,7 @@ export function AppRouter() {
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
             <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="interviews/all" element={<AllInterviews />} />
             <Route path="schedule-interview" element={<InterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
