@@ -49,6 +49,8 @@ const InterviewSchedulingPage = () => {
         interviewSchedulingApi.getInterviewersByRoles(),
         interviewSchedulingApi.getShortlistedCandidates(),
       ]);
+      console.log('Loaded interviewers:', interviewersData);
+      console.log('Loaded candidates:', candidatesData);
       setInterviewers(interviewersData);
       setCandidates(candidatesData);
     } catch (err) {
@@ -90,7 +92,9 @@ const InterviewSchedulingPage = () => {
         status: 'scheduled',
       };
 
+      console.log('Submitting schedule data:', scheduleData);
       const result = await interviewSchedulingApi.createInterviewSchedule(scheduleData);
+      console.log('Schedule result:', result);
       
       // Auto-send invitation for virtual interviews
       if (formData.interviewMode === 'virtual' && result.schedule) {

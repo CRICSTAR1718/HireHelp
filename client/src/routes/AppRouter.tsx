@@ -38,6 +38,7 @@ import ApplicationDetailPage from "@/pages/recruiter/hr/ApplicationDetailPage";
 import FormApprovalsPage from "@/pages/recruiter/admin/FormApprovalsPage";
 import RequisitionReviewPage from "@/pages/recruiter/admin/RequisitionReviewPage";
 import RecruiterInterviewSchedulingPage from "@/pages/recruiter/InterviewSchedulingPage";
+import InterviewPanel from "@/pages/recruiter/InterviewPanel";
 
 // ── Interviewer ──────────────────────────────────────────────────────
 import { InterviewerLayout } from "@/layouts/shared/InterviewerLayout";
@@ -160,14 +161,13 @@ export function AppRouter() {
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
-            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="interviews" element={<InterviewPanel />} />
             <Route path="interviews/schedule" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="schedule-interview" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />
             <Route path="settings" element={<RecruiterSettings />} />
-            <Route path="*" element={<RecruiterPagesWithUser />} />
           </Route>
         </Route>
 
@@ -220,7 +220,6 @@ export function AppRouter() {
             <Route path="configuration" element={<ConfigurationPage />} />
             <Route path="audit" element={<AuditPage />} />
             <Route path="approvals" element={<AdminApprovalsPage />} />
-            <Route path="schedule-interview" element={<InterviewSchedulingPage />} />
           </Route>
         </Route>
 
