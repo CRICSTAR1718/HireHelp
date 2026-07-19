@@ -1,213 +1,152 @@
 import { useEffect, useState } from "react";
-import {
-    BriefcaseBusiness,
-    FileText,
-    CalendarDays,
-    Bell,
-} from "lucide-react";
-
-import StatCard from "./StatCard";
-import RecentApplications from "./RecentApplications";
-import RecommendedJobs from "./RecommendedJobs";
-import ActivityTimeline from "./ActivityTimeline";
-import NotificationsPanel from "./NotificationsPanel";
-
-import Card from "../ui/Card";
-import PageTitle from "../ui/PageTitle";
-import Loader from "../ui/Loader";
+import { ArrowUpRight, Briefcase, CheckCircle2, FileText, User, Activity } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ContentCard, SectionTitle, StatusBadge, LoadingState } from "../../../components/admin/common";
+import { DashboardCard, StatsCard } from "../../../components/admin/dashboard";
 import { getDashboard } from "../../../api/candidate/dashboard.api";
 import { getApplications } from "../../../api/candidate/applications.api";
 import type { DashboardData } from "../../../types/candidate";
 import type { Application } from "../../../types/candidate";
 
+const quickActions = [
+  { label: "Browse Jobs", href: "/candidate/jobs", icon: Briefcase },
+  { label: "Complete Profile", href: "/candidate/profile", icon: User },
+  { label: "View Applications", href: "/candidate/applications", icon: FileText },
+  { label: "Account Settings", href: "/candidate/settings", icon: Activity },
+];
+
 export default function Dashboard() {
-    const [data, setData] = useState<DashboardData | null>(null);
-    const [applications, setApplications] = useState<Application[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const resumeStatus =
-        data?.resumeStatus ?? ({
-            uploaded: false,
-            score: 0,
-            fileName: null,
-            lastUpdated: null,
-        } as DashboardData["resumeStatus"]);
+  useEffect(() => {
+    Promise.all([
+      getDashboard(),
+      getApplications()
+    ])
+      .then(([dashboardData, appsData]) => {
+        setData(dashboardData);
+        setApplications(appsData);
+      })
+      .catch((err) =>
+        setError(err instanceof Error ? err.message : "Failed to load dashboard")
+      )
+      .finally(() => setLoading(false));
+  }, []);
 
+  if (loading) {
+    return <LoadingState />;
+  }
 
-    useEffect(() => {
-        Promise.all([
-            getDashboard(),
-            getApplications()
-        ])
-            .then(([dashboardData, appsData]) => {
-                setData(dashboardData);
-                setApplications(appsData);
-            })
-            .catch((err) =>
-                setError(err instanceof Error ? err.message : "Failed to load dashboard")
-            )
-            .finally(() => setLoading(false));
-    }, []);
-
-    if (loading) {
-        return <Loader />;
-    }
-
-    if (error || !data) {
-        return (
-            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-200">
-                {error ?? "Failed to load dashboard"}
-            </div>
-        );
-    }
-
-    // Update stats with real application count
-    const updatedStats = {
-        ...data.stats,
-        totalApplications: applications.length
-    };
-
+  if (error || !data) {
     return (
-        <div className="space-y-8">
-            <PageTitle
-                title="Dashboard"
-                subtitle="Welcome back! Here's your hiring activity."
-            />
-
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-                <StatCard
-                    title="Applications"
-                    value={String(updatedStats.totalApplications)}
-                    icon={BriefcaseBusiness}
-                    color="bg-blue-600"
-                />
-
-                <StatCard
-                    title="Resume Score"
-                    value={`${data.stats.resumeScore}%`}
-                    icon={FileText}
-                    color="bg-green-600"
-                />
-
-                <StatCard
-                    title="Interviews"
-                    value={String(data.stats.interviewsScheduled)}
-                    icon={CalendarDays}
-                    color="bg-purple-600"
-                />
-
-                <StatCard
-                    title="Notifications"
-                    value={String(data.stats.unreadNotifications)}
-                    icon={Bell}
-                    color="bg-orange-600"
-                />
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-3">
-                <Card>
-                    <h2 className="mb-5 text-lg font-semibold text-white">
-                        Profile Completion
-                    </h2>
-
-                    <div className="h-3 w-full rounded-full bg-slate-700">
-                        <div
-                            className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
-                            style={{ width: `${data.profileCompletion}%` }}
-                        />
-                    </div>
-
-                    <div className="mt-4 flex items-center justify-between">
-                        <span className="text-slate-400">
-                            Complete your profile to improve visibility.
-                        </span>
-
-                        <span className="font-bold text-blue-400">
-                            {data.profileCompletion}%
-                        </span>
-                    </div>
-                </Card>
-
-                <Card>
-                    <h2 className="mb-5 text-lg font-semibold text-white">
-                        Upcoming Interview
-                    </h2>
-
-                    {data.upcomingInterview ? (
-                        <div className="space-y-3">
-                            <h3 className="text-xl font-semibold text-white">
-                                {data.upcomingInterview.role}
-                            </h3>
-
-                            <p className="text-slate-400">
-                                {data.upcomingInterview.company}
-                            </p>
-
-                            <p className="font-medium text-blue-400">
-                                {data.upcomingInterview.formattedDate ??
-                                    `${data.upcomingInterview.date} • ${data.upcomingInterview.time}`}
-                            </p>
-
-                            <a
-                                href={data.upcomingInterview.meetingLink}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="mt-3 inline-block rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700"
-                            >
-                                Join Meeting
-                            </a>
-                        </div>
-                    ) : (
-                        <p className="text-slate-400">No upcoming interviews.</p>
-                    )}
-                </Card>
-
-                <Card>
-                    <h2 className="mb-5 text-lg font-semibold text-white">
-                        Resume Status
-                    </h2>
-
-                    <div className="space-y-3">
-                        <p className="font-semibold text-green-400">
-                            {resumeStatus.uploaded
-                                ? "✓ Resume Uploaded"
-                                : "No resume uploaded yet"}
-                        </p>
-
-                        {resumeStatus.uploaded && (
-                            <>
-                                <p className="text-slate-400">
-                                    ATS Score:{" "}
-                                    <span className="font-semibold text-white">
-                                        {resumeStatus.score}%
-                                    </span>
-                                </p>
-
-                                <p className="text-slate-400">
-                                    {resumeStatus.fileName}
-                                </p>
-                            </>
-                        )}
-                    </div>
-
-                </Card>
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-3">
-                <div className="space-y-6 xl:col-span-2">
-                    <RecentApplications applications={applications} />
-                    <RecommendedJobs jobs={data.recommendedJobs ?? []} />
-                    <ActivityTimeline activities={data.activityTimeline ?? []} />
-
-
-
-                </div>
-
-                <div>
-                    <NotificationsPanel notifications={data.notifications ?? []} />
-                </div>
-            </div>
-        </div>
+      <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-rose-700">
+        {error ?? "Failed to load dashboard"}
+      </div>
     );
+  }
+
+  const activeApplications = applications.filter(app => app.status === "applied" || app.status === "shortlisted").length;
+  const shortlisted = applications.filter(app => app.status === "shortlisted").length;
+  const offers = applications.filter(app => app.status === "offer").length;
+
+  return (
+    <div className="mx-auto max-w-7xl space-y-8">
+      <section>
+        <SectionTitle
+          description="Overview of your job search activity and application status."
+          title="Dashboard"
+        />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <StatsCard description="Total job applications submitted" icon={Briefcase} label="Applications" tone="blue" value={String(applications.length)} />
+          <StatsCard description="Currently in review" icon={Activity} label="Active Applications" tone="violet" value={String(activeApplications)} />
+          <StatsCard description="Moved to interview stage" icon={CheckCircle2} label="Shortlisted" tone="emerald" value={String(shortlisted)} />
+          <StatsCard description="Job offers received" icon={FileText} label="Offers" tone="amber" value={String(offers)} />
+        </div>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <DashboardCard title="Recent Applications">
+          {applications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 p-5 text-center">
+              <Briefcase className="h-5 w-5 text-slate-400" />
+              <h2 className="mt-4 text-sm font-semibold text-slate-900">No applications yet</h2>
+              <p className="mt-1 max-w-sm text-sm text-slate-500">Start browsing jobs and submit your first application.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {applications.slice(0, 5).map((app) => (
+                <div key={app.id} className="flex items-center justify-between rounded-lg border border-slate-200 p-3 hover:bg-slate-50">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-900">{app.jobTitle}</p>
+                    <p className="text-xs text-slate-500">{app.company}</p>
+                  </div>
+                  <StatusBadge label={app.status} tone={app.status === "shortlisted" ? "success" : app.status === "offer" ? "warning" : "neutral"} />
+                </div>
+              ))}
+            </div>
+          )}
+        </DashboardCard>
+
+        <DashboardCard title="Quick Actions">
+          <div className="space-y-2">
+            {quickActions.map(({ label, href, icon: Icon }) => (
+              <Link
+                className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-3 text-sm font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                key={href}
+                to={href}
+              >
+                <span className="flex items-center gap-3">
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </span>
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            ))}
+          </div>
+        </DashboardCard>
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-2">
+        <ContentCard title="Activity Timeline">
+          {data.activityTimeline && data.activityTimeline.length > 0 ? (
+            <div className="space-y-4">
+              {data.activityTimeline.map((item, index) => (
+                <div className="flex gap-3" key={index}>
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-600" />
+                  <div>
+                    <p className="text-sm font-medium text-slate-700">{item}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 p-5">
+              <p className="text-sm text-slate-500">No recent activity</p>
+            </div>
+          )}
+        </ContentCard>
+
+        <ContentCard title="Profile Completion">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-slate-700">Profile Completion</span>
+              <span className="text-sm font-semibold text-slate-900">{data.profileCompletion}%</span>
+            </div>
+            <div className="h-3 w-full rounded-full bg-slate-200">
+              <div
+                className="h-3 rounded-full bg-blue-600 transition-all"
+                style={{ width: `${data.profileCompletion}%` }}
+              />
+            </div>
+            <p className="text-sm text-slate-500">
+              Complete your profile to improve visibility to recruiters.
+            </p>
+          </div>
+        </ContentCard>
+      </section>
+    </div>
+  );
 }

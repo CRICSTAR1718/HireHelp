@@ -2,11 +2,17 @@ import { eq, desc } from "drizzle-orm";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 import { db } from "../../../database";
-import { auditLogs } from "../../../database/schema";
+import { auditLogs, users } from "../../../database/schema";
 
 // Drizzle-inferred types
 export type AuditLog = InferSelectModel<typeof auditLogs>;
 export type NewAuditLog = InferInsertModel<typeof auditLogs>;
+
+// Extended type with user information
+export type AuditLogWithUser = AuditLog & {
+  userName?: string | null;
+  userEmail?: string | null;
+};
 
 // Append-only: insert only, no update or hard-delete
 
@@ -19,10 +25,21 @@ export const create = async (data: NewAuditLog): Promise<AuditLog> => {
 export const findAll = async (params: {
   limit: number;
   offset: number;
-}): Promise<AuditLog[]> => {
+}): Promise<AuditLogWithUser[]> => {
   return db
-    .select()
+    .select({
+      id: auditLogs.id,
+      userId: auditLogs.userId,
+      action: auditLogs.action,
+      resource: auditLogs.resource,
+      metadata: auditLogs.metadata,
+      ipAddress: auditLogs.ipAddress,
+      createdAt: auditLogs.createdAt,
+      userName: users.firstName,
+      userEmail: users.email,
+    })
     .from(auditLogs)
+    .leftJoin(users, eq(auditLogs.userId, users.id))
     .orderBy(desc(auditLogs.createdAt))
     .limit(params.limit)
     .offset(params.offset);

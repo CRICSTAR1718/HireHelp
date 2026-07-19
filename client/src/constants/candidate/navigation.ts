@@ -1,53 +1,11 @@
-import {
-    LayoutDashboard,
-    User,
-    FileText,
-    Briefcase,
-    ClipboardList,
-    Calendar,
-    Bell,
-    Settings,
-} from "lucide-react";
+import { LayoutDashboard, User, Briefcase, ClipboardList } from "lucide-react";
+import type { NavigationGroup } from "../../types/admin/navigation";
 
-export const navigation = [
-    {
-        name: "Dashboard",
-        icon: LayoutDashboard,
-        path: "/dashboard",
-    },
-    {
-        name: "Profile",
-        icon: User,
-        path: "/profile",
-    },
-    {
-        name: "Resume",
-        icon: FileText,
-        path: "/resume",
-    },
-    {
-        name: "Jobs",
-        icon: Briefcase,
-        path: "/jobs",
-    },
-    {
-        name: "Applications",
-        icon: ClipboardList,
-        path: "/applications",
-    },
-    {
-        name: "Interviews",
-        icon: Calendar,
-        path: "/interviews",
-    },
-    {
-        name: "Notifications",
-        icon: Bell,
-        path: "/notifications",
-    },
-    {
-        name: "Settings",
-        icon: Settings,
-        path: "/settings",
-    },
+export const navigationGroups: NavigationGroup[] = [
+  { label: "Main", items: [
+    { label: "Dashboard", href: "/candidate/dashboard", icon: LayoutDashboard },
+    { label: "Profile", href: "/candidate/profile", icon: User },
+    { label: "Jobs", href: "/candidate/jobs", icon: Briefcase },
+    { label: "Applications", href: "/candidate/applications", icon: ClipboardList },
+  ]},
 ];

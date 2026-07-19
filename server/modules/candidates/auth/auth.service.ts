@@ -125,9 +125,24 @@ async register(data: RegisterInput) {
     if (!candidate) {
       throw new Error('Candidate not found');
     }
-    
+
     const { passwordHash, ...candidateData } = candidate;
     return candidateData;
+  }
+
+  async changePassword(id: number, currentPassword: string, newPassword: string) {
+    const candidate = await authRepository.findById(id);
+    if (!candidate) {
+      throw new Error('Candidate not found');
+    }
+
+    const isValid = await authRepository.verifyPassword(currentPassword, candidate.passwordHash);
+    if (!isValid) {
+      throw new Error('Current password is incorrect');
+    }
+
+    await authRepository.updatePassword(id, newPassword);
+    return { success: true, message: 'Password changed successfully' };
   }
 
   private generateToken(candidate: { id: number; email: string }): string {

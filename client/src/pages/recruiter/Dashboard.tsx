@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardBody } from '../../components/interviewer';
 import { Briefcase, Users, Calendar, TrendingUp, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 export const RecruiterDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalJobs: 0,
     activeCandidates: 0,
@@ -197,7 +199,10 @@ export const RecruiterDashboard: React.FC = () => {
                 <Users className="w-5 h-5 text-green-600" />
                 <span className="font-medium text-green-900">View Candidates</span>
               </button>
-              <button className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+              <button 
+                onClick={() => navigate('/recruiter/schedule-interview')}
+                className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+              >
                 <Calendar className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-900">Schedule Interview</span>
               </button>

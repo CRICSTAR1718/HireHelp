@@ -11,7 +11,4 @@ export const API = {
     APPLICATIONS: "/applications",
     DASHBOARD: "/dashboard",
     PROFILE: "/profile",
-    RESUME: "/resume",
-    NOTIFICATIONS: "/notifications",
-    INTERVIEWS: "/interviews",
 };

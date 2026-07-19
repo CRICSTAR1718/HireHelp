@@ -45,7 +45,7 @@ const InterviewSchedulingPage = () => {
     try {
       setLoading(true);
       const [interviewersData, candidatesData] = await Promise.all([
-        interviewSchedulingApi.getAvailableInterviewers(),
+        interviewSchedulingApi.getInterviewersByRoles(),
         interviewSchedulingApi.getShortlistedCandidates(),
       ]);
       setInterviewers(interviewersData);

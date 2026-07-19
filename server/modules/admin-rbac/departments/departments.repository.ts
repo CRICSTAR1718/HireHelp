@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, like, or } from "drizzle-orm";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 import { db } from "../../../database";
@@ -15,6 +15,18 @@ export const findAll = async (): Promise<Department[]> => {
 export const findById = async (id: string): Promise<Department | undefined> => {
   const results = await db.select().from(departments).where(eq(departments.id, id));
   return results[0];
+};
+
+export const findByName = async (name: string): Promise<Department[]> => {
+  return db
+    .select()
+    .from(departments)
+    .where(or(
+      eq(departments.name, name),
+      like(departments.name, name),
+      like(departments.name, `${name}%`),
+      like(departments.name, `%${name}%`)
+    ));
 };
 
 export const findByParentId = async (parentId: string): Promise<Department[]> => {
@@ -49,4 +61,19 @@ export const deleteById = async (id: string): Promise<Department | undefined> =>
     .where(eq(departments.id, id))
     .returning();
   return results[0];
+};
+
+// Delete departments by name (case-insensitive)
+export const deleteByName = async (name: string): Promise<Department[]> => {
+  const results = await db
+    .update(departments)
+    .set({ isActive: false, updatedAt: new Date() })
+    .where(or(
+      eq(departments.name, name),
+      like(departments.name, name),
+      like(departments.name, `${name}%`),
+      like(departments.name, `%${name}%`)
+    ))
+    .returning();
+  return results;
 };

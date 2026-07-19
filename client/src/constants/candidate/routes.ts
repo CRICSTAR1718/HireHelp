@@ -10,8 +10,6 @@ export const ROUTES = {
 
     JOBS: "/jobs",
 
-    RESUME: "/resume",
-
     SETTINGS: "/settings",
 
 };

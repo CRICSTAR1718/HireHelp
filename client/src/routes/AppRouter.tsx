@@ -7,16 +7,13 @@ import { StaffLoginPage } from "@/pages/shared/StaffLoginPage";
 
 // ── Candidate (existing self-contained router pieces, reused) ─────────
 import AuthLayout from "@/layouts/candidate/AuthLayout";
-import DashboardLayout from "@/layouts/candidate/DashboardLayout";
+import { AppLayout as CandidateAppLayout } from "@/layouts/candidate/AppLayout";
 import CandidateLogin from "@/pages/candidate/Login";
 import CandidateRegister from "@/pages/candidate/Register";
 import CandidateDashboard from "@/pages/candidate/Dashboard";
 import CandidateProfile from "@/pages/candidate/Profile";
-import CandidateResume from "@/pages/candidate/Resume";
 import CandidateJobs from "@/pages/candidate/Jobs";
 import CandidateApplications from "@/pages/candidate/Applications";
-import CandidateInterviews from "@/pages/candidate/Interviews";
-import CandidateNotifications from "@/pages/candidate/Notifications";
 import CandidateSettings from "@/pages/candidate/Settings";
 
 // ── Recruiter / HR ──────────────────────────────────────────────────────
@@ -136,14 +133,11 @@ export function AppRouter() {
             <ProtectedRoute allowedRoles={["candidate"]} loginPath="/candidate" />
           }
         >
-          <Route path="/candidate/*" element={<div className="scope-candidate"><DashboardLayout /></div>}>
+          <Route path="/candidate/*" element={<div className="scope-candidate"><CandidateAppLayout /></div>}>
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<CandidateProfile />} />
-            <Route path="resume" element={<CandidateResume />} />
             <Route path="jobs" element={<CandidateJobs />} />
             <Route path="applications" element={<CandidateApplications />} />
-            <Route path="interviews" element={<CandidateInterviews />} />
-            <Route path="notifications" element={<CandidateNotifications />} />
             <Route path="settings" element={<CandidateSettings />} />
           </Route>
         </Route>
@@ -184,12 +178,14 @@ export function AppRouter() {
             <Route path="interviews" element={<AssignedInterviews />} />
             <Route path="calendar" element={<InterviewerCalendar />} />
             <Route path="schedule" element={<ScheduleInterview />} />
+            <Route path="schedule-interview" element={<Navigate replace to="schedule" />} />
             <Route path="history" element={<InterviewHistory />} />
             <Route path="feedback" element={<FeedbackForm />} />
             <Route path="notifications" element={<InterviewerNotifications />} />
             <Route path="integrations" element={<InterviewerIntegrations />} />
             <Route path="settings" element={<InterviewerSettings />} />
             <Route path="schedule-calendar" element={<ScheduleCalendarView />} />
+            <Route path="*" element={<Navigate replace to="calendar" />} />
           </Route>
         </Route>
 

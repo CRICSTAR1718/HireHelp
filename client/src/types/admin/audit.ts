@@ -1,12 +1,12 @@
 export interface AuditLog {
   id: string;
-  userId: string;
+  userId: string | null;
+  userName?: string | null;
+  userEmail?: string | null;
   action: string;
-  entityType: string;
-  entityId: string;
-  changes: Record<string, unknown> | null;
-  ipAddress: string | null;
-  userAgent: string | null;
+  resource: string;
+  metadata: Record<string, unknown>;
+  ipAddress: string;
   createdAt: string;
 }
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ContentCard, SectionTitle, StatusBadge } from "../../../components/admin/common";
 import { DashboardCard, StatsCard } from "../../../components/admin/dashboard";
 import { useAuth } from "../../../hooks/shared/useAuth";
+import { useDashboardStats } from "../../../hooks/admin/queries";
 
 const activityItems = ["Role policy was updated", "New department request received", "User access review completed"];
 const quickActions = [
@@ -16,33 +17,24 @@ const quickActions = [
 
 export const DashboardPage = () => {
   const { user } = useAuth();
+  const { data: stats, isLoading } = useDashboardStats();
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
       <section>
         <SectionTitle
-          description="Overview placeholders for the management modules that will be connected in later milestones."
+          description="Overview of platform metrics and management modules."
           title="Platform overview"
         />
         <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatsCard description="Across the organization" icon={Users} label="Total Users" tone="blue" value="—" />
-          <StatsCard description="Configured access roles" icon={UsersRound} label="Total Roles" tone="violet" value="—" />
-          <StatsCard description="Active organizational units" icon={Building2} label="Departments" tone="emerald" value="—" />
-          <StatsCard description="Awaiting a decision" icon={ClipboardCheck} label="Pending Approvals" tone="amber" value="—" />
+          <StatsCard description="Across the organization" icon={Users} label="Total Users" tone="blue" value={isLoading ? "—" : stats?.totalUsers?.toString() || "0"} />
+          <StatsCard description="Configured access roles" icon={UsersRound} label="Total Roles" tone="violet" value={isLoading ? "—" : stats?.totalRoles?.toString() || "0"} />
+          <StatsCard description="Active organizational units" icon={Building2} label="Departments" tone="emerald" value={isLoading ? "—" : stats?.totalDepartments?.toString() || "0"} />
+          <StatsCard description="Awaiting a decision" icon={ClipboardCheck} label="Pending Approvals" tone="amber" value={isLoading ? "—" : stats?.pendingApprovals?.toString() || "0"} />
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
-        <DashboardCard title="System Health">
-          <div className="flex items-center gap-3 rounded-lg bg-emerald-50 p-4">
-            <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-            <div>
-              <p className="text-sm font-medium text-emerald-800">Service status</p>
-              <p className="text-sm text-emerald-700">Health indicators will appear here.</p>
-            </div>
-          </div>
-        </DashboardCard>
-
+      <section className="grid gap-6 xl:grid-cols-2">
         <DashboardCard title="Recent Activity">
           <div className="space-y-4">
             {activityItems.map((item, index) => (

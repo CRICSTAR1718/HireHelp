@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-
-import PageTitle from "../../../components/candidate/ui/PageTitle";
+import { SectionTitle, LoadingState } from "../../../components/admin/common";
 import ProfileCard from "../../../components/candidate/profile/ProfileCard";
 import SkillsCard from "../../../components/candidate/profile/SkillsCard";
 import EducationCard from "../../../components/candidate/profile/EducationCard";
 import ExperienceCard from "../../../components/candidate/profile/ExperienceCard";
 import EditProfileModal from "../../../components/candidate/profile/EditProfileModal";
-import Loader from "../../../components/candidate/ui/Loader";
 import { getProfile } from "../../../api/candidate/profile.api";
 import type { Profile } from "../../../types/candidate";
 
@@ -41,22 +39,22 @@ export default function Profile() {
     };
 
     if (loading) {
-        return <Loader />;
+        return <LoadingState />;
     }
 
     if (error || !profile) {
         return (
-            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-200">
+            <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-rose-700">
                 {error ?? "Profile not found"}
             </div>
         );
     }
 
     return (
-        <div className="space-y-8">
-            <PageTitle
+        <div className="mx-auto max-w-7xl space-y-8">
+            <SectionTitle
+                description="Manage your professional profile."
                 title="Profile"
-                subtitle="Manage your professional profile."
             />
 
             <div className="grid gap-6 lg:grid-cols-3">

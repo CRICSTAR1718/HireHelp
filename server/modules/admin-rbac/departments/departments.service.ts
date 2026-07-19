@@ -2,6 +2,7 @@ import { AppError } from "../../../common/middleware/error-handler";
 import {
   create,
   deleteById,
+  deleteByName,
   findAll,
   findById,
   update,
@@ -136,4 +137,17 @@ export const deleteDepartment = async (id: string): Promise<{ message: string }>
   }
 
   return { message: "Department deleted successfully" };
+};
+
+export const deleteDepartmentsByName = async (name: string): Promise<{ message: string; count: number }> => {
+  const departments = await deleteByName(name);
+  
+  if (departments.length === 0) {
+    throw new AppError("No departments found with the specified name", 404);
+  }
+
+  return { 
+    message: `Successfully deleted ${departments.length} department(s) with name containing "${name}"`,
+    count: departments.length 
+  };
 };

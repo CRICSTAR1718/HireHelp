@@ -1,4 +1,4 @@
-import { Bell, ClipboardCheck, FileText, LayoutDashboard, Settings, ShieldCheck, SlidersHorizontal, Users, UsersRound, Building2, Briefcase, Plus, GitPullRequest, User, Star, Calendar, BarChart2, Bell as BellIcon, Clock } from "lucide-react";
+import { ClipboardCheck, FileText, LayoutDashboard, ShieldCheck, Users, UsersRound, Building2, Briefcase, Plus, GitPullRequest, User, Star, Calendar, Clock } from "lucide-react";
 import type { NavigationGroup } from "../../types/admin/navigation";
 
 export const navigationGroups: NavigationGroup[] = [
@@ -16,14 +16,6 @@ export const navigationGroups: NavigationGroup[] = [
     { label: "Requisition Review", href: "/admin/requisitions/review", icon: ClipboardCheck },
     { label: "Form Approvals", href: "/admin/forms/approvals", icon: FileText },
   ]},
-  { label: "Analytics", items: [
-    { label: "Analytics", href: "/admin/analytics", icon: BarChart2 },
-    { label: "Reports", href: "/admin/reports", icon: FileText },
-  ]},
-  { label: "Management", items: [{ label: "Users", href: "/admin/users", icon: Users }, { label: "Roles", href: "/admin/roles", icon: UsersRound }, { label: "Permissions", href: "/admin/permissions", icon: ShieldCheck }, { label: "Departments", href: "/admin/departments", icon: Building2 }] },
-  { label: "System", items: [{ label: "Configuration", href: "/admin/configuration", icon: SlidersHorizontal }, { label: "Audit Logs", href: "/admin/audit", icon: FileText }] },
-  { label: "Notifications", items: [{ label: "Notifications", href: "/admin/notifications", icon: BellIcon }] },
-  { label: "Settings", items: [{ label: "Settings", href: "/admin/settings", icon: Settings }] },
+  { label: "Management", items: [{ label: "Users", href: "/admin/users", icon: Users }, { label: "Roles", href: "/admin/roles", icon: UsersRound }, { label: "Departments", href: "/admin/departments", icon: Building2 }] },
+  { label: "System", items: [{ label: "Audit Logs", href: "/admin/audit", icon: FileText }] },
 ];
-
-export const headerIcons = { Bell, Settings };

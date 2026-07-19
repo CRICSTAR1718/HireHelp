@@ -4,6 +4,8 @@ import Input from "./Input";
 
 interface Props {
     placeholder?: string;
+    value?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function PasswordInput(props: Props) {

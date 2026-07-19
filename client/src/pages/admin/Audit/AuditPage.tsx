@@ -14,8 +14,8 @@ export const AuditPage = () => {
   const columns: Column<AuditLog>[] = [
     {
       key: "user",
-      header: "User ID",
-      cell: (row) => row.userId,
+      header: "User",
+      cell: (row) => row.userName ? `${row.userName} (${row.userEmail || row.userId})` : row.userId || "System",
     },
     {
       key: "action",
@@ -23,14 +23,9 @@ export const AuditPage = () => {
       cell: (row) => row.action,
     },
     {
-      key: "entity",
-      header: "Entity",
-      cell: (row) => `${row.entityType}:${row.entityId}`,
-    },
-    {
-      key: "ipAddress",
-      header: "IP Address",
-      cell: (row) => row.ipAddress || "—",
+      key: "resource",
+      header: "Resource",
+      cell: (row) => row.resource,
     },
     {
       key: "timestamp",
