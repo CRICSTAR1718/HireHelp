@@ -34,6 +34,10 @@ export const offerStatusEnum = pgEnum('offer_status', [
   'draft', 'sent', 'accepted', 'declined', 'expired'
 ])
 
+export const talentPoolStatusEnum = pgEnum('talent_pool_status', [
+  'active', 'removed'
+])
+
 // ─── Job Requisitions ──────────────────────────────────────────────────────
 export const job_requisitions = pgTable('job_requisitions', {
   id:                      uuid('id').primaryKey().defaultRandom(),
@@ -259,6 +263,40 @@ export const offers = pgTable('offers', {
   offer_letter:    text('offer_letter'),
   status:          offerStatusEnum('status').default('draft'),
   expires_at:      timestamp('expires_at'),
+  created_at:      timestamp('created_at').defaultNow(),
+  updated_at:      timestamp('updated_at').defaultNow()
+})
+
+// ─── Talent Pool ─────────────────────────────────────────────────────────────
+export const talent_pool = pgTable('talent_pool', {
+  id:                  uuid('id').primaryKey().defaultRandom(),
+  candidate_id:        uuid('candidate_id').notNull(), // logical ref -> candidate module
+  resume_id:           integer('resume_id'), // logical ref -> candidate.resumes.id
+  previous_job_id:     uuid('previous_job_id').notNull().references(() => job_requisitions.id),
+  application_id:      uuid('application_id').notNull().references(() => applications.id, { onDelete: 'cascade' }),
+  interview_feedback:  text('interview_feedback'),
+  interview_score:     numeric('interview_score', { precision: 5, scale: 2 }),
+  ai_score:            numeric('ai_score', { precision: 5, scale: 2 }),
+  rejection_reason:    text('rejection_reason'),
+  status:              talentPoolStatusEnum('status').notNull().default('active'),
+  added_at:            timestamp('added_at').notNull().defaultNow(),
+  created_at:          timestamp('created_at').defaultNow(),
+  updated_at:          timestamp('updated_at').defaultNow()
+})
+
+// ─── Notification History ─────────────────────────────────────────────────────
+export const notification_history = pgTable('notification_history', {
+  id:              uuid('id').primaryKey().defaultRandom(),
+  candidate_id:    uuid('candidate_id').notNull(), // logical ref -> candidate module
+  job_id:          uuid('job_id').notNull().references(() => job_requisitions.id, { onDelete: 'cascade' }),
+  email_status:    varchar('email_status', { length: 50 }).notNull(), // sent, failed, bounced
+  sent_at:         timestamp('sent_at').notNull().defaultNow(),
+  opened:          boolean('opened').default(false),
+  opened_at:       timestamp('opened_at'),
+  clicked:         boolean('clicked').default(false),
+  clicked_at:      timestamp('clicked_at'),
+  applied:         boolean('applied').default(false),
+  applied_at:      timestamp('applied_at'),
   created_at:      timestamp('created_at').defaultNow(),
   updated_at:      timestamp('updated_at').defaultNow()
 })

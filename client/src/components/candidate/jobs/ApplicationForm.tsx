@@ -84,7 +84,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
         // Find resume file if any
         const resumeField = fields.find(f => f.field_type === 'file');
         const resumeValue = resumeField ? values.find(v => v.field_id === resumeField.id)?.value : null;
-        const resumeFile = resumeValue instanceof File ? resumeValue : null;
+        const resumeFile = resumeValue instanceof File ? resumeValue : undefined;
 
         onSubmit(responses, resumeFile);
     };

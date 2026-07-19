@@ -54,7 +54,15 @@ export async function rejectEntry(requisitionId: string, entryId: string, notes?
     throw Object.assign(new Error('Entry does not belong to this requisition'), { statusCode: 403 })
   }
 
-  return repo.setEntryStatus(entryId, 'rejected', notes)
+  const updated = await repo.setEntryStatus(entryId, 'rejected', notes)
+
+  await publishEvent('CandidateRejected', {
+    applicationId: entry.application_id,
+    candidateId: entry.candidate_id,
+    reason: notes,
+  })
+
+  return updated
 }
 
 export async function updateNotes(entryId: string, notes: string) {

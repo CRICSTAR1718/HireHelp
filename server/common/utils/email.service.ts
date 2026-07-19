@@ -58,6 +58,16 @@ interface RejectionEmailParams {
   loginUrl: string;
 }
 
+interface TalentPoolNotificationParams {
+  to: string;
+  candidateName: string;
+  jobTitle: string;
+  department: string;
+  location: string;
+  employmentType: string;
+  jobUrl: string;
+}
+
 /**
  * Generic email sending function using AWS SES
  * @param params - Email parameters (to, subject, text, html)
@@ -983,6 +993,113 @@ HireHelp Team
   }
 }
 
+interface InterviewScheduledEmailParams {
+  to: string;
+  candidateName: string;
+  jobTitle: string;
+  interviewerName: string;
+  startTime: Date;
+  endTime: Date;
+  meetingLink?: string;
+  location?: string;
+}
+
+function generateInterviewScheduledEmailTemplate(params: InterviewScheduledEmailParams): string {
+  const { candidateName, jobTitle, interviewerName, startTime, endTime, meetingLink, location } = params;
+  const dateStr = startTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const timeStr = `${startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+
+  return `
+<!DOCTYPE html>
+<html>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f7; margin: 0; padding: 0;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f7; padding: 40px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+          <tr>
+            <td style="background-color: #4f46e5; padding: 24px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Interview Scheduled</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 32px;">
+              <p style="font-size: 16px; color: #333;">Hi ${candidateName},</p>
+              <p style="font-size: 15px; color: #555; line-height: 1.6;">
+                Your interview for the <strong>${jobTitle}</strong> position has been scheduled. Details below:
+              </p>
+              <table width="100%" cellpadding="8" cellspacing="0" style="background-color: #f9fafb; border-radius: 6px; margin: 20px 0;">
+                <tr><td style="color: #666; width: 130px;">Date</td><td style="color: #111; font-weight: 600;">${dateStr}</td></tr>
+                <tr><td style="color: #666;">Time</td><td style="color: #111; font-weight: 600;">${timeStr}</td></tr>
+                <tr><td style="color: #666;">Interviewer</td><td style="color: #111; font-weight: 600;">${interviewerName}</td></tr>
+                ${location ? `<tr><td style="color: #666;">Location</td><td style="color: #111; font-weight: 600;">${location}</td></tr>` : ''}
+              </table>
+              ${meetingLink ? `
+              <div style="text-align: center; margin: 28px 0;">
+                <a href="${meetingLink}" style="background-color: #4f46e5; color: #ffffff; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px;">Join Google Meet</a>
+              </div>
+              <p style="font-size: 13px; color: #888; text-align: center; word-break: break-all;">${meetingLink}</p>
+              ` : ''}
+              <p style="font-size: 14px; color: #555; line-height: 1.6;">
+                A calendar invite has also been sent to this email address. Please add it to your calendar so you don't miss it.
+              </p>
+              <p style="font-size: 15px; color: #333; margin-top: 24px;">Best of luck,<br/>HireHelp Team</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #f4f4f7; padding: 16px; text-align: center; font-size: 12px; color: #999;">
+              © 2024 HireHelp. All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Sent to the CANDIDATE when an interview is scheduled (either via the
+ * "assign interviewer" flow or the direct "Schedule Interview" page). Both
+ * flows should call this after schedulingService.sendInvitation() succeeds.
+ */
+export async function sendInterviewScheduledEmail(params: InterviewScheduledEmailParams): Promise<void> {
+  const { to, candidateName, jobTitle, interviewerName, startTime, endTime, meetingLink } = params;
+
+  const subject = `Interview Scheduled: ${jobTitle}`;
+  const dateStr = startTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const timeStr = `${startTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${endTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+
+  const text = `
+Dear ${candidateName},
+
+Your interview for the ${jobTitle} position has been scheduled.
+
+Date: ${dateStr}
+Time: ${timeStr}
+Interviewer: ${interviewerName}
+${meetingLink ? `Google Meet link: ${meetingLink}` : ''}
+
+A calendar invite has also been sent to this email address.
+
+Best of luck,
+HireHelp Team
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generateInterviewScheduledEmailTemplate(params);
+
+  try {
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Interview-scheduled email sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send interview-scheduled email to ${to}:`, error);
+  }
+}
+
 /**
  * Legacy function for backward compatibility
  * @deprecated Use sendEmail() instead
@@ -994,4 +1111,190 @@ export async function sendMail(
   html?: string
 ): Promise<void> {
   await sendEmail({ to, subject, text, html });
+}
+
+/**
+ * Generate HTML template for Talent Pool job notification email
+ */
+function generateTalentPoolNotificationTemplate(params: TalentPoolNotificationParams): string {
+  const { candidateName, jobTitle, department, location, employmentType, jobUrl } = params;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Job Opportunity - HireHelp</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .job-details {
+      background-color: #f1f5f9;
+      border-left: 4px solid #3b82f6;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .job-detail-item {
+      margin: 10px 0;
+      color: #475569;
+    }
+    .job-detail-item strong {
+      color: #1e293b;
+    }
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: #ffffff;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+    }
+    .footer {
+      background-color: #f8fafc;
+      padding: 20px 30px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Job Opportunity at HireHelp</h1>
+    </div>
+    
+    <div class="content">
+      <p style="font-size: 18px; color: #1e293b; margin-bottom: 20px;">
+        Hello <strong>${candidateName}</strong>,
+      </p>
+      
+      <p style="color: #475569; margin-bottom: 20px;">
+        We hope you're doing well.
+      </p>
+
+      <p style="color: #475569; margin-bottom: 20px;">
+        A new job opportunity has been published on HireHelp.
+      </p>
+
+      <p style="color: #475569; margin-bottom: 20px;">
+        We'd love to invite you to explore the opportunity and apply if you're interested.
+      </p>
+      
+      <div class="job-details">
+        <h3 style="margin: 0 0 15px 0; color: #1e293b; font-size: 18px;">Job Details</h3>
+        <div class="job-detail-item">
+          <strong>Job Title:</strong> ${jobTitle}
+        </div>
+        <div class="job-detail-item">
+          <strong>Department:</strong> ${department || 'Not specified'}
+        </div>
+        <div class="job-detail-item">
+          <strong>Location:</strong> ${location || 'Not specified'}
+        </div>
+        <div class="job-detail-item">
+          <strong>Employment Type:</strong> ${employmentType || 'Not specified'}
+        </div>
+      </div>
+      
+      <p style="text-align: center; margin: 20px 0;">
+        <a href="${jobUrl}" class="button">View Job</a>
+      </p>
+      
+      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
+        Thank you,<br>
+        HireHelp Recruitment Team
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>© 2024 HireHelp. All rights reserved.</p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+}
+
+/**
+ * Send Talent Pool job notification email
+ * @param params - Talent Pool notification parameters
+ * @returns Promise that resolves when email is sent (or fails gracefully)
+ */
+export async function sendTalentPoolNotification(params: TalentPoolNotificationParams): Promise<void> {
+  console.log(`📨 sendTalentPoolNotification called with params:`, JSON.stringify(params, null, 2))
+  const { to, candidateName, jobTitle, department, location, employmentType, jobUrl } = params;
+
+  const subject = 'New Job Opportunity at HireHelp';
+  const text = `
+Hello ${candidateName},
+
+We hope you're doing well.
+
+A new job opportunity has been published on HireHelp.
+
+We'd love to invite you to explore the opportunity and apply if you're interested.
+
+Job Details:
+• Job Title: ${jobTitle}
+• Department: ${department || 'Not specified'}
+• Location: ${location || 'Not specified'}
+• Employment Type: ${employmentType || 'Not specified'}
+
+Click the link below to view the complete job description and apply:
+${jobUrl}
+
+Thank you,
+HireHelp Recruitment Team
+
+© 2024 HireHelp. All rights reserved.
+  `;
+
+  const html = generateTalentPoolNotificationTemplate(params);
+
+  try {
+    console.log(`📤 About to call sendEmail for Talent Pool notification`)
+    await sendEmail({ to, subject, text, html });
+    console.log(`✅ Talent Pool notification sent successfully to ${to}`);
+  } catch (error) {
+    console.error(`❌ Failed to send Talent Pool notification to ${to}:`, error);
+    throw error;
+  }
 }

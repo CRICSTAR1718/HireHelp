@@ -73,6 +73,12 @@ const envSchema = z.object({
   GOOGLE_REDIRECT_URI: z.string().optional(),
   GOOGLE_REFRESH_TOKEN: z.string().optional(),
   GOOGLE_CALENDAR_ID: z.string().optional(),
+
+  // Cal.com integration for interview scheduling (replaces per-interviewer
+  // Google OAuth -- each interviewer connects their own Google Calendar
+  // inside Cal.com instead, so we never touch Google credentials directly)
+  CAL_API_KEY: z.string().optional(),
+  CAL_API_VERSION: z.string().default('2024-08-13'),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
@@ -116,6 +122,8 @@ export const env = parsedEnv.success
     GOOGLE_REDIRECT_URI: undefined,
     GOOGLE_REFRESH_TOKEN: undefined,
     GOOGLE_CALENDAR_ID: undefined,
+    CAL_API_KEY: undefined,
+    CAL_API_VERSION: '2024-08-13',
   } satisfies z.infer<typeof envSchema>);
 
 export type Env = typeof env;

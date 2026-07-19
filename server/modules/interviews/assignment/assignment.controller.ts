@@ -11,6 +11,16 @@ export class AssignmentController {
     }
   }
 
+  async assignAndSchedule(req: Request, res: Response) {
+    try {
+      const result = await assignmentService.assignAndSchedule(req.body);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error('[Assignment Controller] assignAndSchedule failed:', error);
+      res.status(500).json({ error: 'Failed to assign interviewer and schedule interview' });
+    }
+  }
+
   async getAll(req: Request, res: Response) {
     try {
       const assignments = await assignmentService.getAllAssignments();

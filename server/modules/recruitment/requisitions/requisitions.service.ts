@@ -1,5 +1,6 @@
 import * as repo from './requisitions.repository'
 import { publishEvent } from '../../../events/bus'
+import { notifyTalentPool } from '../talent-pool/talent-pool.service'
 
 type ReqStatus = 'draft' | 'submitted' | 'under_review' | 'needs_changes' | 'approved' | 'rejected' | 'published' | 'closed'
 
@@ -187,6 +188,12 @@ export async function publish(id: string, userId: string) {
     title: row.title,
     department: row.department,
     publishedAt: row.published_at
+  })
+
+  // Trigger Talent Pool notification workflow asynchronously
+  notifyTalentPool(id).catch(error => {
+    console.error('Failed to notify Talent Pool:', error)
+    // Don't throw - notification failure should not prevent job publishing
   })
 
   return row

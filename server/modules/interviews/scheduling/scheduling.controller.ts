@@ -68,15 +68,16 @@ export class SchedulingController {
   async sendInvitation(req: Request, res: Response) {
     try {
       const scheduleId = parseInt(req.params.id);
-      const { interviewerId, candidateEmail, candidateName, interviewerEmail, interviewerName } = req.body;
-      
+      const { interviewerId, candidateEmail, candidateName, interviewerEmail, interviewerName, jobTitle } = req.body;
+
       const updatedSchedule = await schedulingService.sendInvitation(
         scheduleId,
         interviewerId,
         candidateEmail,
         candidateName,
         interviewerEmail,
-        interviewerName
+        interviewerName,
+        jobTitle
       );
       
       res.json(updatedSchedule);
