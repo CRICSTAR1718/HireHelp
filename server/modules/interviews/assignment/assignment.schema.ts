@@ -9,7 +9,7 @@ export const createAssignmentSchema = z.object({
 
 export const updateAssignmentSchema = z.object({
   status: z.string().optional(),
-  completedAt: z.date().optional(),
+  completedAt: z.coerce.date().optional(),
   cancellationReason: z.string().optional(),
   feedback: z.string().optional(),
 });

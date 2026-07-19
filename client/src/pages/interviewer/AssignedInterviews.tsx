@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Button } from "../../components/interviewer";
 import { assignmentApi, type Assignment } from "../../api/interviewer";
-import { Video, Eye, X, Check, Clock, AlertCircle } from 'lucide-react';
+import { Video, Eye, X, Check, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 
 export const AssignedInterviews: React.FC = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -20,8 +20,7 @@ export const AssignedInterviews: React.FC = () => {
 
   const loadAssignments = async () => {
     try {
-      // Temporarily use interviewer ID 7 for testing
-      const data = await assignmentApi.getInterviewerAssignments(7);
+      const data = await assignmentApi.getInterviewerAssignments();
       // Ensure data is an array
       setAssignments(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -184,6 +183,18 @@ export const AssignedInterviews: React.FC = () => {
                       Cancel Interview
                     </Button>
                   </>
+                )}
+                {assignment.status === 'completed' && (
+                  <div className="w-full bg-green-100 border border-green-200 rounded-lg p-3 text-center">
+                    <CheckCircle className="w-5 h-5 mx-auto text-green-600 mb-1" />
+                    <p className="text-sm font-medium text-green-800">Interview Completed</p>
+                  </div>
+                )}
+                {assignment.status === 'cancelled' && (
+                  <div className="w-full bg-red-100 border border-red-200 rounded-lg p-3 text-center">
+                    <XCircle className="w-5 h-5 mx-auto text-red-600 mb-1" />
+                    <p className="text-sm font-medium text-red-800">Interview Cancelled</p>
+                  </div>
                 )}
                 {assignment.schedule?.meetingLink && (
                   <Button variant="outline" className="w-full bg-blue-50 border-blue-200 text-blue-700">

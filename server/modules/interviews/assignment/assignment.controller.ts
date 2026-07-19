@@ -48,12 +48,14 @@ export class AssignmentController {
       // Get interviewer ID from authenticated user or route param
       const interviewerId = req.params.interviewerId 
         ? parseInt(req.params.interviewerId)
-        : await this.getInterviewerIdFromUser(req.user?.id);
+        : await this.getInterviewerIdFromUser(req.user?.userId);
       
       const assignments = await assignmentService.getInterviewerAssignments(interviewerId);
       res.json(assignments);
     } catch (error) {
       console.error('[Assignment Controller] getByInterviewer failed:', error);
+      console.error('[Assignment Controller] User ID:', req.user?.userId);
+      console.error('[Assignment Controller] Route param interviewerId:', req.params.interviewerId);
       // Return empty array if interviewer not found or other error
       res.json([]);
     }
@@ -64,9 +66,13 @@ export class AssignmentController {
       throw new Error('User not authenticated');
     }
     
+    console.log('[Assignment Controller] Looking up interviewer for user ID:', userId);
+    
     // Get interviewer ID from users table
     const { interviewerRepository } = await import('../interviewer/interviewer.repository');
     const interviewer = await interviewerRepository.findByUserId(userId);
+    
+    console.log('[Assignment Controller] Found interviewer:', interviewer);
     
     if (!interviewer) {
       throw new Error('Interviewer not found for user');
