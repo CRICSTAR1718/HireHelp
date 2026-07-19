@@ -11,6 +11,15 @@ export class AssignmentController {
     }
   }
 
+  async getAll(req: Request, res: Response) {
+    try {
+      const assignments = await assignmentService.getAllAssignments();
+      res.json(assignments);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get assignments' });
+    }
+  }
+
   async getById(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);
