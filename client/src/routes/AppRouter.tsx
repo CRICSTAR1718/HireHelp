@@ -52,7 +52,7 @@ import InterviewerSettings from "@/pages/interviewer/Settings";
 import InterviewerNotifications from "@/pages/interviewer/Notifications";
 import InterviewerCalendar from "@/pages/interviewer/InterviewerCalendar";
 import ScheduleInterview from "@/pages/interviewer/ScheduleInterview";
-import CalcomSetup from "@/pages/interviewer/CalcomSetup";
+import InterviewerCalcomSetup from "@/pages/interviewer/CalcomSetup";
 
 // ── Admin ──────────────────────────────────────────────────────
 import { AppLayout as AdminAppLayout } from "@/layouts/admin/AppLayout";
@@ -68,6 +68,7 @@ import { DepartmentsPage } from "@/pages/admin/Departments/DepartmentsPage";
 import { ForbiddenPage } from "@/pages/admin/Forbidden/ForbiddenPage";
 import { NotFoundPage } from "@/pages/admin/NotFound/NotFoundPage";
 import { PermissionsPage } from "@/pages/admin/Permissions/PermissionsPage";
+import AdminCalcomSetup from "@/pages/admin/CalcomSetup";
 import { RolesPage } from "@/pages/admin/Roles/RolesPage";
 import { UsersPage } from "@/pages/admin/Users/UsersPage";
 import InterviewSchedulingPage from "@/pages/admin/InterviewSchedulingPage";
@@ -166,6 +167,8 @@ export function AppRouter() {
             <Route path="interviews/all" element={<AllInterviews />} />
             <Route path="interviews/schedule" element={<RecruiterInterviewSchedulingPage />} />
             <Route path="schedule-interview" element={<RecruiterInterviewSchedulingPage />} />
+              <Route path="integrations" element={<InterviewerCalcomSetup />} />
+            <Route path="calcom-setup" element={<Navigate replace to="integrations" />} />
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />
@@ -184,7 +187,7 @@ export function AppRouter() {
             <Route path="history" element={<InterviewHistory />} />
             <Route path="feedback" element={<FeedbackForm />} />
             <Route path="notifications" element={<InterviewerNotifications />} />
-            <Route path="integrations" element={<CalcomSetup />} />
+            <Route path="integrations" element={<InterviewerCalcomSetup />} />
             <Route path="settings" element={<InterviewerSettings />} />
             <Route path="schedule-calendar" element={<ScheduleCalendarView />} />
             <Route path="*" element={<Navigate replace to="calendar" />} />
@@ -223,6 +226,8 @@ export function AppRouter() {
             <Route path="configuration" element={<ConfigurationPage />} />
             <Route path="audit" element={<AuditPage />} />
             <Route path="approvals" element={<AdminApprovalsPage />} />
+        <Route path="integrations" element={<AdminCalcomSetup />} />
+        <Route path="calcom-setup" element={<Navigate replace to="integrations" />} />
           </Route>
         </Route>
 

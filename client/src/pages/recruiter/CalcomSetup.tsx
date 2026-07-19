@@ -47,8 +47,7 @@ export default function CalcomSetup() {
     if (!interviewerId) return
     
     try {
-      const rawIntegrations = await calendarApi.getInterviewerIntegrations(interviewerId)
-      const integrations = Array.isArray(rawIntegrations) ? rawIntegrations : [rawIntegrations]
+      const integrations = await calendarApi.getInterviewerIntegrations(interviewerId)
       const calcomIntegration = integrations.find(i => i.provider === 'calcom')
       setIntegration(calcomIntegration || null)
       

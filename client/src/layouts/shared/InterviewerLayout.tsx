@@ -6,12 +6,7 @@ import { Calendar, LogOut, LayoutDashboard, FileText, Settings, Home, Clock, Bel
 const navItems = [
   { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
   { to: "/interviewer/interviews", label: "My Interviews", icon: Calendar },
-  { to: "/interviewer/calendar", label: "Calendar", icon: Calendar },
-  { to: "/interviewer/history", label: "History", icon: Clock },
-  { to: "/interviewer/feedback", label: "Feedback", icon: FileText },
-  { to: "/interviewer/notifications", label: "Notifications", icon: Bell },
   { to: "/interviewer/integrations", label: "Cal.com Setup", icon: Link },
-  { to: "/interviewer/settings", label: "Settings", icon: Settings },
 ];
 
 export const InterviewerLayout = () => {
@@ -83,19 +78,7 @@ export const InterviewerLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50 space-y-2">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 group"
-            title={`Current theme: ${theme}`}
-          >
-            {effectiveTheme === 'dark' ? (
-              <Sun className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
-            ) : (
-              <Moon className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
-            )}
-            <span>{effectiveTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
+        <div className="p-4 border-t border-slate-200 bg-slate-50">
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardBody } from '../../components/interviewer';
 import { Briefcase, Users, Calendar, TrendingUp, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { assignmentApi, type Assignment } from '../../api/interviewer';
+import { getRequisitions } from '../../api/recruiter/requisitions';
 
 export const RecruiterDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -11,20 +13,60 @@ export const RecruiterDashboard: React.FC = () => {
     scheduledInterviews: 0,
     pendingApprovals: 0,
   });
+  const [recentJobs, setRecentJobs] = useState<any[]>([]);
+  const [upcomingInterviews, setUpcomingInterviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setStats({
-        totalJobs: 24,
-        activeCandidates: 156,
-        scheduledInterviews: 8,
-        pendingApprovals: 3,
-      });
-      setLoading(false);
-    }, 1000);
+    fetchDashboardData();
   }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      // Fetch requisitions
+      const requisitions = await getRequisitions();
+      
+      // Fetch assignments
+      const assignments = await assignmentApi.getAllAssignments();
+      
+      // Calculate stats
+      const activeRequisitions = requisitions.filter((r: any) => r.status === 'active' || r.status === 'published');
+      const pendingRequisitions = requisitions.filter((r: any) => r.status === 'pending' || r.status === 'submitted');
+      const pendingInterviews = assignments.filter((a: Assignment) => a.status === 'pending');
+      
+      // Get recent jobs (last 4)
+      const recent = requisitions.slice(0, 4).map((r: any) => ({
+        title: r.title,
+        department: r.department || 'Engineering',
+        status: r.status === 'active' || r.status === 'published' ? 'Active' : 'Review',
+        applicants: r.applicantCount || 0,
+      }));
+      
+      // Get upcoming interviews (pending interviews with schedule)
+      const upcoming = pendingInterviews
+        .filter((a: Assignment) => a.schedule && new Date(a.schedule.startTime) >= new Date())
+        .slice(0, 4)
+        .map((a: Assignment) => ({
+          candidate: a.candidateName,
+          role: a.role,
+          time: new Date(a.schedule!.startTime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+          date: new Date(a.schedule!.startTime).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+        }));
+      
+      setStats({
+        totalJobs: activeRequisitions.length,
+        activeCandidates: requisitions.reduce((sum: number, r: any) => sum + (r.applicantCount || 0), 0),
+        scheduledInterviews: pendingInterviews.length,
+        pendingApprovals: pendingRequisitions.length,
+      });
+      setRecentJobs(recent);
+      setUpcomingInterviews(upcoming);
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -126,27 +168,26 @@ export const RecruiterDashboard: React.FC = () => {
             </CardHeader>
             <CardBody className="p-6">
               <div className="space-y-4">
-                {[
-                  { title: 'Senior Software Engineer', department: 'Engineering', status: 'Active', applicants: 45 },
-                  { title: 'Product Manager', department: 'Product', status: 'Active', applicants: 32 },
-                  { title: 'UX Designer', department: 'Design', status: 'Review', applicants: 18 },
-                  { title: 'Data Analyst', department: 'Analytics', status: 'Active', applicants: 27 },
-                ].map((job, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                    <div>
-                      <h3 className="font-medium text-slate-900">{job.title}</h3>
-                      <p className="text-sm text-slate-600">{job.department}</p>
+                {recentJobs.length === 0 ? (
+                  <p className="text-slate-500 text-center py-4">No recent job postings</p>
+                ) : (
+                  recentJobs.map((job, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                      <div>
+                        <h3 className="font-medium text-slate-900">{job.title}</h3>
+                        <p className="text-sm text-slate-600">{job.department}</p>
+                      </div>
+                      <div className="text-right">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {job.status}
+                        </span>
+                        <p className="text-xs text-slate-500 mt-1">{job.applicants} applicants</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {job.status}
-                      </span>
-                      <p className="text-xs text-slate-500 mt-1">{job.applicants} applicants</p>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </CardBody>
           </Card>
@@ -157,28 +198,27 @@ export const RecruiterDashboard: React.FC = () => {
             </CardHeader>
             <CardBody className="p-6">
               <div className="space-y-4">
-                {[
-                  { candidate: 'John Smith', role: 'Senior Developer', time: '10:00 AM', date: 'Today' },
-                  { candidate: 'Sarah Johnson', role: 'Product Manager', time: '2:00 PM', date: 'Today' },
-                  { candidate: 'Mike Brown', role: 'UX Designer', time: '11:00 AM', date: 'Tomorrow' },
-                  { candidate: 'Emily Davis', role: 'Data Analyst', time: '3:00 PM', date: 'Tomorrow' },
-                ].map((interview, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <Calendar className="w-5 h-5 text-blue-600" />
+                {upcomingInterviews.length === 0 ? (
+                  <p className="text-slate-500 text-center py-4">No upcoming interviews</p>
+                ) : (
+                  upcomingInterviews.map((interview, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Calendar className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-slate-900">{interview.candidate}</h3>
+                          <p className="text-sm text-slate-600">{interview.role}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-slate-900">{interview.candidate}</h3>
-                        <p className="text-sm text-slate-600">{interview.role}</p>
+                      <div className="text-right">
+                        <p className="font-medium text-slate-900">{interview.time}</p>
+                        <p className="text-xs text-slate-500">{interview.date}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium text-slate-900">{interview.time}</p>
-                      <p className="text-xs text-slate-500">{interview.date}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </CardBody>
           </Card>

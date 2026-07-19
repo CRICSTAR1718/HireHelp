@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home } from "lucide-react";
+import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home, Link } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -27,10 +27,7 @@ const navItems = [
     ]
   },
   { to: "/recruiter/schedule-interview", label: "Schedule Interview", icon: Plus },
-  { to: "/recruiter/analytics", label: "Analytics", icon: BarChart2 },
-  { to: "/recruiter/reports", label: "Reports", icon: FileText },
-  { to: "/recruiter/notifications", label: "Notifications", icon: Bell },
-  { to: "/recruiter/settings", label: "Settings", icon: Settings },
+  { to: "/recruiter/integrations", label: "Cal.com Setup", icon: Link },
 ];
 
 export const RecruiterLayout = () => {

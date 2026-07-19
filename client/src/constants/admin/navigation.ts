@@ -1,4 +1,4 @@
-import { ClipboardCheck, FileText, LayoutDashboard, ShieldCheck, Users, UsersRound, Building2, Briefcase, Plus, GitPullRequest, User, Star, Calendar, Clock } from "lucide-react";
+import { ClipboardCheck, FileText, LayoutDashboard, ShieldCheck, Users, UsersRound, Building2, Briefcase, Plus, GitPullRequest, User, Star, Calendar, Clock, Link } from "lucide-react";
 import type { NavigationGroup } from "../../types/admin/navigation";
 
 export const navigationGroups: NavigationGroup[] = [
@@ -11,6 +11,7 @@ export const navigationGroups: NavigationGroup[] = [
     { label: "Talent Pool", href: "/admin/talent-pool", icon: Star },
     { label: "Interviews", href: "/admin/interviews", icon: Calendar },
     { label: "Schedule Interview", href: "/admin/schedule-interview", icon: Clock },
+    { label: "Cal.com Setup", href: "/admin/integrations", icon: Link },
   ]},
   { label: "Reviews", items: [
     { label: "Requisition Review", href: "/admin/requisitions/review", icon: ClipboardCheck },
