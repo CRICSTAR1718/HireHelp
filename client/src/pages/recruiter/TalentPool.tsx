@@ -29,8 +29,8 @@ export const TalentPool: React.FC = () => {
     try {
       const data = await getApplications();
       // Filter for shortlisted candidates and those in interview stages
-      const talentPoolCandidates = data.filter(app => 
-        app.status === 'shortlisted' || 
+      const talentPoolCandidates = data.filter((app: Application) =>
+        app.status === 'shortlisted' ||
         app.status === 'under_review' ||
         app.status === 'hired'
       );

@@ -93,6 +93,19 @@ export class AuthController {
       res.status(404).json({ error: (error as Error).message });
     }
   }
+
+  async changePassword(req: Request, res: Response) {
+    try {
+      if (!req.candidateUser) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      const { currentPassword, newPassword } = req.body;
+      const result = await authService.changePassword(req.candidateUser.id, currentPassword, newPassword);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: (error as Error).message });
+    }
+  }
 }
 
 export const authController = new AuthController();

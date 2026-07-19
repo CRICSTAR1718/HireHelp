@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-
-import PageTitle from "../../../components/candidate/ui/PageTitle";
+import { SectionTitle, LoadingState } from "../../../components/admin/common";
 import ApplicationTable from "../../../components/candidate/applications/ApplicationTable";
-import Loader from "../../../components/candidate/ui/Loader";
 import { getApplications } from "../../../api/candidate/applications.api";
 import type { Application } from "../../../types/candidate";
 
@@ -21,16 +19,16 @@ export default function Applications() {
     }, []);
 
     return (
-        <div className="space-y-8">
-            <PageTitle
+        <div className="mx-auto max-w-7xl space-y-8">
+            <SectionTitle
+                description="Track all your job applications."
                 title="Applications"
-                subtitle="Track all your job applications."
             />
 
             {loading ? (
-                <Loader />
+                <LoadingState />
             ) : error ? (
-                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-6 text-rose-200">
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-rose-700">
                     {error}
                 </div>
             ) : (

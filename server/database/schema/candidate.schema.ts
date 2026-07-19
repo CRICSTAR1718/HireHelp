@@ -127,6 +127,20 @@ export const interviewStatus = pgTable('interview_status', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
+export const candidateSettings = pgTable('candidate_settings', {
+  id: serial('id').primaryKey(),
+  candidateId: integer('candidate_id').notNull().references(() => candidates.id).unique(),
+  jobAlerts: boolean('job_alerts').notNull().default(true),
+  applicationUpdates: boolean('application_updates').notNull().default(true),
+  interviewEmails: boolean('interview_emails').notNull().default(true),
+  marketingEmails: boolean('marketing_emails').notNull().default(false),
+  profileVisibility: boolean('profile_visibility').notNull().default(true),
+  allowRecruiterDiscovery: boolean('allow_recruiter_discovery').notNull().default(true),
+  includeInTalentPool: boolean('include_in_talent_pool').notNull().default(true),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
 export type Candidate = typeof candidates.$inferSelect;
 export type NewCandidate = typeof candidates.$inferInsert;
 export type Profile = typeof profiles.$inferSelect;
@@ -142,6 +156,8 @@ export type NewResume = typeof resumes.$inferInsert;
 export type CandidateApplication = typeof candidateApplications.$inferSelect;
 export type NewCandidateApplication = typeof candidateApplications.$inferInsert;
 export type Notification = typeof notifications.$inferSelect;
-export type NewNotification = typeof notifications.$inferInsert;
+export type NewNotification = typeof notifications.$inferSelect;
 export type InterviewStatus = typeof interviewStatus.$inferSelect;
-export type NewInterviewStatus = typeof interviewStatus.$inferInsert;
+export type NewInterviewStatus = typeof interviewStatus.$inferSelect;
+export type CandidateSettings = typeof candidateSettings.$inferSelect;
+export type NewCandidateSettings = typeof candidateSettings.$inferInsert;

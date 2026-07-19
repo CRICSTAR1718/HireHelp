@@ -1,13 +1,13 @@
-import PageTitle from "../../../components/candidate/ui/PageTitle";
+import { SectionTitle } from "../../../components/admin/common";
 import JobFilters from "../../../components/candidate/jobs/JobFilters";
 import FeaturedJobs from "../../../components/candidate/jobs/FeaturedJobs";
 
 export default function Jobs() {
     return (
-        <div className="space-y-8">
-            <PageTitle
+        <div className="mx-auto max-w-7xl space-y-8">
+            <SectionTitle
+                description="Discover opportunities matching your profile."
                 title="Jobs"
-                subtitle="Discover opportunities matching your profile."
             />
 
             <JobFilters />

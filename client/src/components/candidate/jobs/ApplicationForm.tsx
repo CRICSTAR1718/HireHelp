@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-import { X, Upload, FileText, Check } from "lucide-react";
+import { useState } from "react";
+import { X, Check, Upload, FileText } from "lucide-react";
 import type { FormField, FieldOption, FormResponse } from "../../../types/candidate";
-import { getResume, uploadResume } from "../../../api/candidate/resume.api";
-import type { Resume } from "../../../types/candidate";
 
 interface Props {
     fields: FormField[];
-    onSubmit: (responses: FormResponse[], resumeId?: number) => void;
+    onSubmit: (responses: FormResponse[]) => void;
     onCancel: () => void;
     submitting?: boolean;
 }
@@ -21,24 +19,6 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
         fields.map(field => ({ field_id: field.id, value: null }))
     );
     const [errors, setErrors] = useState<Record<string, string>>({});
-    
-    // Resume state
-    const [resume, setResume] = useState<Resume | null>(null);
-    const [loadingResume, setLoadingResume] = useState(false);
-    const [uploadingResume, setUploadingResume] = useState(false);
-    const [resumeError, setResumeError] = useState<string | null>(null);
-
-    // Load existing resume on mount
-    useEffect(() => {
-        setLoadingResume(true);
-        getResume()
-            .then(setResume)
-            .catch(() => {
-                // No resume uploaded yet, that's fine
-                setResume(null);
-            })
-            .finally(() => setLoadingResume(false));
-    }, []);
 
     const updateValue = (fieldId: string, value: string | string[] | File | boolean | number | null) => {
         setValues(prev => prev.map(v => v.field_id === fieldId ? { ...v, value } : v));
@@ -92,33 +72,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
             return { field_id: v.field_id, response_text, response_json, file_url };
         });
 
-        onSubmit(responses, resume?.id ? parseInt(resume.id) : undefined);
-    };
-
-    const handleResumeUpload = async (file: File) => {
-        setUploadingResume(true);
-        setResumeError(null);
-
-        try {
-            // Validate file type
-            const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-            if (!validTypes.includes(file.type)) {
-                throw new Error('Only PDF, DOC, and DOCX files are allowed');
-            }
-
-            // Validate file size (max 5MB)
-            const maxSize = 5 * 1024 * 1024;
-            if (file.size > maxSize) {
-                throw new Error('File size must be less than 5MB');
-            }
-
-            const uploadedResume = await uploadResume(file);
-            setResume(uploadedResume);
-        } catch (err) {
-            setResumeError(err instanceof Error ? err.message : 'Failed to upload resume');
-        } finally {
-            setUploadingResume(false);
-        }
+        onSubmit(responses);
     };
 
     const renderField = (field: FormField) => {
@@ -393,85 +347,6 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    {/* Resume Section */}
-                    <div className="space-y-3 rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                        <label className="flex items-center gap-2 text-sm font-medium text-white">
-                            <FileText size={16} />
-                            Resume
-                        </label>
-                        
-                        {loadingResume ? (
-                            <p className="text-slate-400 text-sm">Loading resume...</p>
-                        ) : resume ? (
-                            <div className="flex items-center justify-between rounded-lg bg-slate-800/50 p-3">
-                                <div className="flex items-center gap-3">
-                                    <FileText className="text-blue-400" size={20} />
-                                    <div>
-                                        <p className="text-sm text-white">{resume.fileName}</p>
-                                        <p className="text-xs text-slate-400">Uploaded {resume.uploadedAt ? new Date(resume.uploadedAt).toLocaleDateString() : 'Recently'}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-xs text-green-400 flex items-center gap-1">
-                                        <Check size={12} />
-                                        Active
-                                    </span>
-                                    <label className="cursor-pointer rounded-lg px-3 py-1 text-xs text-blue-400 hover:bg-blue-500/10 transition-all">
-                                        Replace
-                                        <input
-                                            type="file"
-                                            className="hidden"
-                                            accept=".pdf,.doc,.docx"
-                                            onChange={(e) => {
-                                                const file = e.target.files?.[0];
-                                                if (file) handleResumeUpload(file);
-                                            }}
-                                            disabled={uploadingResume}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                        ) : (
-                            <div>
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    id="resume-upload"
-                                    accept=".pdf,.doc,.docx"
-                                    onChange={(e) => {
-                                        const file = e.target.files?.[0];
-                                        if (file) handleResumeUpload(file);
-                                    }}
-                                    disabled={uploadingResume}
-                                />
-                                <label
-                                    htmlFor="resume-upload"
-                                    className={`flex items-center justify-center gap-3 rounded-lg border-2 border-dashed p-4 transition-all cursor-pointer ${
-                                        uploadingResume
-                                            ? 'border-slate-700/50 bg-slate-900/30 cursor-not-allowed opacity-50'
-                                            : 'border-slate-700/50 bg-slate-900/30 hover:border-blue-500/50 hover:bg-blue-500/10'
-                                    }`}
-                                >
-                                    {uploadingResume ? (
-                                        <>
-                                            <Upload className="text-slate-400 animate-pulse" />
-                                            <span className="text-slate-400">Uploading...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Upload className="text-slate-400" />
-                                            <span className="text-slate-400">Upload your resume (PDF, DOC, DOCX)</span>
-                                        </>
-                                    )}
-                                </label>
-                            </div>
-                        )}
-                        
-                        {resumeError && (
-                            <p className="text-sm text-rose-400">{resumeError}</p>
-                        )}
-                    </div>
-
                     <div className="border-t border-slate-800 pt-6">
                         <h3 className="text-sm font-medium text-white mb-4">Application Questions</h3>
                     </div>

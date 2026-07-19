@@ -44,6 +44,11 @@ export class AuthRepository {
     await db.update(candidates).set({ passwordHash: hash }).where(eq(candidates.email, email));
   }
 
+  async updatePassword(id: number, newPassword: string) {
+    const hash = await bcrypt.hash(newPassword, 10);
+    await db.update(candidates).set({ passwordHash: hash }).where(eq(candidates.id, id));
+  }
+
   async markVerifiedByEmail(email: string) {
     await db.update(candidates).set({ isVerified: true }).where(eq(candidates.email, email));
   }
