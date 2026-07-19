@@ -20,8 +20,11 @@ export async function getApplication(applicationId: string, requisitionId?: stri
 }
 
 export async function updateStatus(applicationId: string, status: string, requisitionId?: string) {
+  console.log(`🚀 updateStatus called with applicationId: ${applicationId}, status: "${status}"`)
   const updated = await repo.updateStatus(applicationId, status as any, requisitionId)
   if (!updated) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
+
+  console.log(`✅ Status updated in database to: "${updated.status}"`)
 
   // Send email notifications based on status change
   try {
@@ -51,9 +54,14 @@ export async function updateStatus(applicationId: string, status: string, requis
     const candidateName = `${candidate.firstName} ${candidate.lastName}`
     const jobTitle = requisition?.title || 'Position'
     const loginUrl = `${env.CLIENT_ORIGIN}/login`
-
-    // Send offer email when status changes to "Offered"
-    if (status === 'Offered') {
+    console.log(`📨 Sending offer email to ${candidate.email}`)
+    console.log(`📧 Email params:`, JSON.stringify({ to: candidate.email, candidateName, jobTitle, loginUrl }, null, 2))
+    console.log(`🔍 Current status value: "${status}" (type: ${typeof status})`)
+    console.log(`🔍 Status === 'Hired': ${status === 'Hired'}`)
+    
+    // Send offer email when status changes to "Hired"
+    if (status === 'hired') {
+      console.log(`🚀 About to call sendOfferEmail`)
       await sendOfferEmail({
         to: candidate.email,
         candidateName,
@@ -61,16 +69,20 @@ export async function updateStatus(applicationId: string, status: string, requis
         loginUrl,
         // offerLetterUrl can be added later when offer letter generation is implemented
       })
+      console.log(`✅ sendOfferEmail completed`)
+    } else {
+      console.log(`⏭️ Skipping offer email - status is "${status}" not "Hired"`)
     }
 
     // Send rejection email when status changes to "Rejected"
-    if (status === 'Rejected') {
+    if (status === 'rejected') {
       await sendRejectionEmail({
         to: candidate.email,
         candidateName,
         jobTitle,
         loginUrl,
       })
+      console.log(`✅ Status update email sent to ${candidate.email}`)
     }
   } catch (error) {
     // Email failure is logged but does not prevent status update

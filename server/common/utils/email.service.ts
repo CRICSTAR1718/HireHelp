@@ -64,6 +64,8 @@ interface RejectionEmailParams {
  * @returns Promise that resolves when email is sent
  */
 export async function sendEmail({ to, subject, text, html }: EmailParams): Promise<void> {
+  console.log(`📨 sendEmail called with:`, JSON.stringify({ to, subject, textLength: text.length, hasHtml: !!html }, null, 2))
+  
   if (!env.SES_FROM_EMAIL) {
     console.warn('SES_FROM_EMAIL not configured — skipping email to', to);
     return;
@@ -78,6 +80,7 @@ export async function sendEmail({ to, subject, text, html }: EmailParams): Promi
     console.log('📨 Sending email via SES to:', to);
     console.log('📧 Subject:', subject);
 
+    console.log(`🔧 Creating SendEmailCommand`)
     const command = new SendEmailCommand({
       Source: env.SES_FROM_EMAIL,
       Destination: {
@@ -102,7 +105,9 @@ export async function sendEmail({ to, subject, text, html }: EmailParams): Promi
         },
       },
     });
+    console.log(`✅ SendEmailCommand created, about to send`)
 
+    console.log(`📤 Calling sesClient.send()`)
     const response = await sesClient.send(command);
     console.log('✅ Email sent successfully via SES');
     console.log('📋 Message ID:', response.MessageId);
@@ -660,7 +665,7 @@ Login URL: ${loginUrl}
  * Generate HTML template for offer email
  */
 function generateOfferEmailTemplate(params: OfferEmailParams): string {
-  const { candidateName, jobTitle, loginUrl, offerLetterUrl } = params;
+  const { candidateName, jobTitle, offerLetterUrl } = params;
 
   return `
 <!DOCTYPE html>
@@ -712,20 +717,6 @@ function generateOfferEmailTemplate(params: OfferEmailParams): string {
       color: #1e293b;
       margin: 15px 0;
     }
-    .button {
-      display: inline-block;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #ffffff;
-      padding: 14px 32px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      margin: 20px 0;
-      transition: transform 0.2s;
-    }
-    .button:hover {
-      transform: translateY(-2px);
-    }
     .offer-letter {
       background-color: #f1f5f9;
       padding: 15px;
@@ -775,12 +766,13 @@ function generateOfferEmailTemplate(params: OfferEmailParams): string {
       </div>
       ` : ''}
       
-      <p style="text-align: center; margin: 20px 0;">
-        <a href="${loginUrl}" class="button">Login to View Offer Details</a>
+      <p style="color: #475569; margin-top: 30px;">
+        We look forward to welcoming you to our team!
       </p>
       
-      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
-        Please login to your portal to review the complete offer details and take the next steps. We look forward to welcoming you to our team!
+      <p style="color: #475569; margin-top: 20px;">
+        Best regards,<br>
+        HireHelp Team
       </p>
     </div>
     
@@ -800,6 +792,7 @@ function generateOfferEmailTemplate(params: OfferEmailParams): string {
  * @returns Promise that resolves when email is sent (or fails gracefully)
  */
 export async function sendOfferEmail(params: OfferEmailParams): Promise<void> {
+  console.log(`📨 sendOfferEmail called with params:`, JSON.stringify(params, null, 2))
   const { to, candidateName, jobTitle, loginUrl, offerLetterUrl } = params;
 
   const subject = 'Congratulations! Your Offer from HireHelp';
@@ -814,18 +807,20 @@ After careful consideration of your application and interview performance, we ar
 
 ${offerLetterUrl ? `You can download your formal offer letter at: ${offerLetterUrl}` : ''}
 
-Please login to your portal to review the complete offer details and take the next steps.
-
-Login URL: ${loginUrl}
-
 We look forward to welcoming you to our team!
+
+Best regards,
+HireHelp Team
 
 © 2024 HireHelp. All rights reserved.
   `;
 
+  console.log(`📧 About to generate HTML template`)
   const html = generateOfferEmailTemplate(params);
+  console.log(`✅ HTML template generated successfully`)
 
   try {
+    console.log(`📤 About to call sendEmail`)
     await sendEmail({ to, subject, text, html });
     console.log(`✅ Offer email sent successfully to ${to}`);
   } catch (error) {
@@ -838,7 +833,7 @@ We look forward to welcoming you to our team!
  * Generate HTML template for rejection email
  */
 function generateRejectionEmailTemplate(params: RejectionEmailParams): string {
-  const { candidateName, jobTitle, loginUrl } = params;
+  const { candidateName, jobTitle } = params;
 
   return `
 <!DOCTYPE html>
@@ -890,20 +885,6 @@ function generateRejectionEmailTemplate(params: RejectionEmailParams): string {
       color: #1e293b;
       margin: 15px 0;
     }
-    .button {
-      display: inline-block;
-      background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-      color: #ffffff;
-      padding: 14px 32px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      margin: 20px 0;
-      transition: transform 0.2s;
-    }
-    .button:hover {
-      transform: translateY(-2px);
-    }
     .footer {
       background-color: #f8fafc;
       padding: 20px 30px;
@@ -943,12 +924,13 @@ function generateRejectionEmailTemplate(params: RejectionEmailParams): string {
         We were impressed by your skills and experience, and we encourage you to apply for future positions that match your qualifications. Your profile will remain in our talent pool for consideration.
       </p>
       
-      <p style="text-align: center; margin: 20px 0;">
-        <a href="${loginUrl}" class="button">View Other Opportunities</a>
+      <p style="color: #475569; margin-top: 30px;">
+        We wish you the very best in your career journey.
       </p>
       
-      <p style="color: #64748b; font-size: 14px; margin: 20px 0;">
-        We wish you the best in your job search and hope to have the opportunity to work with you in the future.
+      <p style="color: #475569; margin-top: 20px;">
+        Best regards,<br>
+        HireHelp Team
       </p>
     </div>
     
@@ -982,9 +964,10 @@ After careful consideration of your application and qualifications, we regret to
 
 We were impressed by your skills and experience, and we encourage you to apply for future positions that match your qualifications. Your profile will remain in our talent pool for consideration.
 
-We wish you the best in your job search and hope to have the opportunity to work with you in the future.
+We wish you the very best in your career journey.
 
-Login URL: ${loginUrl}
+Best regards,
+HireHelp Team
 
 © 2024 HireHelp. All rights reserved.
   `;
