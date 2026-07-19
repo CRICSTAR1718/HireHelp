@@ -7,7 +7,7 @@ import { StaffLoginPage } from "@/pages/shared/StaffLoginPage";
 
 // ── Candidate (existing self-contained router pieces, reused) ─────────
 import AuthLayout from "@/layouts/candidate/AuthLayout";
-import DashboardLayout from "@/layouts/candidate/DashboardLayout";
+import { AppLayout as CandidateAppLayout } from "@/layouts/candidate/AppLayout";
 import CandidateLogin from "@/pages/candidate/Login";
 import CandidateRegister from "@/pages/candidate/Register";
 import CandidateDashboard from "@/pages/candidate/Dashboard";
@@ -133,7 +133,7 @@ export function AppRouter() {
             <ProtectedRoute allowedRoles={["candidate"]} loginPath="/candidate" />
           }
         >
-          <Route path="/candidate/*" element={<div className="scope-candidate"><DashboardLayout /></div>}>
+          <Route path="/candidate/*" element={<div className="scope-candidate"><CandidateAppLayout /></div>}>
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<CandidateProfile />} />
             <Route path="jobs" element={<CandidateJobs />} />

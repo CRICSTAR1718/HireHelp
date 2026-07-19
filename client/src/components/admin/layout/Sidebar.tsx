@@ -1,18 +1,24 @@
 import { ChevronLeft, ChevronRight, LogOut, Settings, ShieldCheck, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { navigationGroups } from "../../../constants/admin/navigation";
+import { navigationGroups as adminNavigationGroups } from "../../../constants/admin/navigation";
 import { useAuth } from "../../../hooks/shared/useAuth";
 import { cn } from "../../../utils/admin/cn";
+import type { NavigationGroup } from "../../../types/admin/navigation";
 
 interface SidebarProps {
   collapsed: boolean;
   mobileOpen: boolean;
   onCloseMobile: () => void;
   onToggle: () => void;
+  navigationGroups?: NavigationGroup[];
+  user?: any;
+  userType?: string;
 }
 
-export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle }: SidebarProps) => {
-  const { user, logout } = useAuth();
+export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, navigationGroups: customNavigationGroups, user: customUser, userType = "Admin" }: SidebarProps) => {
+  const { user: authUser, logout } = useAuth();
+  const user = customUser || authUser;
+  const navigationGroups = customNavigationGroups || adminNavigationGroups;
 
   return (
     <>
@@ -32,11 +38,11 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle }: Side
         )}
       >
         <div className="flex h-16 items-center border-b border-slate-200 px-4">
-          <NavLink className="flex min-w-0 items-center gap-3" onClick={onCloseMobile} to="/admin">
+          <NavLink className="flex min-w-0 items-center gap-3" onClick={onCloseMobile} to={userType === "Candidate" ? "/candidate/dashboard" : "/admin"}>
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-blue-600 text-white">
               <ShieldCheck className="h-5 w-5" />
             </span>
-            {!collapsed && <span className="truncate text-sm font-semibold text-slate-900">HireHelp Admin</span>}
+            {!collapsed && <span className="truncate text-sm font-semibold text-slate-900">HireHelp {userType}</span>}
           </NavLink>
           <button
             aria-label="Close navigation"
@@ -90,22 +96,26 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle }: Side
                 <p className="truncate text-sm font-medium text-slate-800">
                   {user?.firstName} {user?.lastName}
                 </p>
-                <p className="truncate text-xs text-slate-500">Admin</p>
+                <p className="truncate text-xs text-slate-500">{userType}</p>
               </div>
             )}
           </div>
 
-          <button
-            className={cn(
-              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50",
-              collapsed && "justify-center px-2",
-            )}
+          <NavLink
+            className={({ isActive }) =>
+              cn(
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                collapsed && "justify-center px-2",
+              )
+            }
+            onClick={onCloseMobile}
             title={collapsed ? "Settings" : undefined}
-            type="button"
+            to={userType === "Candidate" ? "/candidate/settings" : "/admin/settings"}
           >
             <Settings className="h-5 w-5" />
             {!collapsed && "Settings"}
-          </button>
+          </NavLink>
 
           <button
             className={cn(

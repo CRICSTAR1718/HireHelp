@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
-import Input from "../ui/Input";
+import { Card, Button, Input } from "../../../components/admin/ui";
+import { Label } from "../../../components/admin/ui";
 import { getProfile, updateProfile } from "../../../api/candidate/profile.api";
 import type { Profile } from "../../../types/candidate";
 
@@ -105,46 +104,47 @@ export default function ProfileSettings() {
 
     if (loading) {
         return (
-            <Card>
-                <h2 className="mb-6 text-xl font-semibold text-white">Profile Information</h2>
-                <p className="text-slate-400">Loading...</p>
+            <Card className="p-5">
+                <h2 className="mb-6 text-lg font-semibold text-slate-900">Profile Information</h2>
+                <p className="text-slate-500">Loading...</p>
             </Card>
         );
     }
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold text-white">Profile Information</h2>
+        <Card className="p-5">
+            <h2 className="mb-6 text-lg font-semibold text-slate-900">Profile Information</h2>
 
             {success && (
-                <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/30 p-3 text-sm text-green-300">
+                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
                     Profile updated successfully!
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300">
+                <div className="mb-4 rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
                     {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
+                    <Label htmlFor="fullName">Full Name</Label>
                     <Input
-                        label="Full Name"
+                        id="fullName"
                         placeholder="Full Name"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        className={validationErrors.fullName ? "border-rose-500" : ""}
                     />
                     {validationErrors.fullName && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.fullName}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.fullName}</p>
                     )}
                 </div>
 
                 <div>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                        label="Email"
+                        id="email"
                         placeholder="Email"
                         value={profile?.email || ""}
                         disabled
@@ -153,21 +153,22 @@ export default function ProfileSettings() {
                 </div>
 
                 <div>
+                    <Label htmlFor="phone">Phone Number</Label>
                     <Input
-                        label="Phone Number"
+                        id="phone"
                         placeholder="Phone Number"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={validationErrors.phone ? "border-rose-500" : ""}
                     />
                     {validationErrors.phone && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.phone}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.phone}</p>
                     )}
                 </div>
 
                 <div>
+                    <Label htmlFor="location">Location</Label>
                     <Input
-                        label="Location"
+                        id="location"
                         placeholder="Location"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -175,46 +176,46 @@ export default function ProfileSettings() {
                 </div>
 
                 <div>
+                    <Label htmlFor="linkedin">LinkedIn URL</Label>
                     <Input
-                        label="LinkedIn URL"
+                        id="linkedin"
                         placeholder="LinkedIn URL"
                         value={formData.linkedin}
                         onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                        className={validationErrors.linkedin ? "border-rose-500" : ""}
                     />
                     {validationErrors.linkedin && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.linkedin}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.linkedin}</p>
                     )}
                 </div>
 
                 <div>
+                    <Label htmlFor="github">GitHub URL</Label>
                     <Input
-                        label="GitHub URL"
+                        id="github"
                         placeholder="GitHub URL"
                         value={formData.github}
                         onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                        className={validationErrors.github ? "border-rose-500" : ""}
                     />
                     {validationErrors.github && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.github}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.github}</p>
                     )}
                 </div>
 
                 <div>
+                    <Label htmlFor="portfolio">Portfolio URL</Label>
                     <Input
-                        label="Portfolio URL"
+                        id="portfolio"
                         placeholder="Portfolio URL"
                         value={formData.portfolio}
                         onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
-                        className={validationErrors.portfolio ? "border-rose-500" : ""}
                     />
                     {validationErrors.portfolio && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.portfolio}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.portfolio}</p>
                     )}
                 </div>
 
-                <Button type="submit" loading={saving} fullWidth>
-                    Save Changes
+                <Button type="submit" disabled={saving} className="w-full">
+                    {saving ? "Saving..." : "Save Changes"}
                 </Button>
             </form>
         </Card>

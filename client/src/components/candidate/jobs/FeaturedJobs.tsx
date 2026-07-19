@@ -133,24 +133,26 @@ export default function FeaturedJobs() {
             {loading ? (
                 <Loader />
             ) : jobs.length === 0 ? (
-                <p className="text-slate-400">No jobs found.</p>
+                <p className="text-slate-500">No jobs found.</p>
             ) : (
-                jobs.map((job) => (
-                    <JobCard
-                        key={job.id}
-                        id={job.id}
-                        title={job.title}
-                        department={job.department}
-                        location={job.location}
-                        employment_type={job.employment_type}
-                        work_mode={job.work_mode}
-                        salary={job.salary}
-                        published_at={job.published_at}
-                        onApply={handleApply}
-                        onViewDetails={handleViewDetails}
-                        hasApplied={appliedJobIds.has(job.id)}
-                    />
-                ))
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {jobs.map((job) => (
+                        <JobCard
+                            key={job.id}
+                            id={job.id}
+                            title={job.title}
+                            department={job.department}
+                            location={job.location}
+                            employment_type={job.employment_type}
+                            work_mode={job.work_mode}
+                            salary={job.salary}
+                            published_at={job.published_at}
+                            onApply={handleApply}
+                            onViewDetails={handleViewDetails}
+                            hasApplied={appliedJobIds.has(job.id)}
+                        />
+                    ))}
+                </div>
             )}
 
             {/* Application Form Modal */}

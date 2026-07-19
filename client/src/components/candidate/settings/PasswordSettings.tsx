@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
+import { Card, Button } from "../../../components/admin/ui";
+import { Label } from "../../../components/admin/ui";
 import PasswordInput from "../ui/PasswordInput";
 import { changePassword } from "../../../api/candidate/settings.api";
 
@@ -67,41 +67,43 @@ export default function PasswordSettings() {
     };
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold text-white">Change Password</h2>
+        <Card className="p-5">
+            <h2 className="mb-6 text-lg font-semibold text-slate-900">Change Password</h2>
 
             {success && (
-                <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/30 p-3 text-sm text-green-300">
+                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
                     Password changed successfully!
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300">
+                <div className="mb-4 rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
                     {error}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
+                    <Label htmlFor="currentPassword">Current Password</Label>
                     <PasswordInput
                         placeholder="Current Password"
                         value={formData.currentPassword}
                         onChange={(e) => setFormData({ ...formData, currentPassword: e.target.value })}
                     />
                     {validationErrors.currentPassword && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.currentPassword}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.currentPassword}</p>
                     )}
                 </div>
 
                 <div>
+                    <Label htmlFor="newPassword">New Password</Label>
                     <PasswordInput
                         placeholder="New Password"
                         value={formData.newPassword}
                         onChange={(e) => setFormData({ ...formData, newPassword: e.target.value })}
                     />
                     {validationErrors.newPassword && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.newPassword}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.newPassword}</p>
                     )}
                     <p className="mt-1 text-xs text-slate-500">
                         Must be at least 8 characters with uppercase, lowercase, and number
@@ -109,18 +111,19 @@ export default function PasswordSettings() {
                 </div>
 
                 <div>
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
                     <PasswordInput
                         placeholder="Confirm Password"
                         value={formData.confirmPassword}
                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     />
                     {validationErrors.confirmPassword && (
-                        <p className="mt-1 text-sm text-rose-400">{validationErrors.confirmPassword}</p>
+                        <p className="mt-1 text-sm text-rose-600">{validationErrors.confirmPassword}</p>
                     )}
                 </div>
 
-                <Button type="submit" loading={loading} fullWidth>
-                    Update Password
+                <Button type="submit" disabled={loading} className="w-full">
+                    {loading ? "Updating..." : "Update Password"}
                 </Button>
             </form>
         </Card>

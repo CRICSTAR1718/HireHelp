@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Card from "../ui/Card";
+import { Card } from "../../../components/admin/ui";
 import { getSettings, updateEmailPreferences } from "../../../api/candidate/settings.api";
 import type { EmailPreferences } from "../../../api/candidate/settings.api";
 
@@ -57,38 +57,38 @@ export default function NotificationSettings() {
 
     if (loading) {
         return (
-            <Card>
-                <h2 className="mb-6 text-xl font-semibold text-white">Email Preferences</h2>
-                <p className="text-slate-400">Loading...</p>
+            <Card className="p-5">
+                <h2 className="mb-6 text-lg font-semibold text-slate-900">Email Preferences</h2>
+                <p className="text-slate-500">Loading...</p>
             </Card>
         );
     }
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold text-white">Email Preferences</h2>
+        <Card className="p-5">
+            <h2 className="mb-6 text-lg font-semibold text-slate-900">Email Preferences</h2>
 
             {success && (
-                <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/30 p-3 text-sm text-green-300">
+                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
                     Preferences updated successfully!
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300">
+                <div className="mb-4 rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
                     {error}
                 </div>
             )}
 
-            <div className="space-y-5">
-                <label className="flex items-center justify-between text-white cursor-pointer group">
-                    <span className="group-hover:text-blue-400 transition-colors">Job Alerts</span>
+            <div className="space-y-4">
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
+                    <span className="group-hover:text-slate-900 transition-colors">Job Alerts</span>
                     <button
                         type="button"
                         onClick={() => handleToggle("jobAlerts")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            preferences.jobAlerts ? "bg-blue-600" : "bg-slate-700"
+                            preferences.jobAlerts ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -99,14 +99,14 @@ export default function NotificationSettings() {
                     </button>
                 </label>
 
-                <label className="flex items-center justify-between text-white cursor-pointer group">
-                    <span className="group-hover:text-blue-400 transition-colors">Application Status Updates</span>
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
+                    <span className="group-hover:text-slate-900 transition-colors">Application Status Updates</span>
                     <button
                         type="button"
                         onClick={() => handleToggle("applicationUpdates")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            preferences.applicationUpdates ? "bg-blue-600" : "bg-slate-700"
+                            preferences.applicationUpdates ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -117,14 +117,14 @@ export default function NotificationSettings() {
                     </button>
                 </label>
 
-                <label className="flex items-center justify-between text-white cursor-pointer group">
-                    <span className="group-hover:text-blue-400 transition-colors">Interview Emails</span>
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
+                    <span className="group-hover:text-slate-900 transition-colors">Interview Emails</span>
                     <button
                         type="button"
                         onClick={() => handleToggle("interviewEmails")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            preferences.interviewEmails ? "bg-blue-600" : "bg-slate-700"
+                            preferences.interviewEmails ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -135,14 +135,14 @@ export default function NotificationSettings() {
                     </button>
                 </label>
 
-                <label className="flex items-center justify-between text-white cursor-pointer group">
-                    <span className="group-hover:text-blue-400 transition-colors">Marketing Emails</span>
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
+                    <span className="group-hover:text-slate-900 transition-colors">Marketing Emails</span>
                     <button
                         type="button"
                         onClick={() => handleToggle("marketingEmails")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            preferences.marketingEmails ? "bg-blue-600" : "bg-slate-700"
+                            preferences.marketingEmails ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span

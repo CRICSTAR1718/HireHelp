@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
+import { Card, Button } from "../../../components/admin/ui";
+import { StatusBadge } from "../../../components/admin/common";
 import { useAuth } from "../../../hooks/candidate/useAuth";
 
 interface Session {
@@ -70,31 +70,31 @@ export default function SessionManagement() {
 
     if (loading) {
         return (
-            <Card>
-                <h2 className="mb-6 text-xl font-semibold text-white">Session Management</h2>
-                <p className="text-slate-400">Loading...</p>
+            <Card className="p-5">
+                <h2 className="mb-6 text-lg font-semibold text-slate-900">Session Management</h2>
+                <p className="text-slate-500">Loading...</p>
             </Card>
         );
     }
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold text-white">Session Management</h2>
+        <Card className="p-5">
+            <h2 className="mb-6 text-lg font-semibold text-slate-900">Session Management</h2>
 
             {success && (
-                <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/30 p-3 text-sm text-green-300">
+                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
                     Logged out from all devices successfully!
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300">
+                <div className="mb-4 rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
                     {error}
                 </div>
             )}
 
             <div className="space-y-4 mb-6">
-                <div className="text-sm text-slate-400 mb-2">
+                <div className="text-sm text-slate-500 mb-2">
                     Current Session
                 </div>
 
@@ -103,23 +103,21 @@ export default function SessionManagement() {
                         key={session.id}
                         className={`rounded-lg border p-4 ${
                             session.isCurrent
-                                ? "border-blue-500/30 bg-blue-500/10"
-                                : "border-slate-800 bg-slate-900/50"
+                                ? "border-blue-200 bg-blue-50"
+                                : "border-slate-200 bg-slate-50"
                         }`}
                     >
                         <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-white font-medium">
+                                    <span className="text-slate-900 font-medium">
                                         {session.device}
                                     </span>
                                     {session.isCurrent && (
-                                        <span className="px-2 py-0.5 rounded-full text-xs bg-blue-600 text-white">
-                                            Current
-                                        </span>
+                                        <StatusBadge label="Current" tone="info" />
                                     )}
                                 </div>
-                                <div className="text-sm text-slate-400 space-y-1">
+                                <div className="text-sm text-slate-600 space-y-1">
                                     <p>{session.browser}</p>
                                     <p>{session.location}</p>
                                     <p>Last active: {formatDate(session.lastActive)}</p>
@@ -130,17 +128,17 @@ export default function SessionManagement() {
                 ))}
 
                 {sessions.length === 0 && (
-                    <p className="text-slate-400 text-sm">No active sessions found</p>
+                    <p className="text-slate-500 text-sm">No active sessions found</p>
                 )}
             </div>
 
             <Button
-                variant="secondary"
+                variant="outline"
                 onClick={handleLogoutAll}
-                loading={logoutAllLoading}
-                fullWidth
+                disabled={logoutAllLoading}
+                className="w-full"
             >
-                Logout from All Devices
+                {logoutAllLoading ? "Logging out..." : "Logout from All Devices"}
             </Button>
         </Card>
     );

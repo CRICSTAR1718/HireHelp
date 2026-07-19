@@ -1,5 +1,6 @@
 import { Building2, CalendarDays, MapPin } from "lucide-react";
-import ApplicationStatus from "./ApplicationStatus";
+import { Card, Button } from "../../../components/admin/ui";
+import { StatusBadge } from "../../../components/admin/common";
 
 interface Props {
     company: string;
@@ -8,6 +9,19 @@ interface Props {
     appliedDate: string;
     status: "Applied" | "Interview" | "Rejected" | "Offer";
     onView?: () => void;
+}
+
+function getStatusTone(status: string): "success" | "warning" | "neutral" | "info" {
+    switch (status) {
+        case "Offer":
+            return "success";
+        case "Interview":
+            return "info";
+        case "Rejected":
+            return "warning";
+        default:
+            return "neutral";
+    }
 }
 
 export default function ApplicationCard({
@@ -19,48 +33,41 @@ export default function ApplicationCard({
     onView,
 }: Props) {
     return (
-        <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
+        <Card className="p-5 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                    <h3 className="text-base font-semibold text-slate-900">{role}</h3>
 
-            <div className="flex items-start justify-between">
-
-                <div>
-                    <h2 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                        {role}
-                    </h2>
-
-                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
-                        <Building2 size={16} className="group-hover:scale-110 transition-transform" />
-                        {company}
-                    </div>
-
-                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
-                        <MapPin size={16} className="group-hover:scale-110 transition-transform" />
-                        {location}
-                    </div>
-
-                    <div className="mt-2 flex items-center gap-2 text-slate-400 group-hover:text-blue-400 transition-colors">
-                        <CalendarDays size={16} className="group-hover:scale-110 transition-transform" />
-                        Applied {appliedDate}
+                    <div className="mt-2 space-y-1.5 text-sm text-slate-500">
+                        <div className="flex items-center gap-1.5">
+                            <Building2 className="h-4 w-4" />
+                            {company}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <MapPin className="h-4 w-4" />
+                            {location}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                            <CalendarDays className="h-4 w-4" />
+                            Applied {appliedDate}
+                        </div>
                     </div>
                 </div>
 
-                <ApplicationStatus status={status} />
+                <StatusBadge label={status} tone={getStatusTone(status)} />
             </div>
 
-            <div className="mt-6 flex gap-3">
-
-                <button
-                    onClick={() => {
-                        console.log('View button clicked directly in ApplicationCard');
-                        if (onView) onView();
-                    }}
-                    className="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-white hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105"
-                >
-                    View
-                </button>
-
+            <div className="mt-4">
+                {onView && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onView}
+                    >
+                        View
+                    </Button>
+                )}
             </div>
-
-        </div>
+        </Card>
     );
 }

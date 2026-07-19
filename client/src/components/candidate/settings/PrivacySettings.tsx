@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
+import { Card, Button } from "../../../components/admin/ui";
 import { getSettings, updatePrivacySettings, deleteAccount } from "../../../api/candidate/settings.api";
 import type { PrivacySettings } from "../../../api/candidate/settings.api";
 
@@ -73,33 +72,33 @@ export default function PrivacySettings() {
 
     if (loading) {
         return (
-            <Card>
-                <h2 className="mb-6 text-xl font-semibold text-white">Privacy Settings</h2>
-                <p className="text-slate-400">Loading...</p>
+            <Card className="p-5">
+                <h2 className="mb-6 text-lg font-semibold text-slate-900">Privacy Settings</h2>
+                <p className="text-slate-500">Loading...</p>
             </Card>
         );
     }
 
     return (
-        <Card>
-            <h2 className="mb-6 text-xl font-semibold text-white">Privacy Settings</h2>
+        <Card className="p-5">
+            <h2 className="mb-6 text-lg font-semibold text-slate-900">Privacy Settings</h2>
 
             {success && (
-                <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/30 p-3 text-sm text-green-300">
+                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
                     Privacy settings updated successfully!
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-300">
+                <div className="mb-4 rounded-lg bg-rose-50 border border-rose-200 p-3 text-sm text-rose-700">
                     {error}
                 </div>
             )}
 
-            <div className="space-y-5 mb-8">
-                <label className="flex items-center justify-between text-white cursor-pointer group">
+            <div className="space-y-4 mb-8">
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
                     <div>
-                        <span className="group-hover:text-blue-400 transition-colors">Profile Visibility</span>
+                        <span className="group-hover:text-slate-900 transition-colors">Profile Visibility</span>
                         <p className="text-xs text-slate-500 mt-1">Make your profile visible to others</p>
                     </div>
                     <button
@@ -107,7 +106,7 @@ export default function PrivacySettings() {
                         onClick={() => handleToggle("profileVisibility")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            settings.profileVisibility ? "bg-blue-600" : "bg-slate-700"
+                            settings.profileVisibility ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -118,9 +117,9 @@ export default function PrivacySettings() {
                     </button>
                 </label>
 
-                <label className="flex items-center justify-between text-white cursor-pointer group">
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
                     <div>
-                        <span className="group-hover:text-blue-400 transition-colors">Allow Recruiters to Discover Profile</span>
+                        <span className="group-hover:text-slate-900 transition-colors">Allow Recruiters to Discover Profile</span>
                         <p className="text-xs text-slate-500 mt-1">Let recruiters find you in search results</p>
                     </div>
                     <button
@@ -128,7 +127,7 @@ export default function PrivacySettings() {
                         onClick={() => handleToggle("allowRecruiterDiscovery")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            settings.allowRecruiterDiscovery ? "bg-blue-600" : "bg-slate-700"
+                            settings.allowRecruiterDiscovery ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -139,9 +138,9 @@ export default function PrivacySettings() {
                     </button>
                 </label>
 
-                <label className="flex items-center justify-between text-white cursor-pointer group">
+                <label className="flex items-center justify-between text-slate-700 cursor-pointer group">
                     <div>
-                        <span className="group-hover:text-blue-400 transition-colors">Include in Talent Pool</span>
+                        <span className="group-hover:text-slate-900 transition-colors">Include in Talent Pool</span>
                         <p className="text-xs text-slate-500 mt-1">Be included in the talent pool database</p>
                     </div>
                     <button
@@ -149,7 +148,7 @@ export default function PrivacySettings() {
                         onClick={() => handleToggle("includeInTalentPool")}
                         disabled={saving}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
-                            settings.includeInTalentPool ? "bg-blue-600" : "bg-slate-700"
+                            settings.includeInTalentPool ? "bg-blue-600" : "bg-slate-300"
                         } ${saving ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                         <span
@@ -161,15 +160,15 @@ export default function PrivacySettings() {
                 </label>
             </div>
 
-            <div className="border-t border-slate-800 pt-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Danger Zone</h3>
-                <p className="text-sm text-slate-400 mb-4">
+            <div className="border-t border-slate-200 pt-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Danger Zone</h3>
+                <p className="text-sm text-slate-500 mb-4">
                     Once you delete your account, there is no going back. Please be certain.
                 </p>
                 <Button
-                    variant="danger"
+                    variant="outline"
                     onClick={() => setShowDeleteModal(true)}
-                    fullWidth
+                    className="w-full text-rose-600 border-rose-200 hover:bg-rose-50"
                 >
                     Delete Account
                 </Button>
@@ -177,26 +176,25 @@ export default function PrivacySettings() {
 
             {showDeleteModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="relative w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6">
-                        <h3 className="text-xl font-bold text-white mb-4">Delete Account</h3>
-                        <p className="text-slate-400 mb-6">
+                    <div className="relative w-full max-w-md rounded-xl bg-white border border-slate-200 shadow-2xl p-6">
+                        <h3 className="text-lg font-semibold text-slate-900 mb-4">Delete Account</h3>
+                        <p className="text-slate-600 mb-6">
                             Are you sure you want to delete your account? This action cannot be undone.
                         </p>
                         <div className="flex gap-3">
                             <Button
-                                variant="secondary"
+                                variant="outline"
                                 onClick={() => setShowDeleteModal(false)}
                                 className="flex-1"
                             >
                                 Cancel
                             </Button>
                             <Button
-                                variant="danger"
                                 onClick={handleDeleteAccount}
-                                loading={deleting}
-                                className="flex-1"
+                                disabled={deleting}
+                                className="flex-1 bg-rose-600 hover:bg-rose-700"
                             >
-                                Delete
+                                {deleting ? "Deleting..." : "Delete"}
                             </Button>
                         </div>
                     </div>

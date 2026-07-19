@@ -1,4 +1,7 @@
 import { MapPin, Clock, Building2 } from "lucide-react";
+import { Card } from "../../../components/admin/ui";
+import { Button } from "../../../components/admin/ui";
+import { StatusBadge } from "../../../components/admin/common";
 
 interface Props {
     id: string;
@@ -41,77 +44,78 @@ export default function JobCard({
     };
 
     return (
-        <div className="rounded-2xl border border-slate-800/50 bg-slate-900/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
-            <div className="flex justify-between items-start">
+        <Card className="p-5 hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start gap-4">
                 <div className="flex-1">
-                    <h2 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">
-                        {title}
-                    </h2>
+                    <h3 className="text-base font-semibold text-slate-900">{title}</h3>
 
-                    <div className="mt-2 flex flex-wrap gap-3 text-slate-400 text-sm">
+                    <div className="mt-2 flex flex-wrap gap-3 text-sm text-slate-500">
                         {department && (
-                            <div className="flex items-center gap-2">
-                                <Building2 size={14} />
+                            <div className="flex items-center gap-1.5">
+                                <Building2 className="h-4 w-4" />
                                 {department}
                             </div>
                         )}
                         {location && (
-                            <div className="flex items-center gap-2">
-                                <MapPin size={14} />
+                            <div className="flex items-center gap-1.5">
+                                <MapPin className="h-4 w-4" />
                                 {location}
                             </div>
-                        )}
-                        {employment_type && (
-                            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs">
-                                {employment_type}
-                            </span>
-                        )}
-                        {work_mode && (
-                            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs">
-                                {work_mode}
-                            </span>
                         )}
                     </div>
                 </div>
 
-                {salary && (
-                    <div className="ml-4 text-right">
-                        <p className="text-sm text-slate-400">Salary</p>
-                        <p className="text-lg font-semibold text-green-400">{salary}</p>
-                    </div>
+                {hasApplied && (
+                    <StatusBadge label="Applied" tone="success" />
                 )}
             </div>
 
-            <div className="mt-4 flex items-center gap-2 text-slate-500 text-sm">
-                <Clock size={14} />
-                {formatDate(published_at)}
+            <div className="mt-3 flex flex-wrap gap-2">
+                {employment_type && (
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                        {employment_type}
+                    </span>
+                )}
+                {work_mode && (
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                        {work_mode}
+                    </span>
+                )}
             </div>
 
-            <div className="mt-6 flex gap-3">
-                <button
-                    type="button"
-                    onClick={() => onApply?.(id)}
-                    disabled={applying || hasApplied}
-                    className={`rounded-lg px-5 py-2 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 ${
-                        hasApplied
-                            ? "bg-slate-700 cursor-not-allowed"
-                            : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/25 hover:shadow-blue-500/30"
-                    }`}
-                >
-                    {hasApplied ? "Already Applied" : applying ? "Applying..." : "Apply"}
-                </button>
+            <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                    <Clock className="h-3.5 w-3.5" />
+                    {formatDate(published_at)}
+                </div>
 
-                <button
-                    type="button"
-                    onClick={() => {
-                        console.log('View Details button clicked for job:', id);
-                        if (onViewDetails) onViewDetails(id);
-                    }}
-                    className="rounded-lg border border-blue-500/50 bg-blue-600/10 px-5 py-2 text-blue-300 hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300"
-                >
-                    View Details
-                </button>
+                <div className="flex gap-2">
+                    {onViewDetails && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onViewDetails(id)}
+                        >
+                            View Details
+                        </Button>
+                    )}
+                    {!hasApplied && onApply && (
+                        <Button
+                            size="sm"
+                            onClick={() => onApply(id)}
+                            disabled={applying}
+                        >
+                            {applying ? "Applying..." : "Apply"}
+                        </Button>
+                    )}
+                </div>
             </div>
-        </div>
+
+            {salary && (
+                <div className="mt-3 pt-3 border-t border-slate-100">
+                    <p className="text-sm font-medium text-slate-900">{salary}</p>
+                </div>
+            )}
+        </Card>
     );
 }
