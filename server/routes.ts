@@ -23,6 +23,7 @@ import candidateJobsRoutes from './modules/candidates/jobs/routes/jobs.routes';
 
 // Recruitment
 import requisitionsRoutes from './modules/recruitment/requisitions/requisitions.routes';
+import bulkUploadRoutes from './modules/recruitment/bulk-upload/bulk-upload.routes';
 import jobsRoutes from './modules/recruitment/jobs/jobs.routes';
 import { reqFormRouter, approvalsRouter as formsApprovalsRouter, templatesRouter } from './modules/recruitment/forms/forms.routes';
 import pipelineRoutes from './modules/recruitment/pipeline/pipeline.routes';
@@ -69,6 +70,7 @@ router.use('/candidates/jobs', candidateJobsRoutes); // public browse — no aut
 
 // ── Recruitment ─────────────────────────────────────────────────────────
 router.use('/requisitions', requisitionsRoutes);
+router.use('/requisitions', bulkUploadRoutes);
 router.use('/jobs', jobsRoutes); // public published-jobs feed, consumed by candidates/jobs module in-process too
 router.use('/requisitions/:requisitionId/form', reqFormRouter);
 router.use('/form-approvals', formsApprovalsRouter);

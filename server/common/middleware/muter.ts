@@ -30,6 +30,11 @@ export const uploadResume = multer({
     storage: resumeStorage,
 });
 
+export const uploadResumesBulk = multer({
+    storage: resumeStorage,
+    limits: { files: 50, fileSize: 10 * 1024 * 1024 },
+}).array('resumes', 50);
+
 export const uploadProfilePicture = multer({
     storage: profilePictureStorage,
     limits: {

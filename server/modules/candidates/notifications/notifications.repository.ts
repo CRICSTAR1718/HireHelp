@@ -17,7 +17,7 @@ export class NotificationsRepository {
     return result[0];
   }
 
-  async create(data: NewNotification) {
+  async create(data: Omit<NewNotification, 'id' | 'createdAt'>) {
     const result = await db.insert(notifications).values({
       ...data,
       createdAt: new Date(),

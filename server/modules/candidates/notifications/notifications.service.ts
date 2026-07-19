@@ -23,6 +23,7 @@ export class NotificationsService {
       candidateId,
       ...data,
       isRead: false,
+      metadata: data.metadata || null,
     });
   }
 }

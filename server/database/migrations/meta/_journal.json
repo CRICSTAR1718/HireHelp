@@ -36,6 +36,13 @@
       "when": 1784155368094,
       "tag": "0004_burly_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1784477759349,
+      "tag": "0005_mysterious_toro",
+      "breakpoints": true
     }
   ]
 }

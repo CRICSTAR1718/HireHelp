@@ -72,6 +72,10 @@ async register(data: RegisterInput) {
       throw new Error('Invalid credentials');
     }
 
+    if (!candidate.passwordHash) {
+      throw new Error('This account was sourced by HR. Please complete registration to set a password.');
+    }
+
     const isValid = await authRepository.verifyPassword(data.password, candidate.passwordHash);
     if (!isValid) {
       throw new Error('Invalid credentials');
@@ -136,7 +140,11 @@ async register(data: RegisterInput) {
       throw new Error('Candidate not found');
     }
 
-    const isValid = await authRepository.verifyPassword(currentPassword, candidate.passwordHash);
+    if (!candidate.passwordHash) {
+      throw new Error('This account was sourced by HR. Please complete registration to set a password.');
+    }
+
+    const isValid = await authRepository.verifyPassword(currentPassword, candidate.passwordHash!);
     if (!isValid) {
       throw new Error('Current password is incorrect');
     }
