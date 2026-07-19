@@ -29,7 +29,7 @@ export class ProfileController {
         candidatesData.map(async (candidate) => {
           const profileData = await profileService.getProfile(candidate.id);
           return {
-            id: candidate.id,
+            id: candidate.uuid || candidate.id.toString(), // Use UUID if available, else serial ID as string
             firstName: candidate.firstName,
             lastName: candidate.lastName,
             email: candidate.email,

@@ -76,16 +76,26 @@ export const interviewSchedulingApi = {
   async getShortlistedCandidates(): Promise<Candidate[]> {
     try {
       const response = await apiClient.get(`/applications/shortlisted`);
+      console.log('Shortlisted candidates response:', response.data);
+      
+      // If no shortlisted candidates, fall back to all candidates
+      if (!response.data || response.data.length === 0) {
+        console.log('No shortlisted candidates found, fetching all candidates');
+        return this.getAllCandidates();
+      }
+      
       return response.data;
     } catch (error) {
       console.error('Failed to fetch shortlisted candidates:', error);
-      return [];
+      // Fallback to all candidates on error
+      return this.getAllCandidates();
     }
   },
 
   async getAllCandidates(): Promise<Candidate[]> {
     try {
       const response = await apiClient.get(`/candidates/profile/all`);
+      console.log('All candidates response:', response.data);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch all candidates:', error);
@@ -102,7 +112,9 @@ export const interviewSchedulingApi = {
     location?: string;
     status?: string;
   }) {
+    console.log('API call to /interviews/scheduling/interview with data:', data);
     const response = await apiClient.post(`/interviews/scheduling/interview`, data);
+    console.log('API response:', response.data);
     return response.data;
   },
 

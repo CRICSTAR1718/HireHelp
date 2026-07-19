@@ -48,6 +48,8 @@ const InterviewSchedulingPage = () => {
         interviewSchedulingApi.getInterviewersByRoles(),
         interviewSchedulingApi.getShortlistedCandidates(),
       ]);
+      console.log('Loaded interviewers:', interviewersData);
+      console.log('Loaded candidates:', candidatesData);
       setInterviewers(interviewersData);
       setCandidates(candidatesData);
 
@@ -90,10 +92,13 @@ const InterviewSchedulingPage = () => {
         status: 'scheduled',
       };
 
+      console.log('Submitting schedule data:', scheduleData);
       const result = await interviewSchedulingApi.createInterviewSchedule(scheduleData);
+      console.log('Schedule result:', result);
       
       // Auto-send invitation for virtual interviews
       if (formData.interviewMode === 'virtual' && result.schedule) {
+        console.log('Sending invitation for virtual interview');
         const selectedCandidate = candidates.find(c => c.id.toString() === formData.candidateId);
         const selectedInterviewer = interviewers.find(i => i.id.toString() === formData.interviewerId);
         
@@ -111,12 +116,16 @@ const InterviewSchedulingPage = () => {
             // Don't fail the whole process if invitation fails
           }
         }
+      } else {
+        console.log('Skipping invitation (not virtual or no schedule)');
       }
 
+      console.log('Setting success to true and navigating to dashboard');
       setSuccess(true);
       
       setTimeout(() => {
-        navigate('/admin/dashboard');
+        console.log('Navigating to /admin');
+        navigate('/admin');
       }, 2000);
     } catch (err) {
       setError('Failed to schedule interview. Please try again.');
@@ -311,7 +320,7 @@ const InterviewSchedulingPage = () => {
         <div className="flex justify-end gap-4">
           <button
             type="button"
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => navigate('/admin')}
             className="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors"
           >
             Cancel

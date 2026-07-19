@@ -66,23 +66,37 @@ export const RecruiterLayout = () => {
               if (hasSubItems) {
                 return (
                   <li key={item.to}>
-                    <button
+                    <NavLink
+                      to={item.to}
+                      className={({ isActive }) =>
+                        `flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                          isActive
+                            ? "text-white shadow-md"
+                            : ""
+                        }`
+                      }
+                      style={({ isActive }) => ({
+                        backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                        color: isActive ? 'white' : 'var(--text-secondary)'
+                      })}
+                      onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                      onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                       onClick={() => toggleExpanded(item.label)}
-                      className="flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200"
-                      style={{ color: 'var(--text-secondary)', backgroundColor: 'transparent' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
                     >
-                      <div className="flex items-center gap-3">
-                        <Icon className="w-5 h-5" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
-                        <span>{item.label}</span>
-                      </div>
-                      {expandedItem === item.label ? (
-                        <ChevronDown className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
-                      ) : (
-                        <ChevronRight className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={2} />
+                      {({ isActive }) => (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <Icon className={`w-5 h-5`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <span>{item.label}</span>
+                          </div>
+                          {expandedItem === item.label ? (
+                            <ChevronDown className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                          ) : (
+                            <ChevronRight className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                          )}
+                        </>
                       )}
-                    </button>
+                    </NavLink>
                     {expandedItem === item.label && item.subItems && (
                       <ul className="ml-4 mt-1 space-y-1">
                         {item.subItems.map((subItem) => {
