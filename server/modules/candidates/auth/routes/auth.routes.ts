@@ -15,5 +15,6 @@ router.post('/resend-otp', validate(resendOtpSchema), authController.resendOtp);
 router.post('/forgot-password', validate(forgotPasswordSchema), authController.forgotPassword);
 router.post('/verify-reset-otp', validate(verifyEmailSchema), authController.verifyResetOtp);
 router.post('/reset-password', validate(resetPasswordSchema), authController.resetPassword);
+router.post('/change-password', authenticateCandidate, authController.changePassword);
 
 export default router;
