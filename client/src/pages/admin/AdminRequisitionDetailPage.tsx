@@ -120,7 +120,7 @@ export default function AdminRequisitionDetailPage({ user }: AdminRequisitionDet
   const canApprove = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
   const canReject = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
   const canRequestChanges = req && (req.status === 'submitted' || req.status === 'under_review') && user?.role === 'admin'
-  const canPublish = req && req.status === 'approved' && user?.role === 'admin' && !form?.is_published
+  const canPublish = req && req.status === 'approved' && user?.role === 'admin' && form?.is_published
   const canViewApplications = req && (req.status === 'approved' || req.status === 'published' || req.status === 'closed') && user?.role === 'admin'
 
   const getStatusClass = (status: string) => {
