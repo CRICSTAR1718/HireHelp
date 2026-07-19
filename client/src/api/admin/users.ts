@@ -7,6 +7,13 @@ export const getUsers = async (): Promise<User[]> => {
   return (response.data as ApiResponse<User[]>).data;
 };
 
+export const getUsersByRoles = async (roleNames: string[]): Promise<User[]> => {
+  const response = await apiClient.get("/users/by-roles", {
+    params: { roleIds: roleNames.join(',') }
+  });
+  return (response.data as ApiResponse<User[]>).data;
+};
+
 export const getUser = async (id: string): Promise<User> => {
   const response = await apiClient.get(`/users/${id}`);
   return (response.data as ApiResponse<User>).data;

@@ -15,7 +15,11 @@ export const AssignedInterviews: React.FC = () => {
   const loadAssignments = async () => {
     try {
       const data = await assignmentApi.getInterviewerAssignments(1);
-      setAssignments(data);
+      // Deduplicate assignments by interviewId to prevent duplicate cards
+      const uniqueAssignments = data.filter((assignment, index, self) =>
+        index === self.findIndex((a) => a.interviewId === assignment.interviewId)
+      );
+      setAssignments(uniqueAssignments);
     } catch (error) {
       console.error('Failed to load assignments:', error);
     } finally {

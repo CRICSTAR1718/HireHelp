@@ -5,3 +5,4 @@ export * from "./useDepartments";
 export * from "./useConfiguration";
 export * from "./useAudit";
 export * from "./useApprovals";
+export * from "./useDashboardStats";

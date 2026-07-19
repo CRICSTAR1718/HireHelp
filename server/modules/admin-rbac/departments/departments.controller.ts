@@ -12,6 +12,7 @@ import type { DepartmentData } from "./departments.service";
 type ListDepartmentsResponse = { success: true; data: DepartmentData[] };
 type DepartmentResponse = { success: true; data: DepartmentData };
 type DeleteDepartmentResponse = { success: true; message: string };
+type DeleteDepartmentsByNameResponse = { success: true; message: string; count: number };
 
 const parseDepartmentIdParam = (params: Request["params"]): string => {
   const result = departmentParamsSchema.safeParse(params);
@@ -63,6 +64,16 @@ export const deleteDepartment = async (req: Request, res: Response<DeleteDepartm
   try {
     const result = await departmentsService.deleteDepartment(parseDepartmentIdParam(req.params));
     res.status(200).json({ success: true, message: result.message });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteDepartmentsByName = async (req: Request<{ name: string }>, res: Response<DeleteDepartmentsByNameResponse>, next: NextFunction): Promise<void> => {
+  try {
+    const { name } = req.params;
+    const result = await departmentsService.deleteDepartmentsByName(name);
+    res.status(200).json({ success: true, message: result.message, count: result.count });
   } catch (error) {
     next(error);
   }

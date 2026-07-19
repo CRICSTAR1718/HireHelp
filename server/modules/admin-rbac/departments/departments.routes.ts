@@ -6,6 +6,7 @@ import { validate } from "../../../common/middleware/validate";
 import {
   createDepartment,
   deleteDepartment,
+  deleteDepartmentsByName,
   getDepartmentById,
   listDepartments,
   updateDepartment,
@@ -19,5 +20,6 @@ router.get("/departments/:id", authenticate, authorize("departments:read"), getD
 router.post("/departments", authenticate, authorize("departments:create"), validate(createDepartmentSchema), createDepartment);
 router.patch("/departments/:id", authenticate, authorize("departments:update"), validate(updateDepartmentSchema), updateDepartment);
 router.delete("/departments/:id", authenticate, authorize("departments:delete"), deleteDepartment);
+router.delete("/departments/name/:name", authenticate, authorize("departments:delete"), deleteDepartmentsByName);
 
 export default router;
