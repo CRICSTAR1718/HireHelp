@@ -31,6 +31,7 @@ import offersRoutes from './modules/recruitment/offers/offers.routes';
 import recruitmentApplicationsRoutes from './modules/recruitment/applications/applications.routes';
 import { approvalsRouter as requisitionApprovalsRouter, rulebooksRouter } from './modules/recruitment/approvals/approvals.routes';
 import logsRoutes from './modules/recruitment/logs/logs.routes';
+import talentPoolRoutes from './modules/recruitment/talent-pool/talent-pool.routes';
 
 // Admin RBAC
 import adminAuthRoutes from './modules/admin-rbac/auth/auth.routes';
@@ -80,6 +81,7 @@ router.use('/applications', recruitmentApplicationsRoutes);
 router.use('/requisitions/:requisitionId/approvals', requisitionApprovalsRouter);
 router.use('/requisitions/:requisitionId/rulebooks', rulebooksRouter);
 router.use('/requisitions/:requisitionId/logs', logsRoutes);
+router.use('/talent-pool', talentPoolRoutes);
 
 // ── Admin RBAC ───────────────────────────────────────────────────────────
 router.use('/admin/auth', adminAuthRoutes);

@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "@/store/hooks";
 import type { Role } from "@/store/authSlice";
 
@@ -9,6 +9,7 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ allowedRoles, loginPath = "/login" }: ProtectedRouteProps) => {
   const { isAuthenticated, loading, user } = useAppSelector((s) => s.auth);
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -18,7 +19,7 @@ export const ProtectedRoute = ({ allowedRoles, loginPath = "/login" }: Protected
     );
   }
 
-  if (!isAuthenticated) return <Navigate replace to={loginPath} />;
+  if (!isAuthenticated) return <Navigate replace to={loginPath} state={{ from: location }} />;
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     return <Navigate replace to="/403" />;

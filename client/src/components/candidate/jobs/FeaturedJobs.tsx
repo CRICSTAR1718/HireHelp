@@ -9,7 +9,11 @@ import { submitApplication, checkApplicationStatus } from "../../../api/candidat
 import { uploadResume } from "../../../api/candidate/profile.api";
 import type { Job, FormResponse } from "../../../types/candidate";
 
-export default function FeaturedJobs() {
+interface FeaturedJobsProps {
+    initialSelectedJobId?: string | null;
+}
+
+export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJobsProps) {
     const [jobs, setJobs] = useState<Job[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -24,7 +28,13 @@ export default function FeaturedJobs() {
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     // Job Details Modal state
-    const [selectedJobForDetails, setSelectedJobForDetails] = useState<string | null>(null);
+    const [selectedJobForDetails, setSelectedJobForDetails] = useState<string | null>(initialSelectedJobId);
+
+    useEffect(() => {
+        if (initialSelectedJobId) {
+            setSelectedJobForDetails(initialSelectedJobId);
+        }
+    }, [initialSelectedJobId]);
 
     useEffect(() => {
         setLoading(true);
@@ -138,6 +148,10 @@ export default function FeaturedJobs() {
         handleApply(jobId);
     }
 
+    function handleTalentPoolApply(jobId: string) {
+        setAppliedJobIds(prev => new Set([...prev, jobId]));
+    }
+
     return (
         <div className="space-y-6">
             {successMessage && (
@@ -216,6 +230,7 @@ export default function FeaturedJobs() {
                     jobId={selectedJobForDetails}
                     onClose={handleCloseDetails}
                     onApply={handleApplyFromDetails}
+                    onTalentPoolApply={handleTalentPoolApply}
                     hasApplied={appliedJobIds.has(selectedJobForDetails)}
                 />
             )}

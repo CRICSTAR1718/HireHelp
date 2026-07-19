@@ -1,8 +1,11 @@
 import { SectionTitle } from "../../../components/admin/common";
+import { useParams } from "react-router-dom";
 import JobFilters from "../../../components/candidate/jobs/JobFilters";
 import FeaturedJobs from "../../../components/candidate/jobs/FeaturedJobs";
 
 export default function Jobs() {
+    const { jobId } = useParams();
+
     return (
         <div className="mx-auto max-w-7xl space-y-8">
             <SectionTitle
@@ -12,7 +15,7 @@ export default function Jobs() {
 
             <JobFilters />
 
-            <FeaturedJobs />
+            <FeaturedJobs initialSelectedJobId={jobId ?? null} />
         </div>
     );
 }

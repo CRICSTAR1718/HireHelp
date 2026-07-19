@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAppDispatch } from "@/store/hooks";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
@@ -14,7 +14,13 @@ import PasswordInput from "../../../components/candidate/ui/PasswordInput";
 export default function LoginForm() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const redirectTarget = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+  const destination = redirectTarget?.pathname
+    ? `${redirectTarget.pathname}${redirectTarget.search ?? ""}${redirectTarget.hash ?? ""}`
+    : "/candidate/dashboard";
 
   const {
     register,
@@ -51,7 +57,7 @@ const response = await login({
         })
       );
 
-      navigate("/candidate/dashboard");
+      navigate(destination, { replace: true });
     } catch (error) {
       const message =
         error instanceof Error

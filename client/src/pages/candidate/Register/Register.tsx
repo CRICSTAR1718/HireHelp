@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import { useAppDispatch } from "@/store/hooks";
@@ -23,10 +23,16 @@ type OtpFormValues = {
 export default function Register() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const [serverError, setServerError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [showOtpForm, setShowOtpForm] = useState(false);
     const [registeredEmail, setRegisteredEmail] = useState<string>("");
+
+    const redirectTarget = (location.state as { from?: { pathname?: string; search?: string; hash?: string } } | null)?.from;
+    const destination = redirectTarget?.pathname
+        ? `${redirectTarget.pathname}${redirectTarget.search ?? ""}${redirectTarget.hash ?? ""}`
+        : "/candidate/dashboard";
 
     const {
         register: registerField,
@@ -94,7 +100,7 @@ export default function Register() {
                 }),
             );
 
-            navigate("/candidate/dashboard");
+            navigate(destination, { replace: true });
         } catch (error) {
             const message =
                 error instanceof Error
