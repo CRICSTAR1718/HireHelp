@@ -45,14 +45,13 @@ import { InterviewerLayout } from "@/layouts/shared/InterviewerLayout";
 import { AssignedInterviews } from "@/pages/interviewer/AssignedInterviews";
 import { ScheduleCalendarView } from "@/pages/interviewer/ScheduleCalendarView";
 import { FeedbackForm } from "@/pages/interviewer/FeedbackForm";
-import { CalendarSync } from "@/pages/interviewer/CalendarSync";
 import { InterviewHistory } from "@/pages/interviewer/InterviewHistory";
 import InterviewerDashboard from "@/pages/interviewer/Dashboard";
 import InterviewerSettings from "@/pages/interviewer/Settings";
 import InterviewerNotifications from "@/pages/interviewer/Notifications";
 import InterviewerCalendar from "@/pages/interviewer/InterviewerCalendar";
-import InterviewerIntegrations from "@/pages/interviewer/Integrations";
 import ScheduleInterview from "@/pages/interviewer/ScheduleInterview";
+import CalcomSetup from "@/pages/interviewer/CalcomSetup";
 
 // ── Admin ──────────────────────────────────────────────────────
 import { AppLayout as AdminAppLayout } from "@/layouts/admin/AppLayout";
@@ -182,7 +181,7 @@ export function AppRouter() {
             <Route path="history" element={<InterviewHistory />} />
             <Route path="feedback" element={<FeedbackForm />} />
             <Route path="notifications" element={<InterviewerNotifications />} />
-            <Route path="integrations" element={<InterviewerIntegrations />} />
+            <Route path="integrations" element={<CalcomSetup />} />
             <Route path="settings" element={<InterviewerSettings />} />
             <Route path="schedule-calendar" element={<ScheduleCalendarView />} />
             <Route path="*" element={<Navigate replace to="calendar" />} />

@@ -124,6 +124,7 @@ export const interviewSchedulingApi = {
     candidateName: string;
     interviewerEmail: string;
     interviewerName: string;
+    jobTitle?: string;
   }) {
     const response = await apiClient.post(`/interviews/scheduling/${scheduleId}/send-invite`, data);
     return response.data;

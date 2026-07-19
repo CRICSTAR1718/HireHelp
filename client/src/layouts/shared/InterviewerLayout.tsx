@@ -10,7 +10,7 @@ const navItems = [
   { to: "/interviewer/history", label: "History", icon: Clock },
   { to: "/interviewer/feedback", label: "Feedback", icon: FileText },
   { to: "/interviewer/notifications", label: "Notifications", icon: Bell },
-  { to: "/interviewer/integrations", label: "Integrations", icon: Link },
+  { to: "/interviewer/integrations", label: "Cal.com Setup", icon: Link },
   { to: "/interviewer/settings", label: "Settings", icon: Settings },
 ];
 

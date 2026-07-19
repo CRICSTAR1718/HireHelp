@@ -54,6 +54,22 @@ export const scheduleApi = {
     return response.json();
   },
 
+  async sendInvitation(scheduleId: number, data: {
+    interviewerId: number;
+    candidateEmail: string;
+    candidateName: string;
+    interviewerEmail: string;
+    interviewerName: string;
+    jobTitle?: string;
+  }): Promise<Schedule> {
+    const response = await apiFetch(`/scheduling/${scheduleId}/send-invite`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+
   async getSchedule(id: number): Promise<Schedule> {
     const response = await apiFetch(`/scheduling/${id}`);
     return response.json();

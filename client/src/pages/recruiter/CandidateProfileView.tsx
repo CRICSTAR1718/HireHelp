@@ -77,7 +77,7 @@ export const CandidateProfileView: React.FC = () => {
           </div>
 
           {reqId && entryId && (
-            <ShortlistPanel reqId={reqId} entryId={entryId} />
+            <ShortlistPanel reqId={reqId} entryId={entryId} candidateId={candidateId} />
           )}
         </div>
 

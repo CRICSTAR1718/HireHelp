@@ -7,6 +7,7 @@ import { Calendar, Clock, MapPin, Video, Phone, User, Briefcase, ArrowLeft, Chec
 interface FormData {
   candidateId: string
   candidateName: string
+  candidateEmail: string
   role: string
   date: string
   startTime: string
@@ -23,6 +24,7 @@ export default function ScheduleInterview() {
   const [formData, setFormData] = useState<FormData>({
     candidateId: '',
     candidateName: '',
+    candidateEmail: '',
     role: '',
     date: '',
     startTime: '',
@@ -46,8 +48,9 @@ export default function ScheduleInterview() {
         throw new Error('User not authenticated')
       }
 
+      const interviewerId = parseInt(user.id)
       const interviewData = {
-        interviewerId: parseInt(user.id),
+        interviewerId,
         candidateId: formData.candidateId,
         role: formData.role,
         startTime: new Date(`${formData.date}T${formData.startTime}`).toISOString(),
@@ -57,7 +60,30 @@ export default function ScheduleInterview() {
         status: 'scheduled'
       }
 
-      await scheduleApi.createInterviewSchedule(interviewData)
+      const result = await scheduleApi.createInterviewSchedule(interviewData)
+
+      // Books the Cal.com meeting (Meet link on the interviewer's real
+      // Google Calendar) and emails the candidate. Only meaningful for
+      // video interviews -- in-person/phone still get the confirmation
+      // email but skip the Meet-link generation.
+      if (result?.schedule?.id) {
+        try {
+          await scheduleApi.sendInvitation(result.schedule.id, {
+            interviewerId,
+            candidateEmail: formData.candidateEmail,
+            candidateName: formData.candidateName,
+            interviewerEmail: user.email,
+            interviewerName: user.full_name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
+            jobTitle: formData.role,
+          })
+        } catch (inviteError) {
+          console.warn('Schedule created but invitation/email failed:', inviteError)
+          // Don't block success screen -- the schedule itself exists;
+          // surface this so it isn't silently lost.
+          setError('Interview scheduled, but the calendar invite/email failed to send. Check the candidate manually.')
+        }
+      }
+
       setSuccess(true)
       setTimeout(() => {
         navigate('/interviewer/calendar')
@@ -71,11 +97,6 @@ export default function ScheduleInterview() {
 
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
-  }
-
-  const generateMeetingLink = () => {
-    const mockLink = `https://meet.google.com/${Math.random().toString(36).substring(2, 10)}`
-    setFormData(prev => ({ ...prev, meetingLink: mockLink }))
   }
 
   return (
@@ -147,6 +168,20 @@ export default function ScheduleInterview() {
                       placeholder="Enter candidate ID"
                       required
                     />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Candidate Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.candidateEmail}
+                      onChange={(e) => handleChange('candidateEmail', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="candidate@example.com"
+                      required
+                    />
+                    <p className="text-sm text-gray-500 mt-1">The interview confirmation and Meet link are sent here.</p>
                   </div>
                 </div>
               </div>
@@ -259,23 +294,9 @@ export default function ScheduleInterview() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Meeting Link
                     </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        value={formData.meetingLink}
-                        onChange={(e) => handleChange('meetingLink', e.target.value)}
-                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="https://meet.google.com/..."
-                      />
-                      <button
-                        type="button"
-                        onClick={generateMeetingLink}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
-                      >
-                        Generate
-                      </button>
+                    <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 text-sm">
+                      Auto-generated via Cal.com (Google Meet) once you submit
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">Leave empty to generate automatically</p>
                   </div>
                 )}
 
@@ -393,3 +414,63 @@ export default function ScheduleInterview() {
     </div>
   )
 }
+
+
+
+
+
+// for f in client/src/pages/admin/InterviewSchedulingPage.tsx client/src/pages/recruiter/InterviewSchedulingPage.tsx; do
+//   python3 - "$f" << 'PYEOF'
+// import sys, re
+// path = sys.argv[1]
+// s = open(path).read()
+
+// s = s.replace(
+// """            await interviewSchedulingApi.sendInvitation(result.schedule.id, {
+//               interviewerId: parseInt(formData.interviewerId),
+//               candidateEmail: selectedCandidate.email,
+//               candidateName: `${selectedCandidate.firstName} ${selectedCandidate.lastName}`,
+//               interviewerEmail: selectedInterviewer.email,
+//               interviewerName: selectedInterviewer.name,
+//             });""",
+// Verify patch applieages/recruiter/InterviewSchedulingPage.tsx{selectedCandidate.lastName}`,
+
+
+
+
+
+
+
+// for f in client/src/pages/admin/InterviewSchedulingPage.tsx client/src/pages/recruiter/InterviewSchedulingPage.tsx; do
+//   python3 - "$f" << 'PYEOF'
+// import sys, re
+// path = sys.argv[1]
+// s = open(path).read()
+
+// s = s.replace(
+// """            await interviewSchedulingApi.sendInvitation(result.schedule.id, {
+//               interviewerId: parseInt(formData.interviewerId),
+//               candidateEmail: selectedCandidate.email,
+//               candidateName: `${selectedCandidate.firstName} ${selectedCandidate.lastName}`,
+//               interviewerEmail: selectedInterviewer.email,
+//               interviewerName: selectedInterviewer.name,
+//             });""",
+// """            await interviewSchedulingApi.sendInvitation(result.schedule.id, {
+//               interviewerId: parseInt(formData.interviewerId),
+//               candidateEmail: selectedCandidate.email,
+//               candidateName: `${selectedCandidate.firstName} ${selectedCandidate.lastName}`,
+//               interviewerEmail: selectedInterviewer.email,
+//               interviewerName: selectedInterviewer.name,
+//               jobTitle: formData.interviewType,
+//             });"""
+// )
+
+// s = s.replace(
+// 'Auto-generated by Google Calendar',
+// 'Auto-generated via Cal.com (Google Meet)'
+// )
+
+// open(path, 'w').write(s)
+// print("patched", path)
+// PYEOF
+// done
