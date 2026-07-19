@@ -45,12 +45,34 @@ export class AssignmentController {
 
   async getByInterviewer(req: Request, res: Response) {
     try {
-      const interviewerId = parseInt(req.params.interviewerId);
+      // Get interviewer ID from authenticated user or route param
+      const interviewerId = req.params.interviewerId 
+        ? parseInt(req.params.interviewerId)
+        : await this.getInterviewerIdFromUser(req.user?.id);
+      
       const assignments = await assignmentService.getInterviewerAssignments(interviewerId);
       res.json(assignments);
     } catch (error) {
-      res.status(500).json({ error: 'Failed to get assignments' });
+      console.error('[Assignment Controller] getByInterviewer failed:', error);
+      // Return empty array if interviewer not found or other error
+      res.json([]);
     }
+  }
+
+  private async getInterviewerIdFromUser(userId?: string): Promise<number> {
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+    
+    // Get interviewer ID from users table
+    const { interviewerRepository } = await import('../interviewer/interviewer.repository');
+    const interviewer = await interviewerRepository.findByUserId(userId);
+    
+    if (!interviewer) {
+      throw new Error('Interviewer not found for user');
+    }
+    
+    return interviewer.id;
   }
 
   async update(req: Request, res: Response) {

@@ -8,8 +8,10 @@ export const createAssignmentSchema = z.object({
 });
 
 export const updateAssignmentSchema = z.object({
-  status: z.string(),
+  status: z.string().optional(),
   completedAt: z.date().optional(),
+  cancellationReason: z.string().optional(),
+  feedback: z.string().optional(),
 });
 
 // Used by POST /interviews/assignments/assign-and-schedule -- the "Flow 1"

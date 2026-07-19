@@ -1,6 +1,6 @@
 import { db } from '../../../database'
 import { talent_pool, notification_history } from '../../../database/schema/recruitment.schema'
-import { eq, and, desc } from 'drizzle-orm'
+import { eq, and, desc, count } from 'drizzle-orm'
 
 function toNumericField(value?: number | string) {
   if (value === undefined) return undefined
@@ -80,7 +80,7 @@ export async function checkCandidateInTalentPool(candidateId: string) {
 }
 
 export async function getActiveTalentPoolCount() {
-  const [result] = await db.select({ count: talent_pool.id }).from(talent_pool).where(eq(talent_pool.status, 'active'))
+  const [result] = await db.select({ count: count() }).from(talent_pool).where(eq(talent_pool.status, 'active'))
   return result?.count || 0
 }
 

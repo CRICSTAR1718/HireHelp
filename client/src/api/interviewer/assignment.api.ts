@@ -9,13 +9,21 @@ export interface Assignment {
   candidateId: string;
   candidateName?: string;
   candidateEmail?: string;
+  candidatePhone?: string;
   role: string;
   status: string;
   assignedAt: Date;
   completedAt?: Date;
-  invitationSent?: boolean;
-  scheduleId?: number;
-  meetingLink?: string;
+  cancellationReason?: string;
+  feedback?: string;
+  schedule?: {
+    id: number;
+    startTime: Date;
+    endTime: Date;
+    location?: string;
+    meetingLink?: string;
+    status: string;
+  };
 }
 
 export const assignmentApi = {
@@ -33,8 +41,9 @@ export const assignmentApi = {
     return response.json();
   },
 
-  async getInterviewerAssignments(interviewerId: number): Promise<Assignment[]> {
-    const response = await apiFetch(`/assignments/interviewer/${interviewerId}`);
+  async getInterviewerAssignments(interviewerId?: number): Promise<Assignment[]> {
+    const url = interviewerId ? `/assignments/interviewer/${interviewerId}` : '/assignments/interviewer/me';
+    const response = await apiFetch(url);
     return response.json();
   },
 

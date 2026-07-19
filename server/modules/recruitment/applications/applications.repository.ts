@@ -6,6 +6,7 @@ import {
   form_fields,
   job_requisitions
 } from '../../../database/schema'
+import { assignments } from '../../../database/schema/interview.schema'
 import { eq, and, asc, desc } from 'drizzle-orm'
 import type { InferSelectModel } from 'drizzle-orm'
 
@@ -35,6 +36,58 @@ function baseApplicationSelect() {
   }
 }
 
+async function enrichWithInterviewData(applications: any[]) {
+  // Enrich applications with interview feedback and cancellation reasons
+  return await Promise.all(applications.map(async (app) => {
+    // Try to find assignment by candidate UUID first, then by integer ID
+    let assignment = null;
+    try {
+      [assignment] = await db.select({
+        id: assignments.id,
+        status: assignments.status,
+        feedback: assignments.feedback,
+        cancellationReason: assignments.cancellationReason,
+        role: assignments.role,
+        completedAt: assignments.completedAt,
+      })
+      .from(assignments)
+      .where(eq(assignments.candidateId, app.candidate_id))
+      .orderBy(desc(assignments.assignedAt))
+      .limit(1);
+    } catch (e) {
+      console.log('[Applications Repository] Assignment lookup by UUID failed, trying integer ID');
+    }
+
+    // If not found by UUID, try by integer ID
+    if (!assignment) {
+      const candidateIdInt = parseInt(app.candidate_id);
+      if (!isNaN(candidateIdInt)) {
+        [assignment] = await db.select({
+          id: assignments.id,
+          status: assignments.status,
+          feedback: assignments.feedback,
+          cancellationReason: assignments.cancellationReason,
+          role: assignments.role,
+          completedAt: assignments.completedAt,
+        })
+        .from(assignments)
+        .where(eq(assignments.candidateId, String(candidateIdInt)))
+        .orderBy(desc(assignments.assignedAt))
+        .limit(1);
+      }
+    }
+
+    return {
+      ...app,
+      interviewFeedback: assignment?.feedback,
+      interviewCancellationReason: assignment?.cancellationReason,
+      interviewStatus: assignment?.status,
+      interviewRole: assignment?.role,
+      interviewCompletedAt: assignment?.completedAt,
+    };
+  }));
+}
+
 export async function findAll(requisitionId?: string) {
   const query = db.select(baseApplicationSelect())
     .from(applications)
@@ -43,10 +96,12 @@ export async function findAll(requisitionId?: string) {
     .orderBy(desc(applications.submitted_at))
 
   if (requisitionId) {
-    return query.where(eq(applications.requisition_id, requisitionId))
+    const results = await query.where(eq(applications.requisition_id, requisitionId))
+    return enrichWithInterviewData(results)
   }
 
-  return query
+  const results = await query
+  return enrichWithInterviewData(results)
 }
 
 export async function findByRequisition(requisitionId: string) {

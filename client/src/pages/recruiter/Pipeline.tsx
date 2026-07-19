@@ -15,6 +15,11 @@ interface Application {
   status: string;
   ai_score: string;
   submitted_at: string;
+  interviewFeedback?: string;
+  interviewCancellationReason?: string;
+  interviewStatus?: string;
+  interviewRole?: string;
+  interviewCompletedAt?: string;
 }
 
 export const Pipeline: React.FC = () => {
@@ -135,6 +140,33 @@ export const Pipeline: React.FC = () => {
                     <span>•</span>
                     <span>{application.location}</span>
                   </div>
+                  {application.interviewRole && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <span className="font-medium">Interview:</span>
+                      <span>{application.interviewRole}</span>
+                      {application.interviewStatus && (
+                        <span className={`px-2 py-0.5 rounded text-xs ${
+                          application.interviewStatus === 'completed' ? 'bg-green-100 text-green-800' :
+                          application.interviewStatus === 'cancelled' ? 'bg-red-100 text-red-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {application.interviewStatus}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {application.interviewFeedback && (
+                    <div className="bg-green-50 rounded p-2 text-sm">
+                      <span className="font-medium text-green-800">Feedback:</span>
+                      <p className="text-green-700 mt-1 line-clamp-2">{application.interviewFeedback}</p>
+                    </div>
+                  )}
+                  {application.interviewCancellationReason && (
+                    <div className="bg-red-50 rounded p-2 text-sm">
+                      <span className="font-medium text-red-800">Cancellation Reason:</span>
+                      <p className="text-red-700 mt-1 line-clamp-2">{application.interviewCancellationReason}</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">

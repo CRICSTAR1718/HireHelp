@@ -38,6 +38,8 @@ export const assignments = pgTable('assignments', {
   status: text('status').notNull().default('pending'),
   assignedAt: timestamp('assigned_at').defaultNow(),
   completedAt: timestamp('completed_at'),
+  cancellationReason: text('cancellation_reason'),
+  feedback: text('feedback'),
 });
 
 export const schedules = pgTable('schedules', {
