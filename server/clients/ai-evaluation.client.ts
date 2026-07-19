@@ -40,6 +40,12 @@ export const aiEvaluationClient = {
       throw new Error('AI_EVALUATION_SERVICE_URL not configured')
     }
 
+    console.log('[ai-evaluation-client] Sending evaluation request:', {
+      application_id: request.application_id,
+      resume_url: request.resume_url,
+      job_id: request.job_id
+    })
+
     const url = `${env.AI_EVALUATION_SERVICE_URL}/api/v1/evaluation`
     const res = await fetch(url, {
       method: 'POST',
@@ -53,6 +59,7 @@ export const aiEvaluationClient = {
     if (!res.ok) {
       const errorText = await res.text()
       console.error(`[ai-evaluation-client] Failed to evaluate application: ${res.status} - ${errorText}`)
+      console.error('[ai-evaluation-client] Request payload:', JSON.stringify(request, null, 2))
       throw new Error(`AI evaluation failed: ${res.status}`)
     }
 

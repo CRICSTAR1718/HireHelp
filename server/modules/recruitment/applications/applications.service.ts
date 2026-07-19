@@ -113,7 +113,12 @@ export async function submitApplication(candidateId: string, jobId: string, resp
     console.log('[Application Service] Field responses created:', fieldResponses.length)
   }
 
-  // Trigger AI evaluation asynchronously
+  // Trigger AI evaluation asynchronously - resume is mandatory
+  if (!resumeId) {
+    console.error('[Application Service] Resume ID is required for AI evaluation')
+    throw Object.assign(new Error('Resume is required for application submission'), { statusCode: 400 })
+  }
+  
   triggerAiEvaluation(application.id, jobId, candidateId, resumeId).catch(error => {
     console.error('[Application Service] AI evaluation failed:', error)
   })
@@ -163,7 +168,8 @@ Education Requirements: ${requisition.education_requirements || ''}
     if (resumeId) {
       const { resumes } = await import('../../../database/schema/candidate.schema')
       const [resume] = await db.select({
-        s3_url: resumes.s3Url
+        s3_url: resumes.s3Url,
+        file_type: resumes.fileType
       })
       .from(resumes)
       .where(eq(resumes.id, resumeId))
@@ -173,6 +179,13 @@ Education Requirements: ${requisition.education_requirements || ''}
         throw Object.assign(new Error('Resume not found'), { statusCode: 404 })
       }
       resumeUrl = resume.s3_url
+      console.log('[Application Service] Resume URL for AI evaluation:', resumeUrl, 'File type:', resume.file_type)
+
+      // Validate resume URL format
+      if (!resumeUrl.startsWith('http://') && !resumeUrl.startsWith('https://')) {
+        console.error('[Application Service] Invalid resume URL format:', resumeUrl)
+        throw Object.assign(new Error('Invalid resume URL format'), { statusCode: 400 })
+      }
     } else {
       throw Object.assign(new Error('Resume ID not provided'), { statusCode: 400 })
     }

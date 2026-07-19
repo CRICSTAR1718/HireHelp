@@ -4,7 +4,7 @@ import type { FormField, FieldOption, FormResponse } from "../../../types/candid
 
 interface Props {
     fields: FormField[];
-    onSubmit: (responses: FormResponse[]) => void;
+    onSubmit: (responses: FormResponse[], resumeFile?: File) => void;
     onCancel: () => void;
     submitting?: boolean;
 }
@@ -37,12 +37,21 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
         fields.forEach(field => {
             if (field.is_required) {
                 const fieldValue = values.find(v => v.field_id === field.id);
-                if (!fieldValue || fieldValue.value === null || fieldValue.value === '' || 
+                if (!fieldValue || fieldValue.value === null || fieldValue.value === '' ||
                     (Array.isArray(fieldValue.value) && fieldValue.value.length === 0)) {
                     newErrors[field.id] = `${field.label} is required`;
                 }
             }
         });
+
+        // Ensure resume is uploaded if there's a file field
+        const resumeField = fields.find(f => f.field_type === 'file');
+        if (resumeField) {
+            const resumeValue = values.find(v => v.field_id === resumeField.id);
+            if (!resumeValue || !(resumeValue.value instanceof File)) {
+                newErrors[resumeField.id] = 'Resume is required for application submission';
+            }
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -72,7 +81,12 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
             return { field_id: v.field_id, response_text, response_json, file_url };
         });
 
-        onSubmit(responses);
+        // Find resume file if any
+        const resumeField = fields.find(f => f.field_type === 'file');
+        const resumeValue = resumeField ? values.find(v => v.field_id === resumeField.id)?.value : null;
+        const resumeFile = resumeValue instanceof File ? resumeValue : null;
+
+        onSubmit(responses, resumeFile);
     };
 
     const renderField = (field: FormField) => {

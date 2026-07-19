@@ -6,6 +6,7 @@ import JobDetailsModal from "./JobDetailsModal";
 import Loader from "../ui/Loader";
 import { getJobs, getJobForm } from "../../../api/candidate/jobs.api";
 import { submitApplication, checkApplicationStatus } from "../../../api/candidate/applications.api";
+import { uploadResume } from "../../../api/candidate/profile.api";
 import type { Job, FormResponse } from "../../../types/candidate";
 
 export default function FeaturedJobs() {
@@ -70,16 +71,37 @@ export default function FeaturedJobs() {
         }
     }
 
-    async function handleFormSubmit(responses: FormResponse[]) {
+    async function handleFormSubmit(responses: FormResponse[], resumeFile?: File) {
         if (!selectedJobId) return;
 
         setSubmitting(true);
         setFormError(null);
 
         try {
+            // Resume is mandatory
+            if (!resumeFile) {
+                setFormError('Resume is required for application submission');
+                setSubmitting(false);
+                return;
+            }
+
+            // Upload resume
+            let resumeId: number;
+            try {
+                const uploadResult = await uploadResume(resumeFile);
+                resumeId = uploadResult.id;
+                console.log('Resume uploaded successfully:', uploadResult);
+            } catch (uploadError) {
+                console.error('Resume upload failed:', uploadError);
+                setFormError('Failed to upload resume. Please try again.');
+                setSubmitting(false);
+                return;
+            }
+
             await submitApplication({
                 jobId: selectedJobId,
-                responses
+                responses,
+                resumeId
             });
 
             setSuccessMessage("Application submitted successfully!");

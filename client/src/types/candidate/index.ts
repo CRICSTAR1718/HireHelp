@@ -145,4 +145,5 @@ export interface FormResponse {
 export interface ApplicationSubmission {
     jobId: string;
     responses: FormResponse[];
+    resumeId?: number;
 }

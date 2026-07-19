@@ -3,7 +3,6 @@ import {
     User,
     BriefcaseBusiness,
     ClipboardList,
-    Settings,
     LogOut,
 } from "lucide-react";
 
@@ -30,11 +29,6 @@ const menu = [
         title: "Applications",
         icon: ClipboardList,
         path: "/candidate/applications",
-    },
-    {
-        title: "Settings",
-        icon: Settings,
-        path: "/candidate/settings",
     },
 ];
 

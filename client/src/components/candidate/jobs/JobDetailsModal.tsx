@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MapPin, Clock, Building2, DollarSign, X } from "lucide-react";
+import { MapPin, Clock, Building2, DollarSign, X, ArrowLeft } from "lucide-react";
 import type { Job } from "../../../types/candidate";
 import { getJob } from "../../../api/candidate/jobs.api";
 
@@ -81,10 +81,20 @@ export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = 
             <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
                 {/* Header */}
                 <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-6">
-                    <h2 className="text-xl font-bold text-white">Job Details</h2>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={onClose}
+                            className="rounded-lg p-2 text-blue-400 hover:bg-slate-800 hover:text-blue-300 transition-all"
+                            title="Go back"
+                        >
+                            <ArrowLeft size={20} />
+                        </button>
+                        <h2 className="text-xl font-bold text-white">Job Details</h2>
+                    </div>
                     <button
                         onClick={onClose}
-                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-all"
+                        className="rounded-lg p-2 text-blue-400 hover:bg-slate-800 hover:text-blue-300 transition-all"
+                        title="Close"
                     >
                         <X size={20} />
                     </button>
@@ -226,7 +236,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, hasApplied = 
                             </button>
                             <button
                                 onClick={onClose}
-                                className="rounded-lg border border-slate-700/50 px-6 py-3 text-white hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300"
+                                className="rounded-lg border border-slate-700/50 px-6 py-3 text-blue-400 hover:bg-slate-800/50 hover:border-slate-600 hover:text-blue-300 transition-all duration-300"
                             >
                                 Close
                             </button>

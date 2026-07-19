@@ -1,4 +1,6 @@
 import api from "./api";
+import axios from "axios";
+import { TOKEN_KEY } from "../shared/client";
 import type { Profile } from "../../types/candidate";
 
 function normalizeProfile(payload: any): Profile {
@@ -52,4 +54,28 @@ export async function uploadProfilePicture(file: File): Promise<{ profilePicture
     return {
         profilePictureUrl: response.data.profilePictureUrl ?? response.data.profileImage ?? "",
     };
+}
+
+// Resume upload API
+const resumeApi = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || "/api",
+    headers: {
+        "Content-Type": "multipart/form-data",
+    },
+});
+
+resumeApi.interceptors.request.use((config) => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+export async function uploadResume(file: File): Promise<{ id: number; s3Url: string; candidateId: number }> {
+    const formData = new FormData();
+    formData.append('resume', file);
+
+    const response = await resumeApi.post<{ id: number; s3Url: string; candidateId: number }>("/candidates/resumes/upload", formData);
+    return response.data;
 }
