@@ -13,9 +13,11 @@ export class SchedulingController {
 
   async createInterviewSchedule(req: Request, res: Response) {
     try {
+      console.log('[Scheduling Controller] Received request body:', req.body);
       const result = await schedulingService.createInterviewSchedule(req.body);
       res.status(201).json(result);
     } catch (error) {
+      console.error('[Scheduling Controller] Error:', error);
       res.status(500).json({ error: 'Failed to create interview schedule' });
     }
   }

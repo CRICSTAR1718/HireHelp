@@ -18,6 +18,10 @@ export class AssignmentRepository {
     return db.select().from(assignments).where(eq(assignments.interviewerId, interviewerId));
   }
 
+  async findAll() {
+    return db.select().from(assignments);
+  }
+
   async update(id: number, data: UpdateAssignmentInput) {
     const [assignment] = await db
       .update(assignments)

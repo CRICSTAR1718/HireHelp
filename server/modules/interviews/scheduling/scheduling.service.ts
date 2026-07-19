@@ -36,6 +36,8 @@ export class SchedulingService {
 
   // Combined method to create assignment + schedule in one transaction
   async createInterviewSchedule(data: CreateInterviewScheduleInput) {
+    console.log('[Scheduling Service] Creating interview schedule with data:', data);
+    
     // First create the assignment
     const assignment = await assignmentRepository.create({
       interviewerId: data.interviewerId,
@@ -43,6 +45,8 @@ export class SchedulingService {
       role: data.role,
       interviewId: data.interviewId || `int-${Date.now()}`, // Generate interview ID if not provided
     });
+
+    console.log('[Scheduling Service] Created assignment:', assignment);
 
     // Then create the schedule linked to the assignment
     const schedule = await schedulingRepository.create({
@@ -53,6 +57,8 @@ export class SchedulingService {
       meetingLink: data.meetingLink,
       status: data.status,
     });
+
+    console.log('[Scheduling Service] Created schedule:', schedule);
 
     return {
       assignment,
@@ -71,28 +77,38 @@ export class SchedulingService {
       throw new Error('Invitation already sent');
     }
 
-    const meetingData: MeetingData = {
-      title: `Interview: ${candidateName}`,
-      description: `Interview for ${schedule.assignmentId} - ${new Date(schedule.startTime).toLocaleString()}`,
-      startTime: new Date(schedule.startTime),
-      endTime: new Date(schedule.endTime),
-      attendees: [
-        { email: candidateEmail, name: candidateName },
-        { email: interviewerEmail, name: interviewerName },
-      ],
-      location: schedule.location || undefined,
-    };
+    try {
+      const meetingData: MeetingData = {
+        title: `Interview: ${candidateName}`,
+        description: `Interview for ${schedule.assignmentId} - ${new Date(schedule.startTime).toLocaleString()}`,
+        startTime: new Date(schedule.startTime),
+        endTime: new Date(schedule.endTime),
+        attendees: [
+          { email: candidateEmail, name: candidateName },
+          { email: interviewerEmail, name: interviewerName },
+        ],
+        location: schedule.location || undefined,
+      };
 
-    const result = await this.calendarProvider.createMeeting(meetingData);
+      const result = await this.calendarProvider.createMeeting(meetingData);
 
-    // Update schedule with calendar event details
-    const updatedSchedule = await schedulingRepository.update(scheduleId, {
-      googleEventId: result.eventId,
-      meetingLink: result.meetLink || schedule.meetingLink || undefined,
-      invitationSent: true,
-    });
+      // Update schedule with calendar event details
+      const updatedSchedule = await schedulingRepository.update(scheduleId, {
+        googleEventId: result.eventId,
+        meetingLink: result.meetLink || schedule.meetingLink || undefined,
+        invitationSent: true,
+      });
 
-    return updatedSchedule;
+      return updatedSchedule;
+    } catch (calendarError) {
+      console.error('[Scheduling Service] Failed to send calendar invitation:', calendarError);
+      // Don't fail the whole process if calendar integration fails
+      // Mark as invitation sent but without calendar details
+      const updatedSchedule = await schedulingRepository.update(scheduleId, {
+        invitationSent: true,
+      });
+      return updatedSchedule;
+    }
   }
 
   // Get upcoming interviews for a candidate
