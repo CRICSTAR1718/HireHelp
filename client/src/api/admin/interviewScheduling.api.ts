@@ -56,19 +56,19 @@ export const interviewSchedulingApi = {
 
   async getInterviewersByRoles(): Promise<Interviewer[]> {
     try {
-      const response = await apiClient.get(`/admin/users/by-roles?roleIds=interviewer,hr,admin`);
-      return response.data.data.map((user: any) => ({
-        id: user.id,
-        userId: user.id,
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email,
-        expertise: [],
-        availability: null,
-        createdAt: new Date(user.createdAt),
-        updatedAt: new Date(user.updatedAt),
+      const response = await apiClient.get(`/interviews/interviewers`);
+      return response.data.map((interviewer: any) => ({
+        id: interviewer.id,
+        userId: interviewer.userId,
+        name: interviewer.name,
+        email: interviewer.email,
+        expertise: interviewer.expertise || [],
+        availability: interviewer.availability || null,
+        createdAt: new Date(interviewer.createdAt),
+        updatedAt: new Date(interviewer.updatedAt),
       }));
     } catch (error) {
-      console.error('Failed to fetch interviewers by roles:', error);
+      console.error('Failed to fetch interviewers:', error);
       return [];
     }
   },
