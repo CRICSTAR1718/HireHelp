@@ -1,7 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { useTheme } from "@/contexts/ThemeContext";
-import { Calendar, LogOut, LayoutDashboard, FileText, Settings, Home, Clock, Bell, Link, Moon, Sun } from "lucide-react";
+import { Calendar, LogOut, LayoutDashboard, Home, Link } from "lucide-react";
 
 const navItems = [
   { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
@@ -12,21 +11,10 @@ const navItems = [
 export const InterviewerLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const { theme, setTheme, effectiveTheme } = useTheme();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
-  };
-
-  const toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
   };
 
   return (
