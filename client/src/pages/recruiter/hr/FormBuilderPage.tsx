@@ -350,8 +350,7 @@ const FormBuilderPage: React.FC = () => {
 
   if (!form) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
-
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">No Form Created</h2>
           <p className="text-gray-600 mb-4">Create an application form for this requisition</p>
@@ -367,9 +366,7 @@ const FormBuilderPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-primary)' }}>
-
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -670,7 +667,6 @@ const FormBuilderPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   )
 }

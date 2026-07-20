@@ -128,8 +128,7 @@ export const FeedbackForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-lg">
@@ -455,7 +454,6 @@ export const FeedbackForm: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-      </div>
     </div>
   );
 };

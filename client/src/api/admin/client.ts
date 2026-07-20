@@ -90,10 +90,9 @@ apiClient.interceptors.response.use(
     }
     if (status === 404) {
       console.error("404:", error.config?.url, error.response?.data);
- 
-}
-    else if (status === 404) redirectTo("/404");
-    else if (status === 409) toast.error(error.response?.data.message ?? "The request conflicts with the current data.");
+      redirectTo("/404");
+    }
+    else if (status === 409) toast.error(error.response?.data.error ?? error.response?.data.message ?? "The request conflicts with the current data.");
     else if (status === 500) toast.error("Something went wrong on the server. Please try again.");
     return Promise.reject(error);
   },

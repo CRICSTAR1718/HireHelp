@@ -101,21 +101,23 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
             )}
           </div>
 
-          <NavLink
-            className={({ isActive }) =>
-              cn(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
-                collapsed && "justify-center px-2",
-              )
-            }
-            onClick={onCloseMobile}
-            title={collapsed ? "Settings" : undefined}
-            to={userType === "Candidate" ? "/candidate/settings" : "/admin/settings"}
-          >
-            <Settings className="h-5 w-5" />
-            {!collapsed && "Settings"}
-          </NavLink>
+          {userType !== "Admin" && (
+            <NavLink
+              className={({ isActive }) =>
+                cn(
+                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                  collapsed && "justify-center px-2",
+                )
+              }
+              onClick={onCloseMobile}
+              title={collapsed ? "Settings" : undefined}
+              to={userType === "Candidate" ? "/candidate/settings" : "/recruiter/settings"}
+            >
+              <Settings className="h-5 w-5" />
+              {!collapsed && "Settings"}
+            </NavLink>
+          )}
 
           <button
             className={cn(

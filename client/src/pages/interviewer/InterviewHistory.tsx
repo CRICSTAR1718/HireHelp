@@ -43,15 +43,14 @@ export const InterviewHistory: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-slate-100">
+      <div className="flex items-center justify-center">
         <div className="text-xl text-gray-600">Loading history...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-slate-100 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Interview History</h1>
           <p className="text-gray-600">View your past interview feedback and ratings</p>
@@ -153,7 +152,6 @@ export const InterviewHistory: React.FC = () => {
             </CardBody>
           </Card>
         )}
-      </div>
     </div>
   );
 };

@@ -44,21 +44,21 @@ export default function JobCard({
     };
 
     return (
-        <Card className="p-5 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start gap-4">
+        <Card className="p-4 sm:p-5 hover:shadow-md transition-shadow">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
                 <div className="flex-1">
-                    <h3 className="text-base font-semibold text-slate-900">{title}</h3>
+                    <h3 className="text-sm sm:text-base font-semibold text-slate-900">{title}</h3>
 
-                    <div className="mt-2 flex flex-wrap gap-3 text-sm text-slate-500">
+                    <div className="mt-2 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-slate-500">
                         {department && (
                             <div className="flex items-center gap-1.5">
-                                <Building2 className="h-4 w-4" />
+                                <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 {department}
                             </div>
                         )}
                         {location && (
                             <div className="flex items-center gap-1.5">
-                                <MapPin className="h-4 w-4" />
+                                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                 {location}
                             </div>
                         )}
@@ -72,18 +72,18 @@ export default function JobCard({
 
             <div className="mt-3 flex flex-wrap gap-2">
                 {employment_type && (
-                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-medium text-slate-600">
                         {employment_type}
                     </span>
                 )}
                 {work_mode && (
-                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-medium text-slate-600">
                         {work_mode}
                     </span>
                 )}
             </div>
 
-            <div className="mt-4 flex items-center justify-between">
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div className="flex items-center gap-1.5 text-xs text-slate-400">
                     <Clock className="h-3.5 w-3.5" />
                     {formatDate(published_at)}
@@ -95,6 +95,7 @@ export default function JobCard({
                             variant="outline"
                             size="sm"
                             onClick={() => onViewDetails(id)}
+                            className="text-xs sm:text-sm"
                         >
                             View Details
                         </Button>
@@ -104,6 +105,7 @@ export default function JobCard({
                             size="sm"
                             onClick={() => onApply(id)}
                             disabled={applying}
+                            className="text-xs sm:text-sm"
                         >
                             {applying ? "Applying..." : "Apply"}
                         </Button>

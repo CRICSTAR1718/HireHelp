@@ -199,7 +199,7 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <div className="spinner" style={{ margin: '0 auto 1rem' }} />
           <p style={{ color: 'var(--text-muted)' }}>Loading…</p>

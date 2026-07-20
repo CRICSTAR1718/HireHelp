@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
-import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home, Link } from "lucide-react";
+import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home, Link, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -34,6 +34,8 @@ export const RecruiterLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -46,19 +48,42 @@ export const RecruiterLayout = () => {
 
   return (
     <div className="scope-recruiter min-h-screen flex">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg border-r flex flex-col fixed h-screen" style={{ borderColor: 'var(--border)', zIndex: 9999 }}>
+      <aside
+        className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
+          sidebarCollapsed ? 'w-16' : 'w-64'
+        } ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+        style={{ borderColor: 'var(--border)', zIndex: 9999 }}
+      >
         {/* Logo */}
-        <div className="p-5 border-b" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
+        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <LayoutDashboard className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-white">HireHelp</h1>
-              <p className="text-xs text-blue-100">AI Recruitment</p>
-            </div>
+            {!sidebarCollapsed && (
+              <div>
+                <h1 className="text-lg font-bold text-white">HireHelp</h1>
+                <p className="text-xs text-blue-100">AI Recruitment</p>
+              </div>
+            )}
           </div>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden text-white hover:bg-white/20 rounded-lg p-1"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Navigation Items */}
@@ -86,19 +111,19 @@ export const RecruiterLayout = () => {
                       })}
                       onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
-                      onClick={() => toggleExpanded(item.label)}
+                      onClick={() => !sidebarCollapsed && toggleExpanded(item.label)}
                     >
                       {({ isActive }) => (
                         <>
                           <div className="flex items-center gap-3">
-                            <Icon className={`w-5 h-5`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
-                            <span>{item.label}</span>
+                            <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            {!sidebarCollapsed && <span>{item.label}</span>}
                           </div>
-                          {expandedItem === item.label ? (
+                          {!sidebarCollapsed && (expandedItem === item.label ? (
                             <ChevronDown className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
                           ) : (
                             <ChevronRight className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
-                          )}
+                          ))}
                         </>
                       )}
                     </NavLink>
@@ -160,8 +185,8 @@ export const RecruiterLayout = () => {
                   >
                     {({ isActive }) => (
                       <>
-                        <Icon className={`w-5 h-5`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
-                        <span>{item.label}</span>
+                        <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                        {!sidebarCollapsed && <span>{item.label}</span>}
                       </>
                     )}
                   </NavLink>
@@ -174,6 +199,16 @@ export const RecruiterLayout = () => {
         {/* User Info & Logout */}
         <div className="p-4 border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-hover)' }}>
           <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 mb-2"
+            style={{ color: 'var(--text-secondary)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+          >
+            <LayoutDashboard className="w-5 h-5" strokeWidth={2} />
+            {!sidebarCollapsed && <span>Collapse</span>}
+          </button>
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 group"
             style={{ color: 'var(--danger)' }}
@@ -181,13 +216,24 @@ export const RecruiterLayout = () => {
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--danger)'; }}
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
-            <span>Logout</span>
+            {!sidebarCollapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <main className={`flex-1 p-6 transition-all duration-300 ${
+        sidebarCollapsed ? 'ml-16' : 'ml-64'
+      }`} style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-primary)' }}>
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200"
+          style={{ color: 'var(--text-secondary)', backgroundColor: 'var(--bg-secondary)' }}
+        >
+          <Menu className="w-5 h-5" strokeWidth={2} />
+          <span>Menu</span>
+        </button>
         <div className="max-w-7xl mx-auto">
           <Outlet />
         </div>

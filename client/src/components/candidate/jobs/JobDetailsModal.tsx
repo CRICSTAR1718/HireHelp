@@ -114,7 +114,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
     if (loading) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-8">
+                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 mx-4">
                     <div className="text-center text-slate-400">Loading job details...</div>
                 </div>
             </div>
@@ -124,7 +124,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
     if (error || !job) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-8">
+                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 mx-4">
                     <div className="text-center text-red-400">
                         {error || 'Job not found'}
                     </div>
@@ -143,9 +143,9 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
+            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl mx-4">
                 {/* Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-6">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-4 sm:p-6">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onClose}
@@ -154,7 +154,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                         >
                             <ArrowLeft size={20} />
                         </button>
-                        <h2 className="text-xl font-bold text-white">Job Details</h2>
+                        <h2 className="text-lg sm:text-xl font-bold text-white">Job Details</h2>
                     </div>
                     <button
                         onClick={onClose}
@@ -166,7 +166,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-4 sm:p-6 space-y-6">
                     {successMessage && (
                         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
                             {successMessage}
@@ -199,7 +199,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                     </div>
 
                     {/* Employment Details */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {job.employment_type && (
                             <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
                                 <p className="text-sm text-slate-400">Employment Type</p>
@@ -293,7 +293,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
 
                     {/* Apply Button */}
                     {onApply && (
-                        <div className="flex gap-3 pt-4 border-t border-slate-800">
+                        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-800">
                             <button
                                 onClick={handleApply}
                                 disabled={hasApplied || applying || checkingTalentPool}

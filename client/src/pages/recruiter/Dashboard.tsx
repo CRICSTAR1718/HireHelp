@@ -70,15 +70,14 @@ export const RecruiterDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-xl text-slate-600">Loading dashboard...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>
@@ -249,7 +248,6 @@ export const RecruiterDashboard: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-      </div>
     </div>
   );
 };

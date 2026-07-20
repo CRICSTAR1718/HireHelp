@@ -94,7 +94,7 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
   if (loading) {
     return (
       <div className="admin-page-container">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ textAlign: 'center' }}>
             <div className="spinner" style={{ margin: '0 auto 1rem' }} />
             <p style={{ color: '#64748b' }}>Loading requisitions…</p>

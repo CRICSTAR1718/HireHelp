@@ -87,14 +87,14 @@ export default function InterviewPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-xl text-gray-600">Loading assignments...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    <>
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
@@ -396,6 +396,6 @@ export default function InterviewPanel() {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

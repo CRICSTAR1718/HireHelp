@@ -239,7 +239,6 @@ export function AppRouter() {
             <Route path="analytics" element={<AssignedInterviews />} />
             <Route path="reports" element={<AssignedInterviews />} />
             <Route path="notifications" element={<Notifications />} />
-            <Route path="settings" element={<RecruiterSettings />} />
             <Route path="users" element={<UsersPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="permissions" element={<PermissionsPage />} />

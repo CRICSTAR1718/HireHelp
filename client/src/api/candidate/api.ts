@@ -22,8 +22,9 @@ api.interceptors.response.use(
     (error) => {
         if (isAxiosError(error)) {
             const message =
-                (error.response?.data as { message?: string } | undefined)
-                    ?.message || error.message;
+                (error.response?.data as { error?: string; message?: string } | undefined)?.error ||
+                (error.response?.data as { error?: string; message?: string } | undefined)?.message ||
+                error.message;
 
             return Promise.reject(new Error(message));
         }

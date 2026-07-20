@@ -44,7 +44,7 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="flex h-full w-72 flex-col bg-white/95 border-r border-blue-100">
+        <aside className="hidden lg:flex h-full w-72 flex-col bg-white/95 border-r border-blue-100">
 
             {/* Logo */}
 

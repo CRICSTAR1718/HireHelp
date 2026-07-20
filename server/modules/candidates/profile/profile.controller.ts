@@ -106,14 +106,19 @@ export class ProfileController {
       const candidate = candidateData[0];
 
       if (!candidate) {
-        throw new AppError('Profile Not Found', 404);
+        throw new AppError('Candidate Not Found', 404);
       }
 
       const profileData = await profileService.getProfile(req.candidateUser.id);
       console.log('[Profile Controller] Returned profile data:', profileData);
 
+      // If profile doesn't exist yet, return a default profile built from candidate data
+      // This is a normal state for newly registered candidates
       if (!profileData.profile) {
-        throw new AppError('Profile Not Found', 404);
+        const resume = (await resumeRepository.findByCandidateId(req.candidateUser.id))[0] || null;
+        const responsePayload = this.buildProfileResponse(candidate, { profile: null, skills: [], education: [], experiences: [] }, resume);
+        console.log('[Profile Controller] Returned default profile payload:', responsePayload);
+        return res.status(200).json(responsePayload);
       }
 
       const resume = (await resumeRepository.findByCandidateId(req.candidateUser.id))[0] || null;

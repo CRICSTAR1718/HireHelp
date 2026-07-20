@@ -203,7 +203,7 @@ export default function AdminRequisitionFormPage({ mode = 'create', user }: Admi
   if (loadingData) {
     return (
       <div className="admin-page-container">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div className="spinner" />
         </div>
       </div>

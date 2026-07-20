@@ -39,15 +39,14 @@ export default function AllInterviews() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">All Scheduled Interviews</h1>
           <p className="text-gray-600">View all scheduled interviews across the organization</p>
@@ -152,7 +151,6 @@ export default function AllInterviews() {
             ))}
           </div>
         )}
-      </div>
     </div>
   )
 }

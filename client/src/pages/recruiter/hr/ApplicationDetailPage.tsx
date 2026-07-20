@@ -55,7 +55,7 @@ const ApplicationDetailPage: React.FC = () => {
 
   if (!application) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Not Found</h2>
           <button
@@ -70,8 +70,7 @@ const ApplicationDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <button
             onClick={() => navigate(backTarget)}
@@ -198,7 +197,6 @@ const ApplicationDetailPage: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
     </div>
   )
 }

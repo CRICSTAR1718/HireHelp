@@ -208,7 +208,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
   if (loadingData) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="spinner" />
       </div>
     )
