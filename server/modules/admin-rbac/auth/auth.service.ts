@@ -6,6 +6,7 @@ import { env } from "../../../config/env";
 import { findByEmail, findById, updateLastLogin, update } from "../users/users.repository";
 import { getRoleNameById } from "../roles/roles.repository";
 import { create, findByRefreshTokenHash, update as updateSession, revoke, revokeAllByUserId } from "../user-sessions/user-sessions.repository";
+import { generateToken, hashToken, invalidateByUserId, findValidByTokenHash, markAsUsed, create as createResetToken } from "./password-reset.repository";
 import type { LoginInput, RefreshTokenInput, LogoutInput, ChangePasswordInput, ForgotPasswordInput, ResetPasswordInput } from "./auth.schema";
 
 export const login = async (
@@ -167,8 +168,24 @@ export const forgotPassword = async (input: ForgotPasswordInput) => {
     return { message: "If the email exists, a reset link will be sent" };
   }
 
-  // Generate a temporary reset token (in production, this should be stored in DB with expiry)
-  const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  // Invalidate any existing reset tokens for this user
+  await invalidateByUserId(user.id);
+
+  // Generate a secure reset token
+  const resetToken = generateToken();
+  const tokenHash = hashToken(resetToken);
+  
+  // Set expiry to 30 minutes from now
+  const expiresAt = new Date();
+  expiresAt.setMinutes(expiresAt.getMinutes() + 30);
+
+  // Store the token hash in the database
+  await createResetToken({
+    userId: user.id,
+    tokenHash,
+    expiresAt,
+  });
+
   const resetLink = `${env.CLIENT_ORIGIN}/reset-password?token=${resetToken}`;
   const fullName = `${user.firstName} ${user.lastName}`;
   const loginUrl = `${env.CLIENT_ORIGIN}/login`;
@@ -179,7 +196,7 @@ export const forgotPassword = async (input: ForgotPasswordInput) => {
       to: user.email,
       name: fullName,
       resetLink,
-      expirationMinutes: 30, // 30 minutes expiry
+      expirationMinutes: 30,
       loginUrl,
     });
   } catch (error) {
@@ -190,7 +207,36 @@ export const forgotPassword = async (input: ForgotPasswordInput) => {
   return { message: "If the email exists, a reset link will be sent" };
 };
 
-export const resetPassword = async (_input: ResetPasswordInput) => {
+export const resetPassword = async (input: ResetPasswordInput) => {
+  // Hash the incoming token to compare with stored hash
+  const tokenHash = hashToken(input.token);
+  
+  // Find a valid (unused, unexpired) token
+  const resetToken = await findValidByTokenHash(tokenHash);
+  
+  if (!resetToken) {
+    throw new AppError("Reset link is invalid or has expired", 400);
+  }
+  
+  // Get the user
+  const user = await findById(resetToken.userId);
+  
+  if (!user || !user.isActive) {
+    throw new AppError("Reset link is invalid or has expired", 400);
+  }
+  
+  // Hash the new password
+  const newPasswordHash = await hashPassword(input.newPassword);
+  
+  // Update the user's password
+  await update(user.id, { passwordHash: newPasswordHash });
+  
+  // Mark the token as used
+  await markAsUsed(resetToken.id);
+  
+  // Revoke all existing sessions for this user
+  await revokeAllByUserId(user.id, "password_reset");
+  
   return { message: "Password reset successfully" };
 };
 

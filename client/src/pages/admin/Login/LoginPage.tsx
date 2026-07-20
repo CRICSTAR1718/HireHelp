@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 import { Button } from "../../../components/admin/ui/button";
@@ -19,6 +20,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const LoginPage = () => {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
@@ -44,6 +46,11 @@ export const LoginPage = () => {
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
           <label className="block space-y-2"><span className="text-sm font-medium text-slate-700">Email address</span><Input autoComplete="email" placeholder="you@company.com" type="email" {...register("email")} /><span className="block min-h-5 text-xs text-red-600">{errors.email?.message}</span></label>
           <label className="block space-y-2"><span className="text-sm font-medium text-slate-700">Password</span><Input autoComplete="current-password" placeholder="Enter your password" type="password" {...register("password")} /><span className="block min-h-5 text-xs text-red-600">{errors.password?.message}</span></label>
+          <div className="flex justify-end">
+            <button type="button" onClick={() => navigate("/forgot-password")} className="text-sm text-blue-600 hover:text-blue-700">
+              Forgot password?
+            </button>
+          </div>
           {errors.root?.message && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700" role="alert">{errors.root.message}</p>}
           <Button className="w-full" disabled={isSubmitting} size="lg" type="submit">
             {isSubmitting ? <><Spinner className="mr-2 h-4 w-4" />Signing in</> : <><LogIn className="mr-2 h-4 w-4" />Sign in</>}

@@ -178,6 +178,25 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               />
             </div>
 
+            {mode === 'login' && (
+              <div style={{ textAlign: 'right' }}>
+                <button
+                  type="button"
+                  onClick={() => window.location.href = '/forgot-password'}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                    textDecoration: 'underline'
+                  }}
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
             {/* Role selector — register only */}
             {mode === 'register' && (
               <div>
