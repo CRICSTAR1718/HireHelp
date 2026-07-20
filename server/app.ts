@@ -16,7 +16,20 @@ import { env } from './config/env';
 
 export const app = express();
 
-app.use(cors({ origin: env.CLIENT_ORIGIN, credentials: true }));
+const allowedOrigins = env.CLIENT_ORIGIN.split(',').map((o) => o.trim());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow non-browser requests (curl, server-to-server) with no origin header
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      }
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
