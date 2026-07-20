@@ -153,7 +153,7 @@ export default function InterviewerDashboard() {
         </div>
 
         <div 
-          className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white cursor-pointer hover:shadow-lg transition-shadow"
+          className="bg-linear-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white cursor-pointer hover:shadow-lg transition-shadow"
           onClick={() => navigate('/interviewer/calendar')}
         >
           <div className="flex items-center justify-between mb-4">
@@ -165,7 +165,7 @@ export default function InterviewerDashboard() {
         </div>
 
         <div 
-          className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white cursor-pointer hover:shadow-lg transition-shadow"
+          className="bg-linear-to-br from-green-500 to-green-600 rounded-xl p-6 text-white cursor-pointer hover:shadow-lg transition-shadow"
           onClick={() => navigate('/interviewer/feedback')}
         >
           <div className="flex items-center justify-between mb-4">
