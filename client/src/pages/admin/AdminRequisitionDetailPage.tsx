@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getRequisition, updateRequisition, submitRequisition, approveRequisition, rejectRequisition, requestChanges, publishRequisition } from "../../api/recruiter/requisitions"
 import { getForm } from "../../api/recruiter/forms"
 import api from "../../api/recruiter/requisitions"
-import { TOKEN_KEY } from "../../api/shared/client"
 
 interface User {
   id: string
@@ -142,12 +141,9 @@ export default function AdminRequisitionDetailPage({ user }: AdminRequisitionDet
         formData.append('resumes', file)
       })
 
-      const token = localStorage.getItem(TOKEN_KEY)
       const response = await fetch(`/api/requisitions/${id}/bulk-resumes`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include',
         body: formData,
       })
 

@@ -12,7 +12,7 @@ router.post('/', requireRole('hr', 'admin'), validate(createAssignmentSchema), a
 router.post('/assign-and-schedule', requireRole('hr', 'admin'), validate(assignAndScheduleSchema), assignmentController.assignAndSchedule.bind(assignmentController));
 router.get('/', requireRole('hr', 'admin', 'recruiter'), assignmentController.getAll.bind(assignmentController));
 router.get('/all', requireRole('hr', 'admin'), assignmentController.getAllUnfiltered.bind(assignmentController));
-router.get('/interviewer/me', requireRole('hr', 'admin', 'interviewer'), assignmentController.getByInterviewer.bind(assignmentController));
+router.get('/interviewer/me', requireRole('hr', 'admin', 'recruiter', 'interviewer'), assignmentController.getByInterviewer.bind(assignmentController));
 router.get('/interviewer/:interviewerId', requireRole('hr', 'admin', 'interviewer'), assignmentController.getByInterviewer.bind(assignmentController));
 router.get('/:id', requireRole('hr', 'admin', 'interviewer'), assignmentController.getById.bind(assignmentController));
 router.put('/:id', requireRole('hr', 'admin', 'interviewer'), validate(updateAssignmentSchema), assignmentController.update.bind(assignmentController));

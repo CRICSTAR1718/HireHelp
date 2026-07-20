@@ -1,11 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTheme } from '@/contexts/ThemeContext'
-import { Settings, User, Bell, Shield, Palette, LogOut, Moon, Sun, Monitor } from 'lucide-react'
+import { Settings, User, Bell, Shield, LogOut } from 'lucide-react'
 
 export default function InterviewerSettings() {
   const navigate = useNavigate()
-  const { theme, setTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('profile')
   const [loading, setLoading] = useState(false)
 
@@ -13,7 +11,6 @@ export default function InterviewerSettings() {
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Shield },
-    { id: 'appearance', label: 'Appearance', icon: Palette },
   ]
 
   const handleSave = () => {
@@ -225,84 +222,6 @@ export default function InterviewerSettings() {
                       Enable 2FA
                     </button>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'appearance' && (
-              <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Appearance Settings</h2>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-4">Theme</label>
-                  <div className="grid grid-cols-3 gap-4">
-                    <button
-                      onClick={() => setTheme('light')}
-                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        theme === 'light' 
-                          ? 'border-blue-500 bg-blue-50' 
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <Sun className="w-6 h-6 text-yellow-500" />
-                        <span className="text-sm font-medium">Light</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setTheme('dark')}
-                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        theme === 'dark' 
-                          ? 'border-blue-500 bg-blue-50' 
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <Moon className="w-6 h-6 text-blue-600" />
-                        <span className="text-sm font-medium">Dark</span>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setTheme('system')}
-                      className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        theme === 'system' 
-                          ? 'border-blue-500 bg-blue-50' 
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-2">
-                        <Monitor className="w-6 h-6 text-gray-600" />
-                        <span className="text-sm font-medium">System</span>
-                      </div>
-                    </button>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {theme === 'system' 
-                      ? 'Theme will match your system preferences' 
-                      : `Currently using ${theme} theme`}
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option>English (US)</option>
-                    <option>English (UK)</option>
-                    <option>Spanish</option>
-                    <option>French</option>
-                    <option>German</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
-                  <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <option>Pacific Time (PT)</option>
-                    <option>Mountain Time (MT)</option>
-                    <option>Central Time (CT)</option>
-                    <option>Eastern Time (ET)</option>
-                    <option>UTC</option>
-                  </select>
                 </div>
               </div>
             )}

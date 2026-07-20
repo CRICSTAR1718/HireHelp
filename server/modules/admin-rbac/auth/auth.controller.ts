@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 import { AppError } from "../../../common/middleware/error-handler";
+import { env } from "../../../config/env";
 import * as authService from "./auth.service";
 import type {
   LoginInput,
@@ -26,6 +27,33 @@ const getClientIp = (req: {
 const getUserAgent = (req: { headers: Request["headers"] }): string =>
   req.headers["user-agent"] ?? "";
 
+// Cookie options for httpOnly cookies
+const getCookieOptions = () => {
+  const isProduction = env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProduction, // Only require HTTPS in production
+    sameSite: isProduction ? 'none' as const : 'lax' as const,
+    domain: isProduction ? '.hirehelp.online' : undefined, // Only set domain in production
+    path: '/',
+  };
+};
+
+// Parse JWT_EXPIRES_IN to milliseconds for cookie maxAge
+const parseExpiresToMs = (expiresIn: string): number => {
+  const match = expiresIn.match(/^(\d+)([dhms])$/);
+  if (!match) return 3600000; // Default 1 hour
+  const value = parseInt(match[1], 10);
+  const unit = match[2];
+  switch (unit) {
+    case 'd': return value * 24 * 60 * 60 * 1000;
+    case 'h': return value * 60 * 60 * 1000;
+    case 'm': return value * 60 * 1000;
+    case 's': return value * 1000;
+    default: return 3600000;
+  }
+};
+
 export const login = async (
   req: Request<object, LoginResponse, LoginInput>,
   res: Response<LoginResponse>,
@@ -37,6 +65,22 @@ export const login = async (
       getClientIp(req),
       getUserAgent(req)
     );
+    
+    // Set httpOnly cookies for staff auth
+    const cookieOptions = getCookieOptions();
+    const accessMaxAge = parseExpiresToMs(env.JWT_EXPIRES_IN);
+    const refreshMaxAge = parseExpiresToMs(env.JWT_REFRESH_EXPIRES_IN);
+    
+    res.cookie('staff_access_token', result.accessToken, {
+      ...cookieOptions,
+      maxAge: accessMaxAge,
+    });
+    res.cookie('staff_refresh_token', result.refreshToken, {
+      ...cookieOptions,
+      maxAge: refreshMaxAge,
+    });
+    
+    // Keep JSON response for backward compatibility during rollout
     res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
@@ -50,6 +94,12 @@ export const logout = async (
 ): Promise<void> => {
   try {
     const result = await authService.logout(req.body);
+    
+    // Clear httpOnly cookies with same options used when setting
+    const cookieOptions = getCookieOptions();
+    res.clearCookie('staff_access_token', cookieOptions);
+    res.clearCookie('staff_refresh_token', cookieOptions);
+    
     res.status(200).json({ success: true, message: result.message });
   } catch (error) {
     next(error);
@@ -62,6 +112,30 @@ export const refreshToken = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Try cookie-based refresh first (new path)
+    const cookieRefreshToken = req.cookies?.staff_refresh_token;
+    if (cookieRefreshToken) {
+      const result = await authService.refreshToken({ refreshToken: cookieRefreshToken });
+      
+      // Set new cookies
+      const cookieOptions = getCookieOptions();
+      const accessMaxAge = parseExpiresToMs(env.JWT_EXPIRES_IN);
+      const refreshMaxAge = parseExpiresToMs(env.JWT_REFRESH_EXPIRES_IN);
+      
+      res.cookie('staff_access_token', result.accessToken, {
+        ...cookieOptions,
+        maxAge: accessMaxAge,
+      });
+      res.cookie('staff_refresh_token', result.refreshToken, {
+        ...cookieOptions,
+        maxAge: refreshMaxAge,
+      });
+      
+      res.status(200).json({ success: true, data: result });
+      return;
+    }
+    
+    // Fallback to body-based refresh for backward compatibility
     const result = await authService.refreshToken(req.body);
     res.status(200).json({ success: true, data: result });
   } catch (error) {

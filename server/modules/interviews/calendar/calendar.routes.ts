@@ -6,7 +6,7 @@ import { validate } from '../../../common/middleware/validate';
 import { createCalendarIntegrationSchema, updateCalendarIntegrationSchema } from './calendar.schema';
 
 const router = Router();
-router.use(authenticate, requireRole('interviewer', 'admin'));
+router.use(authenticate, requireRole('hr', 'admin', 'recruiter', 'interviewer'));
 
 router.post('/', validate(createCalendarIntegrationSchema), calendarController.create.bind(calendarController));
 router.get('/:id', calendarController.getById.bind(calendarController));

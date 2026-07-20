@@ -17,7 +17,7 @@ declare module "axios" {
 // mounted under that prefix in server/routes.ts. Every call in this
 // module's sibling files (users.ts, roles.ts, etc.) uses paths relative to
 // that, e.g. "/users" -> /api/admin/users.
-export const apiClient = axios.create({ baseURL: `${import.meta.env.VITE_API_URL || "/api"}/admin`, headers: { "Content-Type": "application/json" } });
+export const apiClient = axios.create({ baseURL: `${import.meta.env.VITE_API_URL || "/api"}/admin`, headers: { "Content-Type": "application/json" }, withCredentials: true });
 // Token reads/writes here use the SAME localStorage keys as the shared
 // Redux auth slice (store/authSlice.ts), because login for every staff role
 // (admin/hr/interviewer) goes through the one shared StaffLoginPage, not
@@ -49,21 +49,16 @@ export const configureTokenUpdateHandler = (handler: ((accessToken: string) => v
 const redirectTo = (path: "/403" | "/404"): void => { if (window.location.pathname !== path) window.location.assign(path); };
 
 const refreshAccessToken = async (): Promise<RefreshTokenResult> => {
-  const refreshToken = tokenStorage.getRefreshToken();
-  if (!refreshToken) throw new Error("No refresh token is available");
+  // Cookie-based refresh - no token in body needed
   if (!refreshRequest) {
-    refreshRequest = apiClient.post("/auth/refresh", { refreshToken }, { skipAuthRefresh: true })
+    refreshRequest = apiClient.post("/auth/refresh", {}, { skipAuthRefresh: true })
       .then((response) => (response.data as ApiResponse<RefreshTokenResult>).data)
       .finally(() => { refreshRequest = undefined; });
   }
   return refreshRequest;
 };
 
-apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const accessToken = tokenStorage.getAccessToken();
-  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
-  return config;
-});
+// Authorization header no longer needed - cookies sent automatically with withCredentials: true
 
 apiClient.interceptors.response.use(
   (response) => response,
@@ -74,9 +69,8 @@ apiClient.interceptors.response.use(
       request._retry = true;
       try {
         const tokens = await refreshAccessToken();
-        tokenStorage.setTokens(tokens.accessToken, tokens.refreshToken);
+        // Tokens are now in cookies, no localStorage update needed
         onTokensUpdated?.(tokens.accessToken);
-        request.headers = { ...request.headers, Authorization: `Bearer ${tokens.accessToken}` };
         return apiClient(request);
       } catch {
         tokenStorage.clear();

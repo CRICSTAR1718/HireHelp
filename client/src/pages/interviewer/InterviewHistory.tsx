@@ -148,7 +148,7 @@ export const InterviewHistory: React.FC = () => {
           <Card>
             <CardBody className="text-center py-12">
               <p className="text-gray-500 mb-4">No interview feedback history yet</p>
-              <Button variant="outline">Refresh</Button>
+              <Button variant="outline" onClick={loadFeedbacks}>Refresh</Button>
             </CardBody>
           </Card>
         )}

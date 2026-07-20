@@ -1,6 +1,5 @@
 import api from "./api";
 import axios from "axios";
-import { TOKEN_KEY } from "../shared/client";
 import type { Profile } from "../../types/candidate";
 
 function normalizeProfile(payload: any): Profile {
@@ -62,14 +61,7 @@ const resumeApi = axios.create({
     headers: {
         "Content-Type": "multipart/form-data",
     },
-});
-
-resumeApi.interceptors.request.use((config) => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+    withCredentials: true,
 });
 
 export async function uploadResume(file: File): Promise<{ id: number; s3Url: string; candidateId: number }> {
