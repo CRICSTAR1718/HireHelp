@@ -27,7 +27,8 @@ export default function InterviewerDashboard() {
         throw new Error('User not authenticated')
       }
 
-      const data = await assignmentApi.getInterviewerAssignments(parseInt(user.id))
+      const rawData = await assignmentApi.getInterviewerAssignments()
+      const data = Array.isArray(rawData) ? rawData : []
       setAssignments(data)
 
       // Calculate stats
