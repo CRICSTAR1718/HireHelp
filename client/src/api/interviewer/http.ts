@@ -12,5 +12,5 @@ export function apiFetch(path: string, init: RequestInit = {}): Promise<Response
   const headers = new Headers(init.headers);
   if (token) headers.set("Authorization", `Bearer ${token}`);
   if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-  return fetch(`/api/interviews${path}`, { ...init, headers });
+  return fetch(`${import.meta.env.VITE_API_URL || "/api"}/interviews${path}`, { ...init, headers });
 }
