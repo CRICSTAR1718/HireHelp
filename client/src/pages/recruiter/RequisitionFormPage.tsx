@@ -215,7 +215,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
   }
 
   return (
-    <div className="page-container" style={{ maxWidth: 900 }}>
+    <div className="page-container px-4 sm:px-6" style={{ maxWidth: 900 }}>
       <button className="btn-secondary btn-sm" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
         ← Back
       </button>
@@ -236,7 +236,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Basic Information
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ gap: '1.25rem' }}>
               <div style={{ gridColumn: 'span 2' }}>
                 <label className="label" htmlFor="req-title">Job Title *</label>
                 {!customTitle ? (
@@ -462,7 +462,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
                 <div>
                   <label className="label" htmlFor="req-exp">Experience Required</label>
                   <input
@@ -488,7 +488,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
                 <div>
                   <label className="label" htmlFor="req-salary">Salary (Optional)</label>
                   <input
@@ -521,7 +521,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Hiring Information
             </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
               <div>
                 <label className="label" htmlFor="req-priority">Hiring Priority</label>
                 <select

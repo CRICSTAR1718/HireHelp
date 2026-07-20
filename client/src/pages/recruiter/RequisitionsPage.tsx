@@ -122,7 +122,7 @@ export default function RequisitionsPage({ user }: RequisitionsPageProps) {
       </div>
 
       {/* Filter Bar */}
-      <div className="admin-filter-bar">
+      <div className="admin-filter-bar flex flex-col sm:flex-row gap-3">
         <input
           type="text"
           className="admin-search-input"
@@ -146,26 +146,26 @@ export default function RequisitionsPage({ user }: RequisitionsPageProps) {
       </div>
 
       {/* Tabs */}
-      <div className="admin-tabs">
-        <button 
+      <div className="admin-tabs flex flex-wrap gap-2">
+        <button
           className={`admin-tab ${activeTab === 'all' ? 'admin-tab-active' : ''}`}
           onClick={() => setActiveTab('all')}
         >
           All <span className="admin-badge-count">{getTabCount('all')}</span>
         </button>
-        <button 
+        <button
           className={`admin-tab ${activeTab === 'pending' ? 'admin-tab-active' : ''}`}
           onClick={() => setActiveTab('pending')}
         >
           Pending <span className="admin-badge-count">{getTabCount('pending')}</span>
         </button>
-        <button 
+        <button
           className={`admin-tab ${activeTab === 'approved' ? 'admin-tab-active' : ''}`}
           onClick={() => setActiveTab('approved')}
         >
           Approved <span className="admin-badge-count">{getTabCount('approved')}</span>
         </button>
-        <button 
+        <button
           className={`admin-tab ${activeTab === 'rejected' ? 'admin-tab-active' : ''}`}
           onClick={() => setActiveTab('rejected')}
         >
@@ -194,7 +194,7 @@ export default function RequisitionsPage({ user }: RequisitionsPageProps) {
           <p className="admin-empty-text">Try adjusting your filters or create a new requisition.</p>
         </div>
       ) : (
-        <div className="admin-requisition-grid">
+        <div className="admin-requisition-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRequisitions.map((req) => (
             <div
               key={req.id}

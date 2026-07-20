@@ -91,13 +91,13 @@ export const AssignedInterviews: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
           <p className="text-gray-600">Manage your assigned interview sessions</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {assignments.map((assignment) => (
             <Card key={assignment.id} className="hover:shadow-xl transition-shadow">
               <CardHeader>

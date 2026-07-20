@@ -68,9 +68,9 @@ export const Candidates: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="space-y-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">All Candidates</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">All Candidates</h1>
           <p className="text-gray-600">View and manage all candidate applications across positions</p>
         </div>
 
@@ -107,8 +107,8 @@ export const Candidates: React.FC = () => {
             <Users className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'Try adjusting your search or filter criteria.' 
+              {searchTerm || statusFilter !== 'all'
+                ? 'Try adjusting your search or filter criteria.'
                 : 'Candidates will appear here once they apply for positions.'}
             </p>
           </div>
@@ -117,22 +117,22 @@ export const Candidates: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Candidate
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                     Position
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                     Department
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Fitment Score
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                     Applied Date
                   </th>
                 </tr>
@@ -140,7 +140,7 @@ export const Candidates: React.FC = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredApplications.map((application) => (
                   <tr key={application.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
                           <span className="text-indigo-600 font-semibold">
@@ -158,13 +158,13 @@ export const Candidates: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                       <div className="flex items-center text-sm text-gray-900">
                         <Briefcase className="w-4 h-4 mr-2 text-gray-400" />
                         {application.requisition_title}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="flex items-center text-sm text-gray-500">
                         <span className="font-medium">{application.department}</span>
                         <span className="mx-2">•</span>
@@ -174,17 +174,17 @@ export const Candidates: React.FC = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                       <span className="text-sm font-semibold text-indigo-600">
                         {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(application.status)}`}>
                         {application.status.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">
                       {new Date(application.submitted_at).toLocaleDateString()}
                     </td>
                   </tr>

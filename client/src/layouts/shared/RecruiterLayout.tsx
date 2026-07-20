@@ -34,7 +34,6 @@ export const RecruiterLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleLogout = () => {
@@ -48,25 +47,15 @@ export const RecruiterLayout = () => {
 
   return (
     <div className="scope-recruiter min-h-screen flex">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
-          sidebarCollapsed ? 'w-16' : 'w-64'
-        } ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          sidebarCollapsed ? 'w-0 -translate-x-full' : 'w-64 translate-x-0'
         }`}
         style={{ borderColor: 'var(--border)', zIndex: 9999 }}
       >
         {/* Logo */}
-        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
+        <div className="p-5 border-b flex items-center" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <LayoutDashboard className="w-5 h-5 text-white" />
@@ -78,12 +67,6 @@ export const RecruiterLayout = () => {
               </div>
             )}
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-white hover:bg-white/20 rounded-lg p-1"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
         {/* Navigation Items */}
@@ -199,16 +182,6 @@ export const RecruiterLayout = () => {
         {/* User Info & Logout */}
         <div className="p-4 border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-hover)' }}>
           <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 mb-2"
-            style={{ color: 'var(--text-secondary)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-          >
-            <LayoutDashboard className="w-5 h-5" strokeWidth={2} />
-            {!sidebarCollapsed && <span>Collapse</span>}
-          </button>
-          <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 group"
             style={{ color: 'var(--danger)' }}
@@ -223,16 +196,15 @@ export const RecruiterLayout = () => {
 
       {/* Main Content */}
       <main className={`flex-1 p-6 transition-all duration-300 ${
-        sidebarCollapsed ? 'ml-16' : 'ml-64'
+        sidebarCollapsed ? 'ml-0' : 'ml-64'
       }`} style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-primary)' }}>
-        {/* Mobile menu button */}
+        {/* Hamburger menu button */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="mb-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200"
           style={{ color: 'var(--text-secondary)', backgroundColor: 'var(--bg-secondary)' }}
         >
           <Menu className="w-5 h-5" strokeWidth={2} />
-          <span>Menu</span>
         </button>
         <div className="max-w-7xl mx-auto">
           <Outlet />

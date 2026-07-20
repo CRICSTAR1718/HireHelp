@@ -77,15 +77,15 @@ export const RecruiterDashboard: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Dashboard</h1>
           <p className="text-slate-600">Welcome back! Here's what's happening with your recruitment.</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           <Card className="shadow-lg border-0">
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
@@ -160,7 +160,7 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card className="shadow-lg border-0">
             <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0">
               <h2 className="text-lg font-semibold text-white">Recent Job Postings</h2>
@@ -229,7 +229,7 @@ export const RecruiterDashboard: React.FC = () => {
             <h2 className="text-lg font-semibold text-white">Quick Actions</h2>
           </CardHeader>
           <CardBody className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <button className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                 <Briefcase className="w-5 h-5 text-blue-600" />
                 <span className="font-medium text-blue-900">Create New Job</span>

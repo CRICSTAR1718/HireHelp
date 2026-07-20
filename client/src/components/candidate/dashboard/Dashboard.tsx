@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Briefcase, CheckCircle2, FileText, User, Activity } from "lucide-react";
+import { ArrowUpRight, Briefcase, CheckCircle2, FileText, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ContentCard, SectionTitle, StatusBadge, LoadingState } from "../../../components/admin/common";
 import { DashboardCard, StatsCard } from "../../../components/admin/dashboard";
@@ -10,9 +10,7 @@ import type { Application } from "../../../types/candidate";
 
 const quickActions = [
   { label: "Browse Jobs", href: "/candidate/jobs", icon: Briefcase },
-  { label: "Complete Profile", href: "/candidate/profile", icon: User },
   { label: "View Applications", href: "/candidate/applications", icon: FileText },
-  { label: "Account Settings", href: "/candidate/settings", icon: Activity },
 ];
 
 export default function Dashboard() {
@@ -127,24 +125,6 @@ export default function Dashboard() {
               <p className="text-sm text-slate-500">No recent activity</p>
             </div>
           )}
-        </ContentCard>
-
-        <ContentCard title="Profile Completion">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Profile Completion</span>
-              <span className="text-sm font-semibold text-slate-900">{data.profileCompletion}%</span>
-            </div>
-            <div className="h-3 w-full rounded-full bg-slate-200">
-              <div
-                className="h-3 rounded-full bg-blue-600 transition-all"
-                style={{ width: `${data.profileCompletion}%` }}
-              />
-            </div>
-            <p className="text-sm text-slate-500">
-              Complete your profile to improve visibility to recruiters.
-            </p>
-          </div>
         </ContentCard>
       </section>
     </div>

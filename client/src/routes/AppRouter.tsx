@@ -126,6 +126,7 @@ const RootRedirect = () => {
     return <Navigate replace to="/login" />; // fallback for main domain / localhost
   }
 
+  if (user?.role === "candidate") return <Navigate replace to="/candidate/dashboard" />;
   const target = user?.role === "hr" ? "recruiter" : user?.role ?? "login";
   return <Navigate replace to={`/${target}`} />;
 };
@@ -157,6 +158,7 @@ export function AppRouter() {
           }
         >
           <Route path="/candidate/*" element={<div className="scope-candidate"><CandidateAppLayout /></div>}>
+            <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<CandidateDashboard />} />
             <Route path="profile" element={<CandidateProfile />} />
             <Route path="jobs" element={<CandidateJobs />} />

@@ -140,7 +140,7 @@ export const UsersPage = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-6">
       <PageHeader description="Manage admin, HR, and interviewer accounts." title="Users" />
 
       <ContentCard

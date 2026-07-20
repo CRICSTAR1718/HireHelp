@@ -19,7 +19,7 @@ export default function Applications() {
     }, []);
 
     return (
-        <div className="mx-auto max-w-7xl space-y-8">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-8">
             <SectionTitle
                 description="Track all your job applications."
                 title="Applications"

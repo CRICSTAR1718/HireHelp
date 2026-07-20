@@ -12,10 +12,10 @@ export const Header = ({ onMenuClick, userType = "Admin" }: HeaderProps) => {
   const titles = userType === "Candidate" ? candidateTitles : adminTitles;
   const basePath = userType === "Candidate" ? "/candidate" : "/admin";
   const title = titles[useLocation().pathname] ?? `HireHelp ${userType}`;
-  
+
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6">
-      <button aria-label="Open navigation" className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden" onClick={onMenuClick} type="button">
+      <button aria-label="Toggle navigation" className="rounded-lg p-2 text-slate-600 hover:bg-slate-100" onClick={onMenuClick} type="button">
         <Menu className="h-5 w-5" />
       </button>
       <div className="md:hidden">

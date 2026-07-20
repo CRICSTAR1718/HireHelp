@@ -20,13 +20,13 @@ export const DashboardPage = () => {
   const { data: stats, isLoading } = useDashboardStats();
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-8">
       <section>
         <SectionTitle
           description="Overview of platform metrics and management modules."
           title="Platform overview"
         />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard description="Across the organization" icon={Users} label="Total Users" tone="blue" value={isLoading ? "—" : stats?.totalUsers?.toString() || "0"} />
           <StatsCard description="Configured access roles" icon={UsersRound} label="Total Roles" tone="violet" value={isLoading ? "—" : stats?.totalRoles?.toString() || "0"} />
           <StatsCard description="Active organizational units" icon={Building2} label="Departments" tone="emerald" value={isLoading ? "—" : stats?.totalDepartments?.toString() || "0"} />
@@ -34,7 +34,7 @@ export const DashboardPage = () => {
         </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         <DashboardCard title="Recent Activity">
           <div className="space-y-4">
             {activityItems.map((item, index) => (
@@ -68,7 +68,7 @@ export const DashboardPage = () => {
         </DashboardCard>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section className="grid gap-4 sm:gap-6 sm:grid-cols-2">
         <ContentCard title="Recent Audit">
           <div className="flex items-center gap-3 rounded-lg border border-dashed border-slate-200 bg-slate-50 p-5">
             <FileText className="h-5 w-5 text-slate-400" />

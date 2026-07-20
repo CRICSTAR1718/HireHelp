@@ -76,13 +76,13 @@ export const Pipeline: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="space-y-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Pipeline Management</h1>
+        <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">Pipeline Management</h1>
         <p className="text-gray-600">Track and manage candidates through your recruitment pipeline</p>
       </div>
 
-        <div className="mb-6 flex gap-2">
+        <div className="mb-6 flex flex-wrap gap-2">
           {['all', 'under_review', 'shortlisted'].map((status) => (
             <button
               key={status}
@@ -105,7 +105,7 @@ export const Pipeline: React.FC = () => {
             <p className="mt-1 text-sm text-gray-500">Candidates will appear here once they apply for positions.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredApplications.map((application) => (
               <div
                 key={application.id}
