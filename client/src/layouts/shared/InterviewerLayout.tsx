@@ -68,18 +68,6 @@ export const InterviewerLayout = () => {
         {/* User Info & Logout */}
         <div className="p-4 border-t border-slate-200 bg-slate-50">
           <button
-            onClick={toggleTheme}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-all duration-200 mb-2"
-            title={`Current theme: ${effectiveTheme}`}
-          >
-            {effectiveTheme === 'dark' ? (
-              <Sun className="w-5 h-5" strokeWidth={2} />
-            ) : (
-              <Moon className="w-5 h-5" strokeWidth={2} />
-            )}
-            <span>Toggle Theme</span>
-          </button>
-          <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
           >
