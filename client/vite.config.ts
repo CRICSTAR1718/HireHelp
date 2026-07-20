@@ -20,4 +20,16 @@ export default defineConfig({
       },
     },
   },
+  // Handle client-side routing for SPA
+  preview: {
+    port: 5173,
+  },
+  build: {
+    outDir: "dist",
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });

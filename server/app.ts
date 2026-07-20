@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { randomUUID } from 'crypto';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import routes from './routes';
 import { env } from './config/env';
 
@@ -15,6 +17,9 @@ import { env } from './config/env';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allowedOrigins = env.CLIENT_ORIGIN.split(',').map((o) => o.trim());
 app.use(
@@ -41,6 +46,19 @@ app.use(cookieParser());
 // });
 
 app.use('/api', routes);
+
+// Serve static files from React app's dist folder
+const clientDistPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDistPath));
+
+// SPA fallback: return index.html for all non-API routes
+app.get('*', (req, res) => {
+  // Don't intercept API routes
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
 
 // Central error handler — must be registered last.
 app.use(

@@ -34,32 +34,17 @@ createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <Provider store={store}>
         <PersistGate
-          loading={null}
+          loading={
+            <main className="grid min-h-screen place-items-center">
+              <div className="h-7 w-7 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+            </main>
+          }
           persistor={persistor}
           onBeforeLift={async () => {
-            const token = localStorage.getItem("hirehelp_access_token");
-            if (token) {
-              try {
-                const me = await getCurrentStaffUser();
-                store.dispatch(
-                  loginSuccess({
-                    user: {
-                      id: me.id,
-                      email: me.email,
-                      full_name: me.firstName && me.lastName ? `${me.firstName} ${me.lastName}` : undefined,
-                      firstName: me.firstName,
-                      lastName: me.lastName,
-                      role: me.role,
-                    },
-                    token,
-                  })
-                );
-              } catch {
-                store.dispatch(sessionResolvedAction());
-              }
-            } else {
-              store.dispatch(sessionResolvedAction());
-            }
+            // Resolve loading state - auth is now cookie-based, so we don't
+            // need to check /me on boot. If a cookie exists, the first API call
+            // will succeed. If not, the user will be redirected to login.
+            store.dispatch(sessionResolvedAction());
           }}
         >
 

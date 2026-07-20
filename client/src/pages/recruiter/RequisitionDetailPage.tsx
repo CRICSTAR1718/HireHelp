@@ -4,7 +4,6 @@ import { getRequisition, updateRequisition, submitRequisition, approveRequisitio
 import { getForm } from "../../api/recruiter/forms"
 import api from "../../api/recruiter/requisitions"
 import StatusBadge from "../../components/recruiter/StatusBadge"
-import { TOKEN_KEY } from "../../api/shared/client"
 
 interface User {
   id: string
@@ -158,12 +157,9 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
         formData.append('resumes', file)
       })
 
-      const token = localStorage.getItem(TOKEN_KEY)
       const response = await fetch(`/api/requisitions/${id}/bulk-resumes`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include',
         body: formData,
       })
 

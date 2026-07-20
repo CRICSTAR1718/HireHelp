@@ -14,16 +14,7 @@ const api = axios.create({
   withCredentials: true
 })
 
-// This client never attached an Authorization header — it relied entirely
-// on a `token` cookie that /admin/auth/login does not set (it returns the
-// access/refresh tokens as JSON, same as every other staff login). Every
-// request was therefore unauthenticated. Reading the same localStorage key
-// the shared login flow (StaffLoginPage) writes to fixes that.
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY)
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
+// Authorization header no longer needed - cookies sent automatically with withCredentials: true
 
 // ─── Interceptor: 401 → refresh → retry once ──────────────────────────────────
 let isRefreshing = false
@@ -56,7 +47,8 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        await refreshToken()
+        // Cookie-based refresh - no localStorage token needed
+        const res = await api.post('/admin/auth/refresh', {})
         processQueue(null)
         return api(originalRequest)
       } catch (refreshErr) {

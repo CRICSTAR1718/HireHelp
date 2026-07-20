@@ -1,6 +1,5 @@
 import api from "./api";
 import axios from "axios";
-import { TOKEN_KEY } from "../shared/client";
 import type { Application, ApplicationSubmission } from "../../types/candidate";
 
 // Create a separate API instance for recruitment endpoints (different base URL)
@@ -9,14 +8,7 @@ const recruitmentApi = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-});
-
-recruitmentApi.interceptors.request.use((config) => {
-    const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+    withCredentials: true,
 });
 
 export async function getApplications(): Promise<Application[]> {

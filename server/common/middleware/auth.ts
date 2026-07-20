@@ -25,13 +25,15 @@ declare module "express" {
 }
 
 function extractToken(req: Request): string | null {
+  // Try httpOnly cookie first (new path)
+  const cookieToken = req.cookies?.staff_access_token;
+  if (cookieToken) {
+    return cookieToken;
+  }
+  // Fallback to Authorization header for backward compatibility
   const authHeader = req.headers.authorization;
   if (authHeader?.startsWith("Bearer ")) {
     return authHeader.substring(7);
-  }
-  const cookieToken = req.cookies?.token;
-  if (cookieToken) {
-    return cookieToken;
   }
   return null;
 }

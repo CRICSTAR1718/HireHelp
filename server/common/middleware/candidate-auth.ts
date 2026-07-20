@@ -39,13 +39,18 @@ export const authenticateCandidate = (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'No token provided' });
+    // Try httpOnly cookie first (new path)
+    let token = req.cookies?.candidate_access_token;
+    
+    // Fallback to Authorization header for backward compatibility
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'No token provided' });
+      }
+      token = authHeader.substring(7);
     }
 
-    const token = authHeader.substring(7);
     const decoded = jwt.verify(token, env.CANDIDATE_JWT_SECRET) as {
       id: number;
       email: string;
@@ -64,10 +69,18 @@ export const optionalCandidateAuth = (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Try httpOnly cookie first (new path)
+    let token = req.cookies?.candidate_access_token;
+    
+    // Fallback to Authorization header for backward compatibility
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.substring(7);
+      }
+    }
 
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.substring(7);
+    if (token) {
       const decoded = jwt.verify(token, env.CANDIDATE_JWT_SECRET) as {
         id: number;
         email: string;
