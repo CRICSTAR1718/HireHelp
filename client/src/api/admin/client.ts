@@ -17,7 +17,7 @@ declare module "axios" {
 // mounted under that prefix in server/routes.ts. Every call in this
 // module's sibling files (users.ts, roles.ts, etc.) uses paths relative to
 // that, e.g. "/users" -> /api/admin/users.
-export const apiClient = axios.create({ baseURL: `${import.meta.env.VITE_API_URL || ""}/api/admin`, headers: { "Content-Type": "application/json" } });
+export const apiClient = axios.create({ baseURL: `${import.meta.env.VITE_API_URL || "/api"}/admin`, headers: { "Content-Type": "application/json" } });
 // Token reads/writes here use the SAME localStorage keys as the shared
 // Redux auth slice (store/authSlice.ts), because login for every staff role
 // (admin/hr/interviewer) goes through the one shared StaffLoginPage, not

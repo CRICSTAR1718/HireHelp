@@ -7,7 +7,7 @@ export const TOKEN_KEY = "hirehelp_access_token";
 export const REFRESH_KEY = "hirehelp_refresh_token";
 
 export const apiClient = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL || ""}/api`,
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   headers: { "Content-Type": "application/json" },
 });
 
