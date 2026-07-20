@@ -4,12 +4,17 @@ import { useAppSelector } from "@/store/hooks";
 
 // ── Shared / auth ──────────────────────────────────────────────────────
 import { StaffLoginPage } from "@/pages/shared/StaffLoginPage";
+import { ForgotPasswordPage } from "@/pages/shared/ForgotPassword";
+import { ResetPasswordPage } from "@/pages/shared/ResetPassword";
+import { ResetPasswordSentPage } from "@/pages/shared/ResetPasswordSent";
+import { ResetPasswordSuccessPage } from "@/pages/shared/ResetPasswordSuccess";
 
 // ── Candidate (existing self-contained router pieces, reused) ─────────
 import AuthLayout from "@/layouts/candidate/AuthLayout";
 import { AppLayout as CandidateAppLayout } from "@/layouts/candidate/AppLayout";
 import CandidateLogin from "@/pages/candidate/Login";
 import CandidateRegister from "@/pages/candidate/Register";
+import ForgotPassword from "@/pages/candidate/Login/ForgotPassword";
 import CandidateDashboard from "@/pages/candidate/Dashboard";
 import CandidateProfile from "@/pages/candidate/Profile";
 import CandidateJobs from "@/pages/candidate/Jobs";
@@ -134,12 +139,17 @@ export function AppRouter() {
         {/* Staff login (recruiter / hr / admin / interviewer) */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<div className="scope-public"><StaffLoginPage /></div>} />
+          <Route path="/forgot-password" element={<div className="scope-public"><ForgotPasswordPage /></div>} />
+          <Route path="/reset-password" element={<div className="scope-public"><ResetPasswordPage /></div>} />
+          <Route path="/reset-password/sent" element={<div className="scope-public"><ResetPasswordSentPage /></div>} />
+          <Route path="/reset-password/success" element={<div className="scope-public"><ResetPasswordSuccessPage /></div>} />
         </Route>
 
         {/* Candidate: public auth pages + protected dashboard */}
         <Route path="/candidate" element={<div className="scope-candidate"><AuthLayout /></div>}>
           <Route index element={<CandidateLogin />} />
           <Route path="register" element={<CandidateRegister />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route
           element={

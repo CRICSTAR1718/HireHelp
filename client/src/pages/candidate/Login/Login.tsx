@@ -16,12 +16,14 @@ export default function Login() {
 
                 <LoginForm />
 
-                <p className="text-center text-slate-400">
-                    Don’t have an account?{' '}
-                    <Link to="/candidate/register" className="text-blue-400 hover:text-blue-300">
-                        Create one
+                <div className="flex justify-between text-sm text-slate-400">
+                    <Link to="/candidate/forgot-password" className="text-blue-400 hover:text-blue-300">
+                        Forgot password?
                     </Link>
-                </p>
+                    <Link to="/candidate/register" className="text-blue-400 hover:text-blue-300">
+                        Create an account
+                    </Link>
+                </div>
             </div>
         </div>
     );

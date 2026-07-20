@@ -42,3 +42,13 @@ export async function getCurrentStaffUser(): Promise<SessionUser> {
   const { data } = await apiClient.get<{ success: boolean; data: SessionUser }>("/admin/auth/me");
   return data.data;
 }
+
+export async function staffForgotPassword(email: string): Promise<{ message: string }> {
+  const { data } = await apiClient.post<{ message: string }>("/admin/auth/forgot-password", { email });
+  return data;
+}
+
+export async function staffResetPassword(token: string, newPassword: string): Promise<{ message: string }> {
+  const { data } = await apiClient.post<{ message: string }>("/admin/auth/reset-password", { token, newPassword });
+  return data;
+}
