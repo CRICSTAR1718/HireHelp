@@ -102,6 +102,11 @@ const RecruiterPagesWithUser = () => {
 
 const RootRedirect = () => {
   const { isAuthenticated, loading, user } = useAppSelector((s) => s.auth);
+
+  const hostname = window.location.hostname;
+  const isCandidateDomain = hostname.startsWith("candidate.");
+  const isStaffDomain = hostname.startsWith("staff.");
+
   if (loading) {
     return (
       <main className="grid min-h-screen place-items-center">
@@ -109,7 +114,13 @@ const RootRedirect = () => {
       </main>
     );
   }
-  if (!isAuthenticated) return <Navigate replace to="/login" />;
+
+  if (!isAuthenticated) {
+    if (isCandidateDomain) return <Navigate replace to="/candidate" />;
+    if (isStaffDomain) return <Navigate replace to="/login" />;
+    return <Navigate replace to="/login" />; // fallback for main domain / localhost
+  }
+
   const target = user?.role === "hr" ? "recruiter" : user?.role ?? "login";
   return <Navigate replace to={`/${target}`} />;
 };
