@@ -32,22 +32,22 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
       />
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-white transition-all duration-200",
+          "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-700 bg-slate-900 transition-all duration-200",
           collapsed ? "w-0 overflow-hidden" : "w-64",
           "lg:static lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        <div className="flex h-16 items-center border-b border-slate-200 px-4">
+        <div className="flex h-16 items-center border-b border-slate-700 px-4">
           <NavLink className="flex min-w-0 items-center gap-3" onClick={onCloseMobile} to={userType === "Candidate" ? "/candidate/dashboard" : "/admin"}>
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-blue-600 text-white">
               <ShieldCheck className="h-5 w-5" />
             </span>
-            {!collapsed && <span className="truncate text-sm font-semibold text-slate-900">HireHelp {userType}</span>}
+            {!collapsed && <span className="truncate text-sm font-semibold text-white">HireHelp {userType}</span>}
           </NavLink>
           <button
             aria-label="Close navigation"
-            className="ml-auto rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
+            className="ml-auto rounded-lg p-2 text-slate-400 hover:bg-slate-800 lg:hidden"
             onClick={onCloseMobile}
             type="button"
           >
@@ -59,7 +59,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
           {navigationGroups.map((group) => (
             <div className="mb-6" key={group.label}>
               {!collapsed && (
-                <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <p className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                   {group.label}
                 </p>
               )}
@@ -69,7 +69,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
                     className={({ isActive }) =>
                       cn(
                         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                        isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                        isActive ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white",
                         collapsed && "justify-center px-2",
                       )
                     }
@@ -87,17 +87,17 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
           ))}
         </nav>
 
-        <div className="border-t border-slate-200 p-3">
+        <div className="border-t border-slate-700 p-3">
           <div className={cn("mb-2 flex items-center gap-3 px-2 py-2", collapsed && "justify-center")}>
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-slate-700 text-xs font-semibold text-slate-300">
               {`${user?.firstName?.charAt(0) ?? "S"}${user?.lastName?.charAt(0) ?? "A"}`}
             </span>
             {!collapsed && (
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-slate-800">
+                <p className="truncate text-sm font-medium text-white">
                   {user?.firstName} {user?.lastName}
                 </p>
-                <p className="truncate text-xs text-slate-500">{userType}</p>
+                <p className="truncate text-xs text-slate-400">{userType}</p>
               </div>
             )}
           </div>
@@ -107,7 +107,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
               className={({ isActive }) =>
                 cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                  isActive ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white",
                   collapsed && "justify-center px-2",
                 )
               }
@@ -122,7 +122,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
 
           <button
             className={cn(
-              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50",
+              "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-red-900/20",
               collapsed && "justify-center px-2",
             )}
             onClick={() => {
@@ -137,7 +137,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
 
           <button
             aria-label="Toggle sidebar"
-            className="mt-2 w-full items-center justify-center rounded-lg py-2 text-slate-500 hover:bg-slate-50 lg:flex"
+            className="mt-2 w-full items-center justify-center rounded-lg py-2 text-slate-400 hover:bg-slate-800 lg:flex"
             onClick={onToggle}
             type="button"
           >

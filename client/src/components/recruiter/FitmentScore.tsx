@@ -23,9 +23,18 @@ export default function FitmentScore({ score, status, compact = false }: Fitment
     return <span className="inline-flex rounded-full bg-rose-100 px-2.5 py-1 text-xs font-medium text-rose-700">Evaluation failed</span>
   }
 
+  if (status === 'processing') {
+    return (
+      <div className="hh-ai-badge">
+        <div className="hh-ai-dot" />
+        Calculating fitment…
+      </div>
+    )
+  }
+
   return (
     <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">
-      {status === 'processing' ? 'Calculating fitment…' : 'Fitment queued'}
+      Fitment queued
     </span>
   )
 }

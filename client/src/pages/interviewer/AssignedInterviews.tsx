@@ -98,9 +98,9 @@ export const AssignedInterviews: React.FC = () => {
           <p className="text-gray-600">Manage your assigned interview sessions</p>
         </div>
 
-        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 hh-stagger">
           {assignments.map((assignment) => (
-            <Card key={assignment.id} className="hover:shadow-xl transition-shadow">
+            <Card key={assignment.id} className="hover:shadow-xl transition-shadow hh-stagger-item">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>

@@ -52,13 +52,13 @@ export const RecruiterLayout = () => {
       <AnimatedBackground />
       {/* Sidebar */}
       <aside
-        className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
+        className={`bg-slate-900 shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
           sidebarCollapsed ? 'w-0 -translate-x-full opacity-0 pointer-events-none' : 'w-64 translate-x-0 opacity-100'
         }`}
         style={{ borderColor: 'var(--border)', zIndex: 9999 }}
       >
         {/* Logo */}
-        <div className="p-5 border-b flex items-center" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
+        <div className="p-5 border-b border-slate-700 flex items-center bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <LayoutDashboard className="w-5 h-5 text-white" />
@@ -85,18 +85,12 @@ export const RecruiterLayout = () => {
                     <NavLink
                       to={item.to}
                       className={({ isActive }) =>
-                        `flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                        `flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-colors ${
                           isActive
-                            ? "text-white shadow-md"
-                            : ""
+                            ? "bg-blue-600 !text-white"
+                            : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                         }`
                       }
-                      style={({ isActive }) => ({
-                        backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                        color: isActive ? 'white' : 'var(--text-secondary)'
-                      })}
-                      onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                      onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                       onClick={(e) => {
                         e.preventDefault();
                         !sidebarCollapsed && toggleExpanded(item.label);
@@ -105,13 +99,13 @@ export const RecruiterLayout = () => {
                       {({ isActive }) => (
                         <>
                           <div className="flex items-center gap-3">
-                            <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <Icon className={`w-5 h-5 shrink-0 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                             {!sidebarCollapsed && <span>{item.label}</span>}
                           </div>
                           {!sidebarCollapsed && (expandedItem === item.label ? (
-                            <ChevronDown className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <ChevronDown className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                           ) : (
-                            <ChevronRight className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <ChevronRight className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                           ))}
                         </>
                       )}
@@ -125,22 +119,16 @@ export const RecruiterLayout = () => {
                               <NavLink
                                 to={subItem.to}
                                 className={({ isActive }) =>
-                                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-colors ${
                                     isActive
-                                      ? "text-white shadow-md"
-                                      : ""
+                                      ? "bg-blue-600 !text-white"
+                                      : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                                   }`
                                 }
-                                style={({ isActive }) => ({
-                                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                                  color: isActive ? 'white' : 'var(--text-secondary)'
-                                })}
-                                onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                                onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                               >
                                 {({ isActive }) => (
                                   <>
-                                    <SubIcon className={`w-4 h-4`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                                    <SubIcon className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                                     <span className="text-sm">{subItem.label}</span>
                                   </>
                                 )}
@@ -159,22 +147,16 @@ export const RecruiterLayout = () => {
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                      `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                         isActive
-                          ? "text-white shadow-md"
-                          : ""
+                          ? "bg-blue-600 !text-white"
+                          : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                       }`
                     }
-                    style={({ isActive }) => ({
-                      backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                      color: isActive ? 'white' : 'var(--text-secondary)'
-                    })}
-                    onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                    onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                   >
                     {({ isActive }) => (
                       <>
-                        <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                        <Icon className={`w-5 h-5 shrink-0 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                         {!sidebarCollapsed && <span>{item.label}</span>}
                       </>
                     )}
@@ -186,13 +168,10 @@ export const RecruiterLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-hover)' }}>
+        <div className="p-4 border-t border-slate-700 bg-slate-800">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 group"
-            style={{ color: 'var(--danger)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = 'var(--danger)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--danger)'; }}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200 group"
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
             {!sidebarCollapsed && <span>Logout</span>}

@@ -67,8 +67,37 @@ export const TalentPool: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="hh-skeleton h-10 w-48 rounded mb-2" />
+          <div className="hh-skeleton h-5 w-64 rounded" />
+        </div>
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="p-4 sm:p-6 bg-white rounded-lg shadow">
+              <div className="hh-skeleton h-10 w-16 rounded mb-2" />
+              <div className="hh-skeleton h-5 w-24 rounded" />
+            </div>
+          ))}
+        </div>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="p-4 sm:p-6 bg-white rounded-lg shadow">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="hh-skeleton h-12 w-12 rounded-full" />
+                <div className="flex-1">
+                  <div className="hh-skeleton h-6 w-1/3 rounded mb-2" />
+                  <div className="hh-skeleton h-6 w-24 rounded" />
+                </div>
+              </div>
+              <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mb-4">
+                <div className="hh-skeleton h-4 w-full rounded" />
+                <div className="hh-skeleton h-4 w-2/3 rounded" />
+                <div className="hh-skeleton h-4 w-1/2 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -104,9 +133,9 @@ export const TalentPool: React.FC = () => {
             </p>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 hh-stagger">
             {candidates.map((candidate) => (
-              <Card key={candidate.id} className="p-4 sm:p-6">
+              <Card key={candidate.id} className="p-4 sm:p-6 hh-lift hh-stagger-item">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex items-start gap-4 flex-1">
                     <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">

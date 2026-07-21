@@ -26,12 +26,12 @@ export const InterviewerLayout = () => {
       <AnimatedBackground />
       {/* Sidebar */}
       <aside
-        className={`bg-white shadow-lg border-r border-slate-200 flex flex-col fixed h-full z-50 transition-all duration-300 ${
+        className={`bg-slate-900 shadow-lg border-r border-slate-700 flex flex-col fixed h-full z-50 transition-all duration-300 ${
           sidebarCollapsed ? 'w-0 -translate-x-full opacity-0 pointer-events-none' : 'w-64 translate-x-0 opacity-100'
         }`}
       >
         {/* Logo */}
-        <div className="p-5 border-b border-slate-200 bg-linear-to-r from-blue-600 to-indigo-600 flex items-center">
+        <div className="p-5 border-b border-slate-700 bg-linear-to-r from-blue-600 to-indigo-600 flex items-center">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
               <LayoutDashboard className="w-5 h-5 text-white" />
@@ -59,7 +59,7 @@ export const InterviewerLayout = () => {
                       `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                         isActive
                           ? "bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-md"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          : "text-slate-300 hover:bg-slate-800 hover:text-white"
                       } ${sidebarCollapsed ? "justify-center px-2" : ""}`
                     }
                     title={sidebarCollapsed ? item.label : undefined}
@@ -78,10 +78,10 @@ export const InterviewerLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="p-4 border-t border-slate-700 bg-slate-800">
           <button
             onClick={handleLogout}
-            className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group ${sidebarCollapsed ? "justify-center px-2" : ""}`}
+            className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200 group ${sidebarCollapsed ? "justify-center px-2" : ""}`}
             title="Logout"
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />

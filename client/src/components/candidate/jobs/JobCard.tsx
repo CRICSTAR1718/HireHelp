@@ -16,6 +16,7 @@ interface Props {
     onViewDetails?: (jobId: string) => void;
     applying?: boolean;
     hasApplied?: boolean;
+    className?: string;
 }
 
 export default function JobCard({
@@ -31,6 +32,7 @@ export default function JobCard({
     onViewDetails,
     applying = false,
     hasApplied = false,
+    className = "",
 }: Props) {
     const formatDate = (dateString?: string) => {
         if (!dateString) return "Posted recently";
@@ -44,7 +46,7 @@ export default function JobCard({
     };
 
     return (
-        <Card className="p-4 sm:p-5 hover:shadow-md transition-shadow">
+        <Card className={`p-4 sm:p-5 hover:shadow-md transition-shadow hh-lift ${className}`}>
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
                 <div className="flex-1">
                     <h3 className="text-sm sm:text-base font-semibold text-slate-900">{title}</h3>

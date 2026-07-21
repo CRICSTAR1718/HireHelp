@@ -95,11 +95,26 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
   if (loading) {
     return (
       <div className="admin-page-container">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="spinner" style={{ margin: '0 auto 1rem' }} />
-            <p style={{ color: '#64748b' }}>Loading requisitions…</p>
-          </div>
+        <div className="admin-requisition-grid">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="admin-requisition-card">
+              <div className="admin-card-content">
+                <div className="admin-card-header mb-4">
+                  <div className="hh-skeleton h-6 w-20 rounded mb-2" />
+                  <div className="hh-skeleton h-6 w-16 rounded" />
+                </div>
+                <div className="hh-skeleton h-6 w-3/4 rounded mb-4" />
+                <div className="admin-card-meta space-y-2">
+                  <div className="hh-skeleton h-4 w-1/2 rounded" />
+                  <div className="hh-skeleton h-4 w-1/3 rounded" />
+                </div>
+                <div className="admin-card-stats mt-4 space-y-2">
+                  <div className="hh-skeleton h-4 w-24 rounded" />
+                  <div className="hh-skeleton h-4 w-20 rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     )
@@ -195,11 +210,11 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
           <p className="admin-empty-text">Try adjusting your filters or create a new requisition.</p>
         </div>
       ) : (
-        <div className="admin-requisition-grid">
+        <div className="admin-requisition-grid hh-stagger">
           {filteredRequisitions.map((req) => (
             <div
               key={req.id}
-              className="admin-requisition-card"
+              className="admin-requisition-card hh-lift hh-stagger-item"
               onClick={() => navigate(`/admin/requisitions/${req.id}`)}
               role="button"
               aria-label={`View requisition ${req.title}`}

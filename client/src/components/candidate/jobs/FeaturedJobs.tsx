@@ -172,7 +172,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
             ) : jobs.length === 0 ? (
                 <p className="text-slate-500">No jobs found.</p>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 hh-stagger">
                     {jobs.map((job) => (
                         <JobCard
                             key={job.id}
@@ -187,6 +187,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
                             onApply={handleApply}
                             onViewDetails={handleViewDetails}
                             hasApplied={appliedJobIds.has(job.id)}
+                            className="hh-stagger-item"
                         />
                     ))}
                 </div>

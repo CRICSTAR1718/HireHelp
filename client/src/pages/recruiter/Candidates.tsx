@@ -61,8 +61,32 @@ export const Candidates: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="space-y-8 px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="hh-skeleton h-10 w-48 rounded mb-2" />
+          <div className="hh-skeleton h-5 w-64 rounded" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="hh-skeleton h-12 w-12 rounded-full" />
+                <div className="flex-1">
+                  <div className="hh-skeleton h-6 w-3/4 rounded mb-2" />
+                  <div className="hh-skeleton h-4 w-1/2 rounded" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="hh-skeleton h-4 w-full rounded" />
+                <div className="hh-skeleton h-4 w-2/3 rounded" />
+                <div className="flex justify-between pt-3 border-t border-gray-100">
+                  <div className="hh-skeleton h-8 w-16 rounded" />
+                  <div className="hh-skeleton h-6 w-16 rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -113,9 +137,9 @@ export const Candidates: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 hh-stagger">
             {filteredApplications.map((application) => (
-              <div key={application.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 sm:p-6">
+              <div key={application.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 sm:p-6 hh-lift hh-stagger-item">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
                     <span className="text-indigo-600 font-semibold text-lg">
