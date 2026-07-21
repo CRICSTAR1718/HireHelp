@@ -21,7 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<LoginFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -30,6 +30,8 @@ export const LoginPage = () => {
     try {
       await login(values);
     } catch (error) {
+      // Clear field-level errors and show root error instead
+      clearErrors(["email", "password"]);
       setError("root", { message: getErrorMessage(error, "Unable to sign in. Please try again.") });
     }
   };

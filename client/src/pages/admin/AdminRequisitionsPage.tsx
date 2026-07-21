@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRequisitions, deleteRequisition } from "../../api/recruiter/requisitions"
+import { toUserMessage } from "../../utils/toUserMessage"
 
 interface User {
   id: string
@@ -45,8 +46,8 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
     try {
       await deleteRequisition(id)
       setRequisitions(prev => prev.filter(r => r.id !== id))
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Delete failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Delete failed'))
     } finally {
       setDeleting(null)
     }

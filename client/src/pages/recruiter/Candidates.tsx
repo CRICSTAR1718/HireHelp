@@ -68,7 +68,7 @@ export const Candidates: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">All Candidates</h1>
           <p className="text-gray-600">View and manage all candidate applications across positions</p>
@@ -113,84 +113,64 @@ export const Candidates: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="bg-white shadow rounded-lg overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Candidate
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                    Position
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                    Department
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fitment Score
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                    Applied Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredApplications.map((application) => (
-                  <tr key={application.id} className="hover:bg-gray-50">
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                          <span className="text-indigo-600 font-semibold">
-                            {application.candidate_first_name.charAt(0)}{application.candidate_last_name.charAt(0)}
-                          </span>
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
-                            {application.candidate_first_name} {application.candidate_last_name}
-                          </div>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Mail className="w-3 h-3 mr-1" />
-                            {application.candidate_email}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                      <div className="flex items-center text-sm text-gray-900">
-                        <Briefcase className="w-4 h-4 mr-2 text-gray-400" />
-                        {application.requisition_title}
-                      </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <span className="font-medium">{application.department}</span>
-                        <span className="mx-2">•</span>
-                        <div className="flex items-center">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          {application.location}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-semibold text-indigo-600">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {filteredApplications.map((application) => (
+              <div key={application.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 sm:p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <span className="text-indigo-600 font-semibold text-lg">
+                      {application.candidate_first_name.charAt(0)}{application.candidate_last_name.charAt(0)}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                      {application.candidate_first_name} {application.candidate_last_name}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                      <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span className="truncate">{application.candidate_email}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <Briefcase className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-900 truncate">{application.requisition_title}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="font-medium text-gray-700">{application.department}</span>
+                    <span className="text-gray-300">•</span>
+                    <div className="flex items-center">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      <span className="truncate">{application.location}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Fitment Score</p>
+                      <p className="text-lg font-semibold text-indigo-600">
                         {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
-                      </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(application.status)}`}>
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 mb-1">Status</p>
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(application.status)}`}>
                         {application.status.replace('_', ' ')}
                       </span>
-                    </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">
-                      {new Date(application.submitted_at).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 text-xs text-gray-400">
+                    <span>Applied: {new Date(application.submitted_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
     </div>

@@ -3,6 +3,7 @@ import { MessageSquare, X } from 'lucide-react';
 import { Card, CardHeader, CardBody, Button } from "../../components/interviewer";
 import { StarRating, TagInput } from "../../components/interviewer";
 import { feedbackApi } from "../../api/interviewer";
+import { toUserMessage } from "../../utils/toUserMessage";
 
 interface DynamicField {
   id: string;
@@ -121,10 +122,10 @@ export const FeedbackForm: React.FC = () => {
     try {
       await feedbackApi.createFeedback(feedback);
       alert('Feedback submitted successfully!');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to submit feedback:', error);
-      alert('Failed to submit feedback');
-    }
+      alert(toUserMessage(error, 'Failed to submit feedback'));
+    } finally { };
   };
 
   return (

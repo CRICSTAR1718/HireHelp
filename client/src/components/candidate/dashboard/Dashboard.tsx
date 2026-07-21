@@ -5,6 +5,7 @@ import { ContentCard, SectionTitle, StatusBadge, LoadingState } from "../../../c
 import { DashboardCard, StatsCard } from "../../../components/admin/dashboard";
 import { getDashboard } from "../../../api/candidate/dashboard.api";
 import { getApplications } from "../../../api/candidate/applications.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { DashboardData } from "../../../types/candidate";
 import type { Application } from "../../../types/candidate";
 
@@ -29,7 +30,7 @@ export default function Dashboard() {
         setApplications(appsData);
       })
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load dashboard")
+        setError(toUserMessage(err, "Failed to load dashboard. Please try again."))
       )
       .finally(() => setLoading(false));
   }, []);

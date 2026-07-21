@@ -1222,12 +1222,29 @@
   transition: all 0.2s;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+}
+
+.scope-recruiter .admin-requisition-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), #6366f1);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.scope-recruiter .admin-requisition-card:hover::before {
+  opacity: 1;
 }
 
 .scope-recruiter .admin-requisition-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+  transform: translateY(-4px);
 }
 
 .scope-recruiter .admin-card-header {
@@ -1315,6 +1332,265 @@
 .scope-recruiter .admin-status-published {
   background: #dbeafe;
   color: #2563eb;
+}
+
+.scope-recruiter .admin-card-priority {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.scope-recruiter .admin-priority-high {
+  background: var(--danger);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.scope-recruiter .admin-priority-medium {
+  background: var(--warning);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+}
+
+.scope-recruiter .admin-priority-low {
+  background: var(--success);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.scope-recruiter .admin-card-content {
+  padding-right: 2rem;
+}
+
+.scope-recruiter .admin-card-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.scope-recruiter .admin-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.scope-recruiter .admin-stat-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scope-recruiter .admin-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.scope-recruiter .admin-action-btn {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scope-recruiter .admin-action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-light);
+}
+
+.scope-recruiter .admin-action-btn-danger {
+  color: var(--danger);
+  border-color: #fecaca;
+}
+
+.scope-recruiter .admin-action-btn-danger:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.scope-recruiter .admin-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+
+.scope-recruiter .admin-card-user {
+  display: flex;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.scope-recruiter .admin-card-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.scope-recruiter .admin-card-user-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.scope-recruiter .admin-card-user-role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Recruiter requisition form styling */
+.scope-recruiter .admin-form-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.scope-recruiter .admin-form-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.scope-recruiter .admin-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.scope-recruiter .admin-form-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.scope-recruiter .admin-form-section {
+  margin-bottom: 2rem;
+}
+
+.scope-recruiter .admin-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.scope-recruiter .admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.scope-recruiter .admin-form-full {
+  grid-column: span 2;
+}
+
+.scope-recruiter .admin-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.scope-recruiter .admin-form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.scope-recruiter .admin-form-label-required {
+  color: var(--danger);
+  margin-left: 0.25rem;
+}
+
+.scope-recruiter .admin-form-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+}
+
+.scope-recruiter .admin-form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.scope-recruiter .admin-form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.scope-recruiter .admin-form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.scope-recruiter .admin-form-select {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+}
+
+.scope-recruiter .admin-form-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.scope-recruiter .admin-alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.scope-recruiter .admin-alert-error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.scope-recruiter .admin-info-box {
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.scope-recruiter .admin-info-box-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.scope-recruiter .admin-info-box-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 .scope-recruiter .admin-btn-primary {
@@ -1420,88 +1696,6 @@
 .scope-recruiter .admin-filter-select:focus {
   outline: none;
   border-color: var(--accent);
-}
-
-.scope-recruiter .admin-card-priority {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.scope-recruiter .admin-priority-high {
-  background: #ef4444;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-}
-
-.scope-recruiter .admin-priority-medium {
-  background: #f59e0b;
-  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
-}
-
-.scope-recruiter .admin-priority-low {
-  background: #10b981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-}
-
-.scope-recruiter .admin-card-content {
-  padding-right: 2rem;
-}
-
-.scope-recruiter .admin-card-stats {
-  display: flex;
-  gap: 1.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.scope-recruiter .admin-stat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.scope-recruiter .admin-stat-value {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.scope-recruiter .admin-card-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.scope-recruiter .admin-action-btn {
-  padding: 0.375rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid var(--border);
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-}
-
-.scope-recruiter .admin-action-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-light);
-}
-
-.scope-recruiter .admin-action-btn-danger {
-  color: #dc2626;
-  border-color: #fecaca;
-}
-
-.scope-recruiter .admin-action-btn-danger:hover {
-  background: #fee2e2;
-  border-color: #fca5a5;
 }
 
 .scope-recruiter .admin-tabs {
@@ -1718,9 +1912,24 @@
     grid-template-columns: 1fr;
   }
 
+  .scope-admin .admin-requisition-card,
+  .scope-recruiter .admin-requisition-card {
+    padding: 1rem;
+  }
+
   .scope-admin .admin-search-input,
   .scope-recruiter .admin-search-input {
     min-width: 100%;
+  }
+
+  .scope-admin .admin-filter-bar,
+  .scope-recruiter .admin-filter-bar {
+    flex-direction: column;
+  }
+
+  .scope-admin .admin-filter-select,
+  .scope-recruiter .admin-filter-select {
+    width: 100%;
   }
 
   .scope-admin .admin-tabs,

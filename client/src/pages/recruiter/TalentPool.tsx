@@ -74,23 +74,23 @@ export const TalentPool: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Talent Pool</h1>
-          <p className="text-slate-600">Rejected candidates retained for future opportunities</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Talent Pool</h1>
+          <p className="text-slate-600 text-base sm:text-sm">Rejected candidates retained for future opportunities</p>
         </div>
 
-        <div className="mb-6 grid grid-cols-3 gap-4">
-          <Card className="p-6">
-            <div className="text-3xl font-bold text-slate-900">{stats.total}</div>
+        <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Card className="p-4 sm:p-6">
+            <div className="text-2xl sm:text-3xl font-bold text-slate-900">{stats.total}</div>
             <div className="text-sm text-slate-600">Total Candidates</div>
           </Card>
-          <Card className="p-6">
-            <div className="text-3xl font-bold text-blue-600">{stats.candidates}</div>
+          <Card className="p-4 sm:p-6">
+            <div className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.candidates}</div>
             <div className="text-sm text-slate-600">Active in Pool</div>
           </Card>
-          <Card className="p-6">
-            <div className="text-3xl font-bold text-green-600">{candidates.filter(c => c.ai_score).length}</div>
+          <Card className="p-4 sm:p-6">
+            <div className="text-2xl sm:text-3xl font-bold text-green-600">{candidates.filter(c => c.ai_score).length}</div>
             <div className="text-sm text-slate-600">With AI Scores</div>
           </Card>
         </div>
@@ -106,7 +106,7 @@ export const TalentPool: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {candidates.map((candidate) => (
-              <Card key={candidate.id} className="p-6">
+              <Card key={candidate.id} className="p-4 sm:p-6">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                   <div className="flex items-start gap-4 flex-1">
                     <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
@@ -114,8 +114,8 @@ export const TalentPool: React.FC = () => {
                     </div>
 
                     <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-3 mb-3">
-                        <h3 className="font-semibold text-slate-900">{candidate.candidateName}</h3>
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
+                        <h3 className="font-semibold text-slate-900 text-base sm:text-sm">{candidate.candidateName}</h3>
                         <span className="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
                           Current Status: {candidate.status}
                         </span>
@@ -124,34 +124,34 @@ export const TalentPool: React.FC = () => {
                         </span>
                       </div>
 
-                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 mb-4">
+                      <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mb-4">
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <Mail className="w-4 h-4" />
-                          <span>{candidate.email || 'Not specified'}</span>
+                          <span className="truncate">{candidate.email || 'Not specified'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <Phone className="w-4 h-4" />
-                          <span>{candidate.phone || 'Not specified'}</span>
+                          <span className="truncate">{candidate.phone || 'Not specified'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <Briefcase className="w-4 h-4" />
-                          <span>{candidate.previousJobTitle || 'Previous job not available'}</span>
+                          <span className="truncate">{candidate.previousJobTitle || 'Previous job not available'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <Building2 className="w-4 h-4" />
-                          <span>{candidate.previousJobDepartment || 'Department not specified'}</span>
+                          <span className="truncate">{candidate.previousJobDepartment || 'Department not specified'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <Calendar className="w-4 h-4" />
-                          <span>{candidate.previousJobLocation || 'Location not specified'}</span>
+                          <span className="truncate">{candidate.previousJobLocation || 'Location not specified'}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-slate-600">
                           <FileText className="w-4 h-4" />
-                          <span>{candidate.resumeFileName || 'Resume available'}</span>
+                          <span className="truncate">{candidate.resumeFileName || 'Resume available'}</span>
                         </div>
                       </div>
 
-                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 mb-4">
+                      <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mb-4">
                         {candidate.ai_score != null && (
                           <div className="flex items-center gap-2 text-sm">
                             <Award className="w-4 h-4 text-slate-400" />
@@ -199,7 +199,7 @@ export const TalentPool: React.FC = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(buildCandidateProfilePath(candidate))}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <Eye className="w-4 h-4" />
                       View Candidate Profile
@@ -209,7 +209,7 @@ export const TalentPool: React.FC = () => {
                       size="sm"
                       onClick={() => candidate.resumeUrl && window.open(candidate.resumeUrl, '_blank', 'noopener,noreferrer')}
                       disabled={!candidate.resumeUrl}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <FileText className="w-4 h-4" />
                       View Resume
@@ -219,7 +219,7 @@ export const TalentPool: React.FC = () => {
                       size="sm"
                       onClick={() => handleDownloadResume(candidate.id)}
                       disabled={!candidate.resumeUrl}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <Download className="w-4 h-4" />
                       Download Resume
@@ -228,7 +228,7 @@ export const TalentPool: React.FC = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(buildApplicationPath(candidate))}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <FileText className="w-4 h-4" />
                       View Interview Feedback
@@ -237,7 +237,7 @@ export const TalentPool: React.FC = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => navigate(buildApplicationsListPath(candidate))}
-                      className="flex items-center justify-center gap-2"
+                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <FileText className="w-4 h-4" />
                       View Previous Applications
@@ -249,7 +249,7 @@ export const TalentPool: React.FC = () => {
                         setSelectedCandidate(candidate);
                         setShowRemoveConfirm(true);
                       }}
-                      className="flex items-center justify-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                      className="flex items-center justify-center gap-2 text-red-600 border-red-200 hover:bg-red-50 text-base sm:text-sm"
                     >
                       <Trash2 className="w-4 h-4" />
                       Remove Candidate from Talent Pool

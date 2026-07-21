@@ -75,7 +75,7 @@ apiClient.interceptors.response.use(
       } catch {
         tokenStorage.clear();
         onAuthenticationFailure?.();
-        if (window.location.pathname !== "/login") window.location.assign("/login");
+        // Don't redirect on refresh failure - let the auth state handle it
       }
     }
     if (status === 403) {

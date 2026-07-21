@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { createRequisition, getRequisition, updateRequisition } from "../../api/recruiter/requisitions"
 import { createForm } from "../../api/recruiter/forms"
+import { toUserMessage } from "../../utils/toUserMessage"
 
 const DEPARTMENTS = [
   'Engineering', 'Product', 'Design', 'Marketing', 'Sales',
@@ -199,8 +200,8 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
         await updateRequisition(id || '', payload)
         navigate(`/recruiter/requisitions/${id}`)
       }
-    } catch (err: any) {
-      setApiError(err.response?.data?.error || err.message || 'Operation failed')
+    } catch (err: unknown) {
+      setApiError(toUserMessage(err, 'Operation failed'))
     } finally {
       setLoading(false)
     }
@@ -208,42 +209,50 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
   if (loadingData) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="spinner" />
+      <div className="admin-page-container">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="spinner" />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="page-container px-4 sm:px-6" style={{ maxWidth: 900 }}>
-      <button className="btn-secondary btn-sm" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
+    <div className="admin-page-container">
+      <button 
+        className="admin-btn-secondary" 
+        onClick={() => navigate(mode === 'create' ? '/recruiter/requisitions' : `/recruiter/requisitions/${id}`)} 
+        style={{ marginBottom: '1.5rem' }}
+      >
         ← Back
       </button>
 
-      <div className="glass-card" style={{ padding: '2rem' }}>
-        <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-          {mode === 'create' ? 'New Job Requisition' : 'Edit Requisition'}
-        </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '2rem' }}>
-          {mode === 'create' ? 'Fill in the details to create a new requisition.' : 'Update the requisition details.'}
-        </p>
+      <div className="admin-form-container">
+        <div className="admin-form-header">
+          <h1 className="admin-form-title">
+            {mode === 'create' ? 'New Job Requisition' : 'Edit Requisition'}
+          </h1>
+          <p className="admin-form-subtitle">
+            {mode === 'create' ? 'Fill in the details to create a new requisition.' : 'Update the requisition details.'}
+          </p>
+        </div>
 
-        {apiError && <div className="alert-error" style={{ marginBottom: '1.25rem' }}>{apiError}</div>}
+        {apiError && <div className="admin-alert admin-alert-error" style={{ marginBottom: '1.25rem' }}>{apiError}</div>}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           {/* Basic Information */}
           <section>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            <h2 className="admin-section-title" style={{ marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Basic Information
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ gap: '1.25rem' }}>
-              <div style={{ gridColumn: 'span 2' }}>
-                <label className="label" htmlFor="req-title">Job Title *</label>
+            <div className="admin-form-grid">
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-title">Job Title *</label>
                 {!customTitle ? (
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <select
                       id="req-title"
-                      className={`input-field${errors.title ? ' border-red-500' : ''}`}
+                      className={`admin-form-select${errors.title ? ' border-red-500' : ''}`}
                       value={formData.title}
                       onChange={e => {
                         if (e.target.value === 'custom') {
@@ -265,7 +274,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                     <input
                       id="req-title"
                       type="text"
-                      className={`input-field${errors.title ? ' border-red-500' : ''}`}
+                      className={`admin-form-input${errors.title ? ' border-red-500' : ''}`}
                       placeholder="Enter custom job title"
                       value={formData.title}
                       onChange={e => handleChange('title', e.target.value)}
@@ -277,7 +286,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                         setCustomTitle(false)
                         handleChange('title', '')
                       }}
-                      className="btn-secondary"
+                      className="admin-btn-secondary"
                       style={{ padding: '0.5rem 1rem' }}
                     >
                       Use List
@@ -287,27 +296,26 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 {errors.title && <p style={{ color: 'var(--danger)', fontSize: '0.8rem', marginTop: '0.25rem' }}>{errors.title}</p>}
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-dept">Department</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-dept">Department</label>
                 <select
                   id="req-dept"
-                  className="input-field"
+                  className="admin-form-select"
                   value={formData.department}
                   onChange={e => handleChange('department', e.target.value)}
-                  style={{ appearance: 'none' }}
                 >
                   <option value="">Select department…</option>
                   {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-team">Team</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-team">Team</label>
                 {!customTeam ? (
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <select
                       id="req-team"
-                      className="input-field"
+                      className="admin-form-select"
                       value={formData.team}
                       onChange={e => {
                         if (e.target.value === 'custom') {
@@ -329,7 +337,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                     <input
                       id="req-team"
                       type="text"
-                      className="input-field"
+                      className="admin-form-input"
                       placeholder="Enter custom team"
                       value={formData.team}
                       onChange={e => handleChange('team', e.target.value)}
@@ -341,7 +349,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                         setCustomTeam(false)
                         handleChange('team', '')
                       }}
-                      className="btn-secondary"
+                      className="admin-btn-secondary"
                       style={{ padding: '0.5rem 1rem' }}
                     >
                       Use List
@@ -350,52 +358,50 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 )}
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-location">Location</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-location">Location</label>
                 <input
                   id="req-location"
                   type="text"
-                  className="input-field"
+                  className="admin-form-input"
                   placeholder="e.g. New York, NY"
                   value={formData.location}
                   onChange={e => handleChange('location', e.target.value)}
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-emp-type">Employment Type</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-emp-type">Employment Type</label>
                 <select
                   id="req-emp-type"
-                  className="input-field"
+                  className="admin-form-select"
                   value={formData.employment_type}
                   onChange={e => handleChange('employment_type', e.target.value)}
-                  style={{ appearance: 'none' }}
                 >
                   <option value="">Select type…</option>
                   {EMPLOYMENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-work-mode">Work Mode</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-work-mode">Work Mode</label>
                 <select
                   id="req-work-mode"
-                  className="input-field"
+                  className="admin-form-select"
                   value={formData.work_mode}
                   onChange={e => handleChange('work_mode', e.target.value)}
-                  style={{ appearance: 'none' }}
                 >
                   <option value="">Select mode…</option>
                   {WORK_MODES.map(m => <option key={m} value={m}>{m}</option>)}
                 </select>
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-openings">Number of Openings</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-openings">Number of Openings</label>
                 <input
                   id="req-openings"
                   type="number"
-                  className="input-field"
+                  className="admin-form-input"
                   min="1"
                   value={formData.number_of_openings}
                   onChange={e => handleChange('number_of_openings', parseInt(e.target.value) || 1)}
@@ -406,15 +412,15 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
           {/* Job Description */}
           <section>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            <h2 className="admin-section-title" style={{ marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Job Description
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label className="label" htmlFor="req-about">About the Role</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-about">About the Role</label>
                 <textarea
                   id="req-about"
-                  className="input-field"
+                  className="admin-form-input admin-form-textarea"
                   placeholder="Describe the role and its impact…"
                   value={formData.about_role}
                   onChange={e => handleChange('about_role', e.target.value)}
@@ -423,11 +429,11 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-resp">Responsibilities</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-resp">Responsibilities</label>
                 <textarea
                   id="req-resp"
-                  className="input-field"
+                  className="admin-form-input admin-form-textarea"
                   placeholder="List key responsibilities…"
                   value={formData.responsibilities}
                   onChange={e => handleChange('responsibilities', e.target.value)}
@@ -436,11 +442,11 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-req-skills">Required Skills</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-req-skills">Required Skills</label>
                 <textarea
                   id="req-req-skills"
-                  className="input-field"
+                  className="admin-form-input admin-form-textarea"
                   placeholder="List required technical and soft skills…"
                   value={formData.required_skills}
                   onChange={e => handleChange('required_skills', e.target.value)}
@@ -449,11 +455,11 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-pref-skills">Preferred Skills</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-pref-skills">Preferred Skills</label>
                 <textarea
                   id="req-pref-skills"
-                  className="input-field"
+                  className="admin-form-input admin-form-textarea"
                   placeholder="List preferred but not required skills…"
                   value={formData.preferred_skills}
                   onChange={e => handleChange('preferred_skills', e.target.value)}
@@ -462,25 +468,25 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
-                <div>
-                  <label className="label" htmlFor="req-exp">Experience Required</label>
+              <div className="admin-form-grid">
+                <div className="admin-form-group">
+                  <label className="admin-form-label" htmlFor="req-exp">Experience Required</label>
                   <input
                     id="req-exp"
                     type="text"
-                    className="input-field"
+                    className="admin-form-input"
                     placeholder="e.g. 3-5 years"
                     value={formData.experience_required}
                     onChange={e => handleChange('experience_required', e.target.value)}
                   />
                 </div>
 
-                <div>
-                  <label className="label" htmlFor="req-edu">Education Requirements</label>
+                <div className="admin-form-group">
+                  <label className="admin-form-label" htmlFor="req-edu">Education Requirements</label>
                   <input
                     id="req-edu"
                     type="text"
-                    className="input-field"
+                    className="admin-form-input"
                     placeholder="e.g. Bachelor's in Computer Science"
                     value={formData.education_requirements}
                     onChange={e => handleChange('education_requirements', e.target.value)}
@@ -488,25 +494,25 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
-                <div>
-                  <label className="label" htmlFor="req-salary">Salary (Optional)</label>
+              <div className="admin-form-grid">
+                <div className="admin-form-group">
+                  <label className="admin-form-label" htmlFor="req-salary">Salary (Optional)</label>
                   <input
                     id="req-salary"
                     type="text"
-                    className="input-field"
+                    className="admin-form-input"
                     placeholder="e.g. $80,000 - $120,000"
                     value={formData.salary}
                     onChange={e => handleChange('salary', e.target.value)}
                   />
                 </div>
 
-                <div>
-                  <label className="label" htmlFor="req-benefits">Benefits (Optional)</label>
+                <div className="admin-form-group">
+                  <label className="admin-form-label" htmlFor="req-benefits">Benefits (Optional)</label>
                   <input
                     id="req-benefits"
                     type="text"
-                    className="input-field"
+                    className="admin-form-input"
                     placeholder="e.g. Health insurance, 401k"
                     value={formData.benefits}
                     onChange={e => handleChange('benefits', e.target.value)}
@@ -518,41 +524,40 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
           {/* Hiring Information */}
           <section>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            <h2 className="admin-section-title" style={{ marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Hiring Information
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.25rem' }}>
-              <div>
-                <label className="label" htmlFor="req-priority">Hiring Priority</label>
+            <div className="admin-form-grid">
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-priority">Hiring Priority</label>
                 <select
                   id="req-priority"
-                  className="input-field"
+                  className="admin-form-select"
                   value={formData.hiring_priority}
                   onChange={e => handleChange('hiring_priority', e.target.value)}
-                  style={{ appearance: 'none' }}
                 >
                   <option value="">Select priority…</option>
                   {PRIORITIES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
                 </select>
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-join-date">Target Joining Date</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-join-date">Target Joining Date</label>
                 <input
                   id="req-join-date"
                   type="date"
-                  className="input-field"
+                  className="admin-form-input"
                   value={formData.target_joining_date}
                   onChange={e => handleChange('target_joining_date', e.target.value)}
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-deadline">Application Deadline</label>
+              <div className="admin-form-group">
+                <label className="admin-form-label" htmlFor="req-deadline">Application Deadline</label>
                 <input
                   id="req-deadline"
                   type="date"
-                  className="input-field"
+                  className="admin-form-input"
                   value={formData.application_deadline}
                   onChange={e => handleChange('application_deadline', e.target.value)}
                 />
@@ -562,7 +567,7 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
           {/* Application Information */}
           <section>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            <h2 className="admin-section-title" style={{ marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Application Information
             </h2>
             <div>
@@ -580,27 +585,27 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
 
           {/* Attachments */}
           <section>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+            <h2 className="admin-section-title" style={{ marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
               Attachments
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <label className="label" htmlFor="req-jd-doc">Job Description Document URL</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-jd-doc">Job Description Document URL</label>
                 <input
                   id="req-jd-doc"
                   type="text"
-                  className="input-field"
+                  className="admin-form-input"
                   placeholder="https://..."
                   value={formData.job_description_document}
                   onChange={e => handleChange('job_description_document', e.target.value)}
                 />
               </div>
 
-              <div>
-                <label className="label" htmlFor="req-add-docs">Additional Documents (JSON)</label>
+              <div className="admin-form-group admin-form-full">
+                <label className="admin-form-label" htmlFor="req-add-docs">Additional Documents (JSON)</label>
                 <textarea
                   id="req-add-docs"
-                  className="input-field"
+                  className="admin-form-input admin-form-textarea"
                   placeholder='[{"name": "Document 1", "url": "https://..."}]'
                   value={formData.additional_documents}
                   onChange={e => handleChange('additional_documents', e.target.value)}
@@ -620,16 +625,16 @@ export default function RequisitionFormPage({ mode = 'create', user }: Requisiti
               fontSize: '0.825rem',
               color: 'var(--accent)'
             }}>
-              ℹ️ New requisitions start as <strong>Draft</strong>. After saving, you can submit for approval.
+              ℹ️ After creating, you'll be redirected to the application form builder.
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-            <button className="btn-secondary" onClick={() => navigate(-1)}>
+          <div className="admin-form-actions">
+            <button className="admin-btn-secondary" onClick={() => navigate(mode === 'create' ? '/recruiter/requisitions' : `/recruiter/requisitions/${id}`)}>
               Cancel
             </button>
             <button
-              className="btn-primary"
+              className="admin-btn-primary"
               onClick={handleSubmit}
               disabled={loading}
             >

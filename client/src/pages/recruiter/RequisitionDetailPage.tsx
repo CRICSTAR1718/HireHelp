@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getRequisition, updateRequisition, submitRequisition, approveRequisition, rejectRequisition, requestChanges, publishRequisition } from "../../api/recruiter/requisitions"
 import { getForm } from "../../api/recruiter/forms"
 import api from "../../api/recruiter/requisitions"
+import { toUserMessage } from "../../utils/toUserMessage"
 import StatusBadge from "../../components/recruiter/StatusBadge"
 
 interface User {
@@ -63,8 +64,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       const updated = await submitRequisition(id || '')
       setReq(updated)
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Submit failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Submit failed'))
     } finally {
       setActionLoading(false)
     }
@@ -77,8 +78,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       const updated = await approveRequisition(id || '')
       setReq(updated)
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Approval failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Approval failed'))
     } finally {
       setActionLoading(false)
     }
@@ -96,8 +97,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       setShowRejectModal(false)
       setRejectionReason('')
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Rejection failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Rejection failed'))
     } finally {
       setActionLoading(false)
     }
@@ -115,8 +116,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       setShowRequestChangesModal(false)
       setAdminRemarks('')
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Request failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Request failed'))
     } finally {
       setActionLoading(false)
     }
@@ -129,8 +130,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       const updated = await publishRequisition(id || '')
       setReq(updated)
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Publish failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Publish failed'))
     } finally {
       setActionLoading(false)
     }
@@ -177,8 +178,8 @@ export default function RequisitionDetailPage({ user }: RequisitionDetailPagePro
       await fetchAll()
       
       alert(`Upload complete: ${data.succeeded} succeeded, ${data.failed} failed`)
-    } catch (err: any) {
-      alert(err.message || 'Upload failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Upload failed'))
     } finally {
       setUploading(false)
     }

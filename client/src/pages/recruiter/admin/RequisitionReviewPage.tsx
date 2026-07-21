@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRequisitions, approveRequisition, rejectRequisition, requestChanges } from "../../../api/recruiter/requisitions"
+import { toUserMessage } from "../../../utils/toUserMessage"
 import StatusBadge from "../../../components/recruiter/StatusBadge"
 
 interface User {
@@ -63,8 +64,8 @@ export default function RequisitionReviewPage({ user }: RequisitionReviewPagePro
     try {
       await approveRequisition(reqId)
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Approval failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Approval failed'))
     } finally {
       setActionLoading(prev => ({ ...prev, [reqId]: false }))
     }
@@ -81,8 +82,8 @@ export default function RequisitionReviewPage({ user }: RequisitionReviewPagePro
       setShowRejectModal(null)
       setRejectionReason('')
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Rejection failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Rejection failed'))
     } finally {
       setActionLoading(prev => ({ ...prev, [reqId]: false }))
     }
@@ -99,8 +100,8 @@ export default function RequisitionReviewPage({ user }: RequisitionReviewPagePro
       setShowRequestChangesModal(null)
       setAdminRemarks('')
       await fetchAll()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Request failed')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Request failed'))
     } finally {
       setActionLoading(prev => ({ ...prev, [reqId]: false }))
     }

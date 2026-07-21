@@ -32,9 +32,10 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
       />
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-white transition-all duration-200 lg:static lg:translate-x-0",
-          collapsed ? "w-0 -translate-x-full" : "w-64",
-          mobileOpen ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-white transition-all duration-200",
+          collapsed ? "w-0 overflow-hidden" : "w-64",
+          "lg:static lg:translate-x-0",
+          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
         <div className="flex h-16 items-center border-b border-slate-200 px-4">
@@ -136,7 +137,7 @@ export const Sidebar = ({ collapsed, mobileOpen, onCloseMobile, onToggle, naviga
 
           <button
             aria-label="Toggle sidebar"
-            className="mt-2 hidden w-full items-center justify-center rounded-lg py-2 text-slate-500 hover:bg-slate-50 lg:flex"
+            className="mt-2 w-full items-center justify-center rounded-lg py-2 text-slate-500 hover:bg-slate-50 lg:flex"
             onClick={onToggle}
             type="button"
           >

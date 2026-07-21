@@ -24,7 +24,7 @@ export const InterviewerLayout = () => {
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-lg border-r border-slate-200 flex flex-col fixed h-full z-50 transition-all duration-300 ${
-          sidebarCollapsed ? 'w-0 -translate-x-full' : 'w-64 translate-x-0'
+          sidebarCollapsed ? 'w-0 -translate-x-full opacity-0 pointer-events-none' : 'w-64 translate-x-0 opacity-100'
         }`}
       >
         {/* Logo */}

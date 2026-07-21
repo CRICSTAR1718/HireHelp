@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { SectionTitle, LoadingState } from "../../../components/admin/common";
 import ApplicationTable from "../../../components/candidate/applications/ApplicationTable";
 import { getApplications } from "../../../api/candidate/applications.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { Application } from "../../../types/candidate";
 
 export default function Applications() {
@@ -13,7 +14,7 @@ export default function Applications() {
         getApplications()
             .then(setApplications)
             .catch((err) =>
-                setError(err instanceof Error ? err.message : "Failed to load applications")
+                setError(toUserMessage(err, "Failed to load applications. Please try again."))
             )
             .finally(() => setLoading(false));
     }, []);

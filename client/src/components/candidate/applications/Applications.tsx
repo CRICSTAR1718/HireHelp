@@ -4,6 +4,7 @@ import PageTitle from "../ui/PageTitle";
 import ApplicationTable from "./ApplicationTable";
 import Loader from "../ui/Loader";
 import { getApplications } from "@/api/candidate/applications.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { Application } from "../../../types/candidate";
 
 export default function Applications() {
@@ -15,7 +16,7 @@ export default function Applications() {
         getApplications()
             .then(setApplications)
             .catch((err) =>
-                setError(err instanceof Error ? err.message : "Failed to load applications")
+                setError(toUserMessage(err, "Failed to load applications. Please try again."))
             )
             .finally(() => setLoading(false));
     }, []);

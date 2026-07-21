@@ -6,6 +6,7 @@ import EducationCard from "../../../components/candidate/profile/EducationCard";
 import ExperienceCard from "../../../components/candidate/profile/ExperienceCard";
 import EditProfileModal from "../../../components/candidate/profile/EditProfileModal";
 import { getProfile } from "../../../api/candidate/profile.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { Profile } from "../../../types/candidate";
 
 export default function Profile() {
@@ -18,7 +19,7 @@ export default function Profile() {
         getProfile()
             .then(setProfile)
             .catch((err) =>
-                setError(err instanceof Error ? err.message : "Failed to load profile")
+                setError(toUserMessage(err, "Failed to load profile. Please try again."))
             )
             .finally(() => setLoading(false));
     }, []);

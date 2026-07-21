@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Button } from "../../components/interviewer";
 import { assignmentApi, type Assignment } from "../../api/interviewer";
+import { toUserMessage } from "../../utils/toUserMessage";
 import { Video, Eye, X, Check, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 
 export const AssignedInterviews: React.FC = () => {
@@ -23,9 +24,9 @@ export const AssignedInterviews: React.FC = () => {
       const data = await assignmentApi.getInterviewerAssignments();
       // Ensure data is an array
       setAssignments(Array.isArray(data) ? data : []);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to load assignments:', error);
-      setAssignments([]);
+      alert(toUserMessage(error, 'Failed to load assignments'));
     } finally {
       setLoading(false);
     }
@@ -54,9 +55,9 @@ export const AssignedInterviews: React.FC = () => {
       setStatusAction(null);
       setFeedback('');
       setCancellationReason('');
-    } catch (error) {
-      console.error('Failed to update assignment:', error);
-      alert('Failed to update interview status');
+    } catch (error: unknown) {
+      console.error('Failed to update status:', error);
+      alert(toUserMessage(error, 'Failed to update status'));
     } finally {
       setUpdating(false);
     }

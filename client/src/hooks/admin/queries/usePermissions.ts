@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as permissionsApi from "../../../api/admin/permissions";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { CreatePermissionInput, UpdatePermissionInput } from "../../../types/admin/permissions";
 
 export const usePermissions = () => {
@@ -28,7 +29,7 @@ export const useCreatePermission = () => {
       toast.success("Permission created successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to create permission");
+      toast.error(toUserMessage(error, "Failed to create permission. Please try again."));
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdatePermission = () => {
       toast.success("Permission updated successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update permission");
+      toast.error(toUserMessage(error, "Failed to update permission. Please try again."));
     },
   });
 };
@@ -60,7 +61,7 @@ export const useDeletePermission = () => {
       toast.success("Permission deleted successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete permission");
+      toast.error(toUserMessage(error, "Failed to delete permission. Please try again."));
     },
   });
 };

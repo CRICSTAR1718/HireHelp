@@ -50,7 +50,7 @@ export const RecruiterLayout = () => {
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
-          sidebarCollapsed ? 'w-0 -translate-x-full' : 'w-64 translate-x-0'
+          sidebarCollapsed ? 'w-0 -translate-x-full opacity-0 pointer-events-none' : 'w-64 translate-x-0 opacity-100'
         }`}
         style={{ borderColor: 'var(--border)', zIndex: 9999 }}
       >
@@ -94,7 +94,10 @@ export const RecruiterLayout = () => {
                       })}
                       onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
-                      onClick={() => !sidebarCollapsed && toggleExpanded(item.label)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        !sidebarCollapsed && toggleExpanded(item.label);
+                      }}
                     >
                       {({ isActive }) => (
                         <>

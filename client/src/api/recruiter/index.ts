@@ -48,12 +48,12 @@ api.interceptors.response.use(
 
       try {
         // Cookie-based refresh - no localStorage token needed
-        const res = await api.post('/admin/auth/refresh', {})
+        const res = await refreshToken()
         processQueue(null)
         return api(originalRequest)
       } catch (refreshErr) {
         processQueue(refreshErr)
-        window.location.href = '/'
+        // Don't redirect on refresh failure - let the auth state handle it
         return Promise.reject(refreshErr)
       } finally {
         isRefreshing = false

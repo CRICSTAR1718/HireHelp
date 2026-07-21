@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { forgotPassword, verifyResetOtp, resetPassword, resendOtp } from "../../../api/candidate/auth.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import Button from "../../../components/candidate/ui/Button";
 import Input from "../../../components/candidate/ui/Input";
 import PasswordInput from "../../../components/candidate/ui/PasswordInput";
@@ -51,8 +52,8 @@ export default function ForgotPassword() {
       setEmail(values.email);
       setSuccess("OTP sent to your email. Please check your inbox.");
       setStep("otp");
-    } catch (err: any) {
-      setError(err.message || "Failed to send OTP. Please try again.");
+    } catch (err: unknown) {
+      setError(toUserMessage(err, "Failed to send OTP. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -67,8 +68,8 @@ export default function ForgotPassword() {
       await verifyResetOtp(email, values.otp);
       setSuccess("OTP verified. Please set your new password.");
       setStep("newPassword");
-    } catch (err: any) {
-      setError(err.message || "Invalid OTP. Please try again.");
+    } catch (err: unknown) {
+      setError(toUserMessage(err, "Invalid OTP. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -85,8 +86,8 @@ export default function ForgotPassword() {
       setTimeout(() => {
         navigate("/candidate/login");
       }, 2000);
-    } catch (err: any) {
-      setError(err.message || "Failed to reset password. Please try again.");
+    } catch (err: unknown) {
+      setError(toUserMessage(err, "Failed to reset password. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -111,8 +112,9 @@ export default function ForgotPassword() {
           return prev - 1;
         });
       }, 1000);
-    } catch (err: any) {
-      if (err.response?.status === 429) {
+    } catch (err: unknown) {
+      const { isAxiosError } = await import("axios");
+      if (isAxiosError(err) && err.response?.status === 429) {
         setError("Please wait before requesting another OTP.");
         setCooldown(60);
         const timer = setInterval(() => {
@@ -125,7 +127,7 @@ export default function ForgotPassword() {
           });
         }, 1000);
       } else {
-        setError(err.message || "Failed to resend OTP. Please try again.");
+        setError(toUserMessage(err, "Failed to resend OTP. Please try again."));
       }
     } finally {
       setLoading(false);

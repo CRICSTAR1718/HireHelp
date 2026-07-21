@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hooks";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
 import { login } from "../../../api/candidate/auth.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { LoginRequest } from "../../../types/candidate/auth";
 
 import Button from "../../../components/candidate/ui/Button";
@@ -59,10 +60,7 @@ const response = await login({
 
       navigate(destination, { replace: true });
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Login failed. Please try again.";
+      const message = toUserMessage(error, "Unable to sign in. Please check your credentials and try again.");
 
       setServerError(message);
       dispatch(loginFailure(message));
@@ -72,7 +70,7 @@ const response = await login({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {serverError && (
-        <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+        <div className="rounded-2xl border border-red-600 bg-red-600 p-4 text-sm text-white">
           {serverError}
         </div>
       )}
@@ -93,7 +91,7 @@ const response = await login({
         />
 
         {errors.email && (
-          <p className="mt-1 text-sm text-rose-400">
+          <p className="mt-1 text-sm text-red-400">
             {errors.email.message}
           </p>
         )}
@@ -108,7 +106,7 @@ const response = await login({
         />
 
         {errors.password && (
-          <p className="mt-1 text-sm text-rose-400">
+          <p className="mt-1 text-sm text-red-400">
             {errors.password.message}
           </p>
         )}
