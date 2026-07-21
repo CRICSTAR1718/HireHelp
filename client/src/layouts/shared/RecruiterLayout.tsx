@@ -2,6 +2,8 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
 import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home, Link, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { AnimatedBackground } from "@/components/shared/AnimatedBackground";
+import { PageTransition } from "@/components/shared/PageTransition";
 
 const navItems = [
   { to: "/recruiter/dashboard", label: "Dashboard", icon: Home, end: true },
@@ -46,7 +48,8 @@ export const RecruiterLayout = () => {
   };
 
   return (
-    <div className="scope-recruiter min-h-screen flex">
+    <div className="scope-recruiter relative min-h-screen flex">
+      <AnimatedBackground />
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
@@ -198,9 +201,9 @@ export const RecruiterLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 p-6 transition-all duration-300 ${
+      <main className={`relative z-10 flex-1 p-6 transition-all duration-300 ${
         sidebarCollapsed ? 'ml-0' : 'ml-64'
-      }`} style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-primary)' }}>
+      }`} style={{ borderColor: 'var(--border)' }}>
         {/* Hamburger menu button */}
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -210,7 +213,9 @@ export const RecruiterLayout = () => {
           <Menu className="w-5 h-5" strokeWidth={2} />
         </button>
         <div className="max-w-7xl mx-auto">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </div>
       </main>
     </div>

@@ -2,6 +2,8 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
 import { Calendar, LogOut, LayoutDashboard, Home, Link, Menu } from "lucide-react";
 import { useState } from "react";
+import { AnimatedBackground } from "@/components/shared/AnimatedBackground";
+import { PageTransition } from "@/components/shared/PageTransition";
 
 const navItems = [
   { to: "/interviewer", label: "Dashboard", icon: Home, end: true },
@@ -20,7 +22,8 @@ export const InterviewerLayout = () => {
   };
 
   return (
-    <div className="scope-interviewer min-h-screen bg-linear-to-br from-slate-50 to-slate-100 flex">
+    <div className="scope-interviewer relative min-h-screen bg-linear-to-br from-slate-50 to-slate-100 flex">
+      <AnimatedBackground />
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-lg border-r border-slate-200 flex flex-col fixed h-full z-50 transition-all duration-300 ${
@@ -88,7 +91,7 @@ export const InterviewerLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 p-6 transition-all duration-300 ${
+      <main className={`relative z-10 flex-1 p-6 transition-all duration-300 ${
         sidebarCollapsed ? 'ml-0' : 'ml-64'
       }`}>
         {/* Hamburger menu button */}
@@ -99,7 +102,9 @@ export const InterviewerLayout = () => {
           <Menu className="w-5 h-5" strokeWidth={2} />
         </button>
         <div className="max-w-7xl mx-auto">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </div>
       </main>
     </div>

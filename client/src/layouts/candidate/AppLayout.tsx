@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
 import { Sidebar } from "../../components/admin/layout";
 import { navigationGroups } from "../../constants/candidate/navigation";
 import { useAuth } from "../../hooks/candidate/useAuth";
+import { AnimatedBackground } from "../../components/shared/AnimatedBackground";
+import { PageTransition } from "../../components/shared/PageTransition";
 
 export const AppLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -44,7 +46,8 @@ export const AppLayout = () => {
         <Menu className="h-5 w-5" style={{ color: "#1e293b" }} />
       </button>
 
-      <div className="scope-candidate flex min-h-screen bg-slate-50">
+      <div className="scope-candidate relative flex min-h-screen bg-slate-50">
+        <AnimatedBackground />
         <Sidebar
           collapsed={collapsed}
           mobileOpen={mobileOpen}
@@ -56,7 +59,9 @@ export const AppLayout = () => {
         />
         <div className="min-w-0 flex-1 transition-all duration-200">
           <main className="min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8">
-            <Outlet />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </div>
       </div>
