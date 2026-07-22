@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, FileText } from "lucide-react";
 import { Card, Button } from "../../../components/admin/ui";
 import { UserAvatar } from "../../../components/admin/common";
 import type { Profile } from "../../../types/candidate";
@@ -9,6 +9,12 @@ interface Props {
 }
 
 export default function ProfileCard({ profile, onEditProfile }: Props) {
+    const handleViewResume = () => {
+        if (profile.resumeUrl) {
+            window.open(profile.resumeUrl, '_blank', 'noopener,noreferrer');
+        }
+    };
+
     return (
         <Card className="p-6 hh-lift">
             <div className="flex items-center gap-4 mb-6">
@@ -44,14 +50,26 @@ export default function ProfileCard({ profile, onEditProfile }: Props) {
                 )}
             </div>
 
-            {onEditProfile && (
-                <Button 
-                    onClick={onEditProfile}
-                    className="mt-6 w-full"
-                >
-                    Edit Profile
-                </Button>
-            )}
+            <div className="mt-6 space-y-2">
+                {profile.resumeUrl && (
+                    <Button 
+                        onClick={handleViewResume}
+                        variant="outline"
+                        className="w-full"
+                    >
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Resume
+                    </Button>
+                )}
+                {onEditProfile && (
+                    <Button 
+                        onClick={onEditProfile}
+                        className="w-full"
+                    >
+                        Edit Profile
+                    </Button>
+                )}
+            </div>
         </Card>
     );
 }

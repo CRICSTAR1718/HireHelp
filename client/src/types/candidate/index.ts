@@ -92,6 +92,7 @@ export interface Profile {
     linkedin?: string;
     github?: string;
     profilePictureUrl?: string;
+    resumeUrl?: string;
     skills: string[];
     education: Education[];
     experience: Experience[];

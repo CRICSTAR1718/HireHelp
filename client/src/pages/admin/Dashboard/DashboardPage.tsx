@@ -22,7 +22,7 @@ export const DashboardPage = () => {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 space-y-12">
       <section>
         <div className="mb-6">
-          <h1 className="text-5xl font-bold text-gray-900 mb-2">Platform overview</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-2">Dashboard</h1>
           <p className="text-lg text-gray-600">Overview of platform metrics and management modules.</p>
         </div>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 hh-stagger">
