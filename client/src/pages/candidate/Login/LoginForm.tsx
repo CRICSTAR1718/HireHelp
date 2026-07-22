@@ -80,7 +80,6 @@ const response = await login({
           label="Email Address"
           type="email"
           placeholder="Enter your email"
-          className="bg-slate-950"
           {...register("email", {
             required: "Email is required.",
             pattern: {

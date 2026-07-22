@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Save, Upload, Plus, X as XIcon } from "lucide-react";
 import type { Profile } from "../../../types/candidate";
 import { updateProfile, uploadProfilePicture } from "../../../api/candidate/profile.api";
@@ -186,15 +187,15 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
         onClose();
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl mx-4">
+    return createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={handleCancel}>
+            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-6">
-                    <h2 className="text-xl font-bold text-white">Edit Profile</h2>
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 backdrop-blur-sm p-6">
+                    <h2 className="text-xl font-bold text-slate-900">Edit Profile</h2>
                     <button
                         onClick={handleCancel}
-                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-all"
+                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all"
                     >
                         <X size={20} />
                     </button>
@@ -204,26 +205,26 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     {/* Success Message */}
                     {success && (
-                        <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-200">
+                        <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-700">
                             Profile updated successfully!
                         </div>
                     )}
 
                     {/* Error Message */}
                     {error && (
-                        <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+                        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                             {error}
                         </div>
                     )}
 
                     {/* Profile Picture */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Profile Picture</label>
+                        <label className="text-sm font-medium text-slate-700">Profile Picture</label>
                         <div className="flex items-center gap-4">
                             <img
                                 src={formData.profilePictureUrl || "https://i.pravatar.cc/150?img=12"}
                                 alt="Profile"
-                                className="h-20 w-20 rounded-full border-2 border-slate-700 object-cover"
+                                className="h-20 w-20 rounded-full border-2 border-slate-200 object-cover"
                             />
                             <div className="flex flex-col gap-2">
                                 <input
@@ -236,7 +237,7 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
                                 />
                                 <label
                                     htmlFor="profile-picture-input"
-                                    className={`flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 transition-all cursor-pointer ${
+                                    className={`flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-all cursor-pointer ${
                                         uploadingPicture ? 'opacity-50 cursor-not-allowed' : ''
                                     }`}
                                 >
@@ -250,70 +251,70 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
 
                     {/* Basic Information */}
                     <div className="space-y-4">
-                        <h3 className="text-md font-semibold text-white">Basic Information</h3>
-                        
+                        <h3 className="text-md font-semibold text-slate-900">Basic Information</h3>
+
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Full Name</label>
+                            <label className="text-sm font-medium text-slate-700">Full Name</label>
                             <input
                                 type="text"
                                 value={formData.fullName || ''}
                                 onChange={(e) => handleChange('fullName', e.target.value)}
-                                className={`w-full rounded-lg border px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                    validationErrors.fullName ? 'border-rose-500 bg-rose-500/10' : 'border-slate-700 bg-slate-800'
+                                className={`w-full rounded-lg border px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                    validationErrors.fullName ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-white'
                                 }`}
                                 placeholder="Enter your full name"
                             />
                             {validationErrors.fullName && (
-                                <p className="text-xs text-rose-400">{validationErrors.fullName}</p>
+                                <p className="text-xs text-rose-600">{validationErrors.fullName}</p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Email</label>
+                            <label className="text-sm font-medium text-slate-700">Email</label>
                             <input
                                 type="email"
                                 value={formData.email || ''}
                                 disabled
-                                className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-4 py-2 text-slate-400 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-not-allowed"
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2 text-slate-400 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-not-allowed"
                                 placeholder="your.email@example.com"
                             />
                             <p className="text-xs text-slate-500">Email cannot be changed</p>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Phone</label>
+                            <label className="text-sm font-medium text-slate-700">Phone</label>
                             <input
                                 type="tel"
                                 value={formData.phone || ''}
                                 onChange={(e) => handleChange('phone', e.target.value)}
-                                className={`w-full rounded-lg border px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                    validationErrors.phone ? 'border-rose-500 bg-rose-500/10' : 'border-slate-700 bg-slate-800'
+                                className={`w-full rounded-lg border px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                    validationErrors.phone ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-white'
                                 }`}
                                 placeholder="+1 234 567 8900"
                             />
                             {validationErrors.phone && (
-                                <p className="text-xs text-rose-400">{validationErrors.phone}</p>
+                                <p className="text-xs text-rose-600">{validationErrors.phone}</p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Headline</label>
+                            <label className="text-sm font-medium text-slate-700">Headline</label>
                             <input
                                 type="text"
                                 value={formData.headline || ''}
                                 onChange={(e) => handleChange('headline', e.target.value)}
-                                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="Software Developer | Full Stack"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Location</label>
+                            <label className="text-sm font-medium text-slate-700">Location</label>
                             <input
                                 type="text"
                                 value={formData.location || ''}
                                 onChange={(e) => handleChange('location', e.target.value)}
-                                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="City, State, Country"
                             />
                         </div>
@@ -321,61 +322,61 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
 
                     {/* Professional Links */}
                     <div className="space-y-4">
-                        <h3 className="text-md font-semibold text-white">Professional Links</h3>
-                        
+                        <h3 className="text-md font-semibold text-slate-900">Professional Links</h3>
+
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">LinkedIn URL</label>
+                            <label className="text-sm font-medium text-slate-700">LinkedIn URL</label>
                             <input
                                 type="url"
                                 value={formData.linkedin || ''}
                                 onChange={(e) => handleChange('linkedin', e.target.value)}
-                                className={`w-full rounded-lg border px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                    validationErrors.linkedin ? 'border-rose-500 bg-rose-500/10' : 'border-slate-700 bg-slate-800'
+                                className={`w-full rounded-lg border px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                    validationErrors.linkedin ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-white'
                                 }`}
                                 placeholder="https://linkedin.com/in/yourprofile"
                             />
                             {validationErrors.linkedin && (
-                                <p className="text-xs text-rose-400">{validationErrors.linkedin}</p>
+                                <p className="text-xs text-rose-600">{validationErrors.linkedin}</p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">GitHub URL</label>
+                            <label className="text-sm font-medium text-slate-700">GitHub URL</label>
                             <input
                                 type="url"
                                 value={formData.github || ''}
                                 onChange={(e) => handleChange('github', e.target.value)}
-                                className={`w-full rounded-lg border px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                    validationErrors.github ? 'border-rose-500 bg-rose-500/10' : 'border-slate-700 bg-slate-800'
+                                className={`w-full rounded-lg border px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                    validationErrors.github ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-white'
                                 }`}
                                 placeholder="https://github.com/yourusername"
                             />
                             {validationErrors.github && (
-                                <p className="text-xs text-rose-400">{validationErrors.github}</p>
+                                <p className="text-xs text-rose-600">{validationErrors.github}</p>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Portfolio URL</label>
+                            <label className="text-sm font-medium text-slate-700">Portfolio URL</label>
                             <input
                                 type="url"
                                 value={formData.portfolio || ''}
                                 onChange={(e) => handleChange('portfolio', e.target.value)}
-                                className={`w-full rounded-lg border px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                                    validationErrors.portfolio ? 'border-rose-500 bg-rose-500/10' : 'border-slate-700 bg-slate-800'
+                                className={`w-full rounded-lg border px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                                    validationErrors.portfolio ? 'border-rose-500 bg-rose-50' : 'border-slate-200 bg-white'
                                 }`}
                                 placeholder="https://yourportfolio.com"
                             />
                             {validationErrors.portfolio && (
-                                <p className="text-xs text-rose-400">{validationErrors.portfolio}</p>
+                                <p className="text-xs text-rose-600">{validationErrors.portfolio}</p>
                             )}
                         </div>
                     </div>
 
                     {/* Skills */}
                     <div className="space-y-3">
-                        <label className="text-sm font-medium text-slate-300">Skills</label>
-                        
+                        <label className="text-sm font-medium text-slate-700">Skills</label>
+
                         {/* Add Skill Input */}
                         <div className="flex gap-2">
                             <input
@@ -383,13 +384,13 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
                                 value={newSkill}
                                 onChange={(e) => setNewSkill(e.target.value)}
                                 onKeyPress={handleSkillKeyPress}
-                                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="flex-1 rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                 placeholder="Add a skill (e.g., React)"
                             />
                             <button
                                 type="button"
                                 onClick={addSkill}
-                                className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white hover:bg-slate-700 transition-all"
+                                className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-900 hover:bg-slate-50 transition-all"
                             >
                                 <Plus size={16} />
                                 Add
@@ -402,13 +403,13 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
                                 {formData.skills.map((skill, index) => (
                                     <div
                                         key={index}
-                                        className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-sm text-white"
+                                        className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-sm text-slate-900"
                                     >
                                         {skill}
                                         <button
                                             type="button"
                                             onClick={() => removeSkill(skill)}
-                                            className="text-slate-400 hover:text-rose-400 transition-colors"
+                                            className="text-slate-400 hover:text-rose-600 transition-colors"
                                         >
                                             <XIcon size={14} />
                                         </button>
@@ -422,17 +423,17 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
 
                     {/* Summary */}
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-300">Summary</label>
+                        <label className="text-sm font-medium text-slate-700">Summary</label>
                         <textarea
                             value={formData.summary || ''}
                             onChange={(e) => handleChange('summary', e.target.value)}
-                            className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[120px]"
+                            className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-[120px]"
                             placeholder="Brief professional summary..."
                         />
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3 pt-4 border-t border-slate-800">
+                    <div className="flex gap-3 pt-4 border-t border-slate-200">
                         <button
                             type="submit"
                             disabled={saving}
@@ -445,13 +446,14 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
                             type="button"
                             onClick={handleCancel}
                             disabled={saving}
-                            className="rounded-lg border border-slate-700/50 px-6 py-3 text-white hover:bg-slate-800/50 hover:border-slate-600 transition-all duration-300 disabled:opacity-50"
+                            className="rounded-lg border border-slate-200 px-6 py-3 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 disabled:opacity-50"
                         >
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

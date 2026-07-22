@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Check, Upload, FileText } from "lucide-react";
 import type { FormField, FieldOption, FormResponse } from "../../../types/candidate";
 
@@ -94,8 +95,8 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
         const value = fieldValue?.value;
         const error = errors[field.id];
 
-        const baseClassName = "w-full rounded-lg border bg-slate-900/50 px-4 py-3 text-white outline-none transition-all focus:border-blue-500/50 focus:shadow-lg focus:shadow-blue-500/10";
-        const errorClassName = error ? "border-rose-500/50" : "border-slate-800/50";
+        const baseClassName = "w-full rounded-lg border bg-white px-4 py-3 text-slate-900 outline-none transition-all focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/10";
+        const errorClassName = error ? "border-rose-500" : "border-slate-200";
 
         switch (field.field_type) {
             case 'text':
@@ -190,7 +191,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                                     className="w-4 h-4 accent-blue-500"
                                     required={field.is_required}
                                 />
-                                <span className="text-slate-300 group-hover:text-white transition-colors">
+                                <span className="text-slate-700 group-hover:text-slate-900 transition-colors">
                                     {option.label}
                                 </span>
                             </label>
@@ -208,7 +209,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                             className="w-4 h-4 accent-blue-500"
                             required={field.is_required}
                         />
-                        <span className="text-slate-300 group-hover:text-white transition-colors">
+                        <span className="text-slate-700 group-hover:text-slate-900 transition-colors">
                             {field.label}
                         </span>
                     </label>
@@ -234,7 +235,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                                         }}
                                         className="w-4 h-4 accent-blue-500"
                                     />
-                                    <span className="text-slate-300 group-hover:text-white transition-colors">
+                                    <span className="text-slate-700 group-hover:text-slate-900 transition-colors">
                                         {option.label}
                                     </span>
                                 </label>
@@ -261,20 +262,20 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                             htmlFor={`file-${field.id}`}
                             className={`flex items-center gap-3 rounded-lg border-2 border-dashed p-6 transition-all cursor-pointer ${
                                 value instanceof File
-                                    ? 'border-green-500/50 bg-green-500/10'
-                                    : 'border-slate-700/50 bg-slate-900/30 hover:border-blue-500/50 hover:bg-blue-500/10'
+                                    ? 'border-green-500 bg-green-50'
+                                    : 'border-slate-200 bg-slate-50 hover:border-blue-500 hover:bg-blue-50'
                             }`}
                         >
                             {value instanceof File ? (
                                 <>
-                                    <FileText className="text-green-400" />
-                                    <span className="text-green-300">{value.name}</span>
-                                    <Check className="text-green-400 ml-auto" />
+                                    <FileText className="text-green-600" />
+                                    <span className="text-green-700">{value.name}</span>
+                                    <Check className="text-green-600 ml-auto" />
                                 </>
                             ) : (
                                 <>
                                     <Upload className="text-slate-400" />
-                                    <span className="text-slate-400">
+                                    <span className="text-slate-600">
                                         {field.placeholder || 'Upload file (PDF, DOC, DOCX)'}
                                     </span>
                                 </>
@@ -315,7 +316,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                                 className="w-4 h-4 accent-blue-500"
                                 required={field.is_required}
                             />
-                            <span className="text-slate-300">Yes</span>
+                            <span className="text-slate-700">Yes</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
@@ -327,7 +328,7 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                                 className="w-4 h-4 accent-blue-500"
                                 required={field.is_required}
                             />
-                            <span className="text-slate-300">No</span>
+                            <span className="text-slate-700">No</span>
                         </label>
                     </div>
                 );
@@ -346,42 +347,42 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-6">
-                    <h2 className="text-xl font-bold text-white">Application Form</h2>
+    return createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onCancel}>
+            <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 backdrop-blur-sm p-6">
+                    <h2 className="text-xl font-bold text-slate-900">Application Form</h2>
                     <button
                         type="button"
                         onClick={onCancel}
-                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition-all"
+                        className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all"
                     >
                         <X size={20} />
                     </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    <div className="border-t border-slate-800 pt-6">
-                        <h3 className="text-sm font-medium text-white mb-4">Application Questions</h3>
+                    <div className="border-t border-slate-200 pt-6">
+                        <h3 className="text-sm font-medium text-slate-900 mb-4">Application Questions</h3>
                     </div>
 
                     {fields.map((field) => (
                         <div key={field.id} className="space-y-2">
-                            <label className="flex items-center gap-2 text-sm font-medium text-white">
+                            <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
                                 {field.label}
-                                {field.is_required && <span className="text-rose-400">*</span>}
+                                {field.is_required && <span className="text-rose-600">*</span>}
                             </label>
                             {renderField(field)}
                             {field.helper_text && (
                                 <p className="text-xs text-slate-500">{field.helper_text}</p>
                             )}
                             {errors[field.id] && (
-                                <p className="text-sm text-rose-400">{errors[field.id]}</p>
+                                <p className="text-sm text-rose-600">{errors[field.id]}</p>
                             )}
                         </div>
                     ))}
 
-                    <div className="flex gap-3 pt-4 border-t border-slate-800">
+                    <div className="flex gap-3 pt-4 border-t border-slate-200">
                         <button
                             type="submit"
                             disabled={submitting}
@@ -393,13 +394,14 @@ export default function ApplicationForm({ fields, onSubmit, onCancel, submitting
                             type="button"
                             onClick={onCancel}
                             disabled={submitting}
-                            className="rounded-lg border border-blue-500/50 bg-blue-600/10 px-6 py-3 text-blue-300 font-medium hover:bg-blue-600/20 hover:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="rounded-lg border border-slate-200 bg-white px-6 py-3 text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

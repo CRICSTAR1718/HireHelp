@@ -135,18 +135,18 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950/95 p-10 shadow-2xl shadow-slate-950/40 sm:p-12">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10" />
+    <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-10 shadow-2xl shadow-slate-200/40 sm:p-12">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
       <div className="relative z-10 space-y-10">
         <div className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.32em] text-blue-400">
+          <p className="text-sm uppercase tracking-[0.32em] text-blue-600">
             {step === "email" ? "Forgot Password" : step === "otp" ? "Verify OTP" : "Reset Password"}
           </p>
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-slate-900">
             {step === "email" ? "Reset your password" : step === "otp" ? "Enter verification code" : "Set new password"}
           </h1>
-          <p className="max-w-xl text-slate-400">
-            {step === "email" 
+          <p className="max-w-xl text-slate-600">
+            {step === "email"
               ? "Enter your email address and we'll send you a verification code to reset your password."
               : step === "otp"
               ? `Enter the 6-digit code sent to ${email}`
@@ -156,13 +156,13 @@ export default function ForgotPassword() {
         </div>
 
         {error && (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-200">
+          <div className="rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-green-700">
             {success}
           </div>
         )}
@@ -174,7 +174,6 @@ export default function ForgotPassword() {
                 label="Email Address"
                 type="email"
                 placeholder="Enter your email"
-                className="bg-slate-950"
                 {...register("email", {
                   required: "Email is required.",
                   pattern: {
@@ -184,7 +183,7 @@ export default function ForgotPassword() {
                 })}
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-rose-400">{errors.email.message}</p>
+                <p className="mt-1 text-sm text-rose-600">{errors.email.message}</p>
               )}
             </div>
           )}
@@ -195,7 +194,6 @@ export default function ForgotPassword() {
                 label="Verification Code"
                 type="text"
                 placeholder="Enter 6-digit code"
-                className="bg-slate-950"
                 maxLength={6}
                 {...register("otp", {
                   required: "OTP is required.",
@@ -206,13 +204,13 @@ export default function ForgotPassword() {
                 })}
               />
               {errors.otp && (
-                <p className="mt-1 text-sm text-rose-400">{errors.otp.message}</p>
+                <p className="mt-1 text-sm text-rose-600">{errors.otp.message}</p>
               )}
               <button
                 type="button"
                 onClick={handleResendOtp}
                 disabled={cooldown > 0 || loading}
-                className="mt-2 text-sm text-blue-400 hover:text-blue-300 disabled:text-slate-500"
+                className="mt-2 text-sm text-blue-600 hover:text-blue-700 disabled:text-slate-500"
               >
                 {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
               </button>
@@ -222,7 +220,7 @@ export default function ForgotPassword() {
           {step === "newPassword" && (
             <>
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-300">New Password</label>
+                <label className="block mb-2 text-sm font-medium text-slate-700">New Password</label>
                 <PasswordInput
                   placeholder="Enter new password"
                   {...register("newPassword", {
@@ -234,12 +232,12 @@ export default function ForgotPassword() {
                   })}
                 />
                 {errors.newPassword && (
-                  <p className="mt-1 text-sm text-rose-400">{errors.newPassword.message}</p>
+                  <p className="mt-1 text-sm text-rose-600">{errors.newPassword.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="block mb-2 text-sm font-medium text-slate-300">Confirm Password</label>
+                <label className="block mb-2 text-sm font-medium text-slate-700">Confirm Password</label>
                 <PasswordInput
                   placeholder="Confirm new password"
                   {...register("confirmPassword", {
@@ -248,7 +246,7 @@ export default function ForgotPassword() {
                   })}
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-rose-400">{errors.confirmPassword.message}</p>
+                  <p className="mt-1 text-sm text-rose-600">{errors.confirmPassword.message}</p>
                 )}
               </div>
             </>
@@ -259,11 +257,11 @@ export default function ForgotPassword() {
           </Button>
         </form>
 
-        <p className="text-center text-slate-400">
+        <p className="text-center text-slate-600">
           Remember your password?{" "}
           <button
             onClick={() => navigate("/candidate/login")}
-            className="text-blue-400 hover:text-blue-300"
+            className="text-blue-600 hover:text-blue-700"
           >
             Sign in
           </button>

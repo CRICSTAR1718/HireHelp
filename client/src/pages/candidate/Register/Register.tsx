@@ -130,7 +130,7 @@ export default function Register() {
 
                     <form onSubmit={handleSubmit(onRegisterSubmit)} className="space-y-4">
                         {serverError && (
-                            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+                            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                                 {serverError}
                             </div>
                         )}
@@ -145,7 +145,7 @@ export default function Register() {
                                     })}
                                 />
                                 {errors.firstName && (
-                                    <p className="mt-1 text-sm text-rose-400">
+                                    <p className="mt-1 text-sm text-rose-600">
                                         {errors.firstName.message}
                                     </p>
                                 )}
@@ -160,7 +160,7 @@ export default function Register() {
                                     })}
                                 />
                                 {errors.lastName && (
-                                    <p className="mt-1 text-sm text-rose-400">
+                                    <p className="mt-1 text-sm text-rose-600">
                                         {errors.lastName.message}
                                     </p>
                                 )}
@@ -181,7 +181,7 @@ export default function Register() {
                                 })}
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-rose-400">{errors.email.message}</p>
+                                <p className="mt-1 text-sm text-rose-600">{errors.email.message}</p>
                             )}
                         </div>
 
@@ -205,10 +205,10 @@ export default function Register() {
                                 })}
                             />
 
-                            <div className="-mt-4 mb-1 text-sm text-slate-300">Password</div>
+                            <div className="-mt-4 mb-1 text-sm text-slate-600">Password</div>
 
                             {errors.password && (
-                                <p className="mt-1 text-sm text-rose-400">
+                                <p className="mt-1 text-sm text-rose-600">
                                     {errors.password.message}
                                 </p>
                             )}
@@ -224,12 +224,12 @@ export default function Register() {
                                 })}
                             />
 
-                            <div className="-mt-4 mb-1 text-sm text-slate-300">
+                            <div className="-mt-4 mb-1 text-sm text-slate-600">
                                 Confirm Password
                             </div>
 
                             {errors.confirmPassword && (
-                                <p className="mt-1 text-sm text-rose-400">
+                                <p className="mt-1 text-sm text-rose-600">
                                     {errors.confirmPassword.message}
                                 </p>
                             )}
@@ -244,18 +244,18 @@ export default function Register() {
                 <>
                     <h1 className="mb-2 text-3xl font-bold">Verify Email</h1>
                     <p className="mb-8 text-gray-500">
-                        Enter the 6-digit OTP sent to <span className="font-semibold text-white">{registeredEmail}</span>
+                        Enter the 6-digit OTP sent to <span className="font-semibold text-slate-900">{registeredEmail}</span>
                     </p>
 
                     <form onSubmit={handleOtpSubmit(onOtpSubmit)} className="space-y-4">
                         {serverError && (
-                            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-4 text-sm text-rose-200">
+                            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
                                 {serverError}
                             </div>
                         )}
 
                         {successMessage && (
-                            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+                            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
                                 {successMessage}
                             </div>
                         )}
@@ -275,7 +275,7 @@ export default function Register() {
                                 })}
                             />
                             {otpErrors.otp && (
-                                <p className="mt-1 text-sm text-rose-400">{otpErrors.otp.message}</p>
+                                <p className="mt-1 text-sm text-rose-600">{otpErrors.otp.message}</p>
                             )}
                         </div>
 
@@ -286,7 +286,7 @@ export default function Register() {
                         <button
                             type="button"
                             onClick={handleResendOtp}
-                            className="w-full text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                            className="w-full text-sm text-blue-600 hover:text-blue-700 transition-colors"
                         >
                             Resend OTP
                         </button>

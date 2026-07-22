@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { MapPin, Clock, Building2, DollarSign, X, ArrowLeft, Zap } from "lucide-react";
 import type { Job } from "../../../types/candidate";
 import { getJob } from "../../../api/candidate/jobs.api";
@@ -113,53 +114,55 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
     };
 
     if (loading) {
-        return (
+        return createPortal(
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 mx-4">
-                    <div className="text-center text-slate-400">Loading job details...</div>
+                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 sm:p-8 mx-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="text-center text-slate-600">Loading job details...</div>
                 </div>
-            </div>
+            </div>,
+            document.body
         );
     }
 
     if (error || !job) {
-        return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 mx-4">
-                    <div className="text-center text-red-400">
+        return createPortal(
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+                <div className="w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl p-6 sm:p-8 mx-4" onClick={(e) => e.stopPropagation()}>
+                    <div className="text-center text-rose-600">
                         {error || 'Job not found'}
                     </div>
                     <div className="mt-4 text-center">
                         <button
                             onClick={onClose}
-                            className="rounded-lg bg-slate-700 px-4 py-2 text-white hover:bg-slate-600 transition-all"
+                            className="rounded-lg bg-slate-200 px-4 py-2 text-slate-700 hover:bg-slate-300 transition-all"
                         >
                             Close
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>,
+            document.body
         );
     }
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl mx-4">
+    return createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white border border-slate-200 shadow-2xl mx-4" onClick={(e) => e.stopPropagation()}>
                 {/* Header */}
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-900/95 backdrop-blur-sm p-4 sm:p-6">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 backdrop-blur-sm p-4 sm:p-6">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={onClose}
-                            className="rounded-lg p-2 text-blue-400 hover:bg-slate-800 hover:text-blue-300 transition-all"
+                            className="rounded-lg p-2 text-blue-600 hover:bg-slate-100 hover:text-blue-700 transition-all"
                             title="Go back"
                         >
                             <ArrowLeft size={20} />
                         </button>
-                        <h2 className="text-lg sm:text-xl font-bold text-white">Job Details</h2>
+                        <h2 className="text-lg sm:text-xl font-bold text-slate-900">Job Details</h2>
                     </div>
                     <button
                         onClick={onClose}
-                        className="rounded-lg p-2 text-blue-400 hover:bg-slate-800 hover:text-blue-300 transition-all"
+                        className="rounded-lg p-2 text-blue-600 hover:bg-slate-100 hover:text-blue-700 transition-all"
                         title="Close"
                     >
                         <X size={20} />
@@ -169,15 +172,15 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                 {/* Content */}
                 <div className="p-4 sm:p-6 space-y-6">
                     {successMessage && (
-                        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                             {successMessage}
                         </div>
                     )}
 
                     {/* Job Title and Basic Info */}
                     <div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{job.title}</h3>
-                        <div className="flex flex-wrap gap-4 text-slate-400 text-sm">
+                        <h3 className="text-2xl font-bold text-slate-900 mb-2">{job.title}</h3>
+                        <div className="flex flex-wrap gap-4 text-slate-600 text-sm">
                             {job.department && (
                                 <div className="flex items-center gap-2">
                                     <Building2 size={16} />
@@ -202,113 +205,113 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                     {/* Employment Details */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {job.employment_type && (
-                            <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                                <p className="text-sm text-slate-400">Employment Type</p>
-                                <p className="font-semibold text-white">{job.employment_type}</p>
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <p className="text-sm text-slate-600">Employment Type</p>
+                                <p className="font-semibold text-slate-900">{job.employment_type}</p>
                             </div>
                         )}
                         {job.work_mode && (
-                            <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                                <p className="text-sm text-slate-400">Work Mode</p>
-                                <p className="font-semibold text-white">{job.work_mode}</p>
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <p className="text-sm text-slate-600">Work Mode</p>
+                                <p className="font-semibold text-slate-900">{job.work_mode}</p>
                             </div>
                         )}
                         {job.salary && (
-                            <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                                <p className="text-sm text-slate-400">Salary</p>
-                                <p className="font-semibold text-green-400 flex items-center gap-2">
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <p className="text-sm text-slate-600">Salary</p>
+                                <p className="font-semibold text-green-600 flex items-center gap-2">
                                     <DollarSign size={16} />
                                     {job.salary}
                                 </p>
                             </div>
                         )}
                         {job.number_of_openings && (
-                            <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                                <p className="text-sm text-slate-400">Openings</p>
-                                <p className="font-semibold text-white">{job.number_of_openings}</p>
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <p className="text-sm text-slate-600">Openings</p>
+                                <p className="font-semibold text-slate-900">{job.number_of_openings}</p>
                             </div>
                         )}
                     </div>
 
                     {/* Job Description */}
                     {job.about_role && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">About the Role</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.about_role}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">About the Role</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.about_role}</p>
                         </div>
                     )}
 
                     {/* Responsibilities */}
                     {job.responsibilities && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Responsibilities</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.responsibilities}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Responsibilities</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.responsibilities}</p>
                         </div>
                     )}
 
                     {/* Skills */}
                     {job.required_skills && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Required Skills</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.required_skills}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Required Skills</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.required_skills}</p>
                         </div>
                     )}
 
                     {job.preferred_skills && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Preferred Skills</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.preferred_skills}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Preferred Skills</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.preferred_skills}</p>
                         </div>
                     )}
 
                     {/* Requirements */}
                     {job.experience_required && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Experience Required</h4>
-                            <p className="text-slate-300">{job.experience_required}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Experience Required</h4>
+                            <p className="text-slate-700">{job.experience_required}</p>
                         </div>
                     )}
 
                     {job.education_requirements && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Education Requirements</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.education_requirements}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Education Requirements</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.education_requirements}</p>
                         </div>
                     )}
 
                     {/* Benefits */}
                     {job.benefits && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <h4 className="text-md font-semibold text-white mb-2">Benefits</h4>
-                            <p className="text-slate-300 whitespace-pre-wrap">{job.benefits}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <h4 className="text-md font-semibold text-slate-900 mb-2">Benefits</h4>
+                            <p className="text-slate-700 whitespace-pre-wrap">{job.benefits}</p>
                         </div>
                     )}
 
                     {/* Deadline */}
                     {job.application_deadline && (
-                        <div className="rounded-xl border border-slate-800/50 bg-slate-900/30 p-4">
-                            <p className="text-sm text-slate-400">Application Deadline</p>
-                            <p className="font-semibold text-white">{formatDate(job.application_deadline)}</p>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <p className="text-sm text-slate-600">Application Deadline</p>
+                            <p className="font-semibold text-slate-900">{formatDate(job.application_deadline)}</p>
                         </div>
                     )}
 
                     {/* Apply Button */}
                     {onApply && (
-                        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-800">
+                        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-200">
                             <button
                                 onClick={handleApply}
                                 disabled={hasApplied || applying || checkingTalentPool}
                                 className={`flex-1 rounded-lg px-6 py-3 text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 ${
                                     hasApplied
-                                        ? "bg-slate-700 cursor-not-allowed"
-                                        : "bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/25 hover:shadow-blue-500/30"
+                                        ? "bg-slate-400 cursor-not-allowed"
+                                        : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-blue-500/25 hover:shadow-blue-500/30"
                                 }`}
                             >
                                 {hasApplied ? "Already Applied" : applying ? "Applying..." : "Apply Now"}
                             </button>
                             <button
                                 onClick={onClose}
-                                className="rounded-lg border border-slate-700/50 px-6 py-3 text-blue-400 hover:bg-slate-800/50 hover:border-slate-600 hover:text-blue-300 transition-all duration-300"
+                                className="rounded-lg border border-slate-200 px-6 py-3 text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300"
                             >
                                 Close
                             </button>
@@ -316,6 +319,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                     )}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
