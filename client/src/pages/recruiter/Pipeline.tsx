@@ -371,7 +371,7 @@ export const Pipeline: React.FC = () => {
             applicationId={selectedCandidate.id}
             requisitionId={selectedCandidate.requisition_id}
             candidateName={`${selectedCandidate.candidate_first_name} ${selectedCandidate.candidate_last_name}`}
-            position={modalPosition}
+            position={modalPosition ?? undefined}
           />
         )}
     </div>

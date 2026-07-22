@@ -229,7 +229,7 @@ const ApplicationsListPage: React.FC = () => {
             applicationId={selectedApplication.id}
             requisitionId={id}
             candidateName={formatCandidateName(selectedApplication)}
-            position={modalPosition}
+            position={modalPosition ?? undefined}
           />
         )}
     </div>

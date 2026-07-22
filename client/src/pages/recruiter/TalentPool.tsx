@@ -330,7 +330,7 @@ export const TalentPool: React.FC = () => {
           applicationId={selectedCandidate.application_id}
           requisitionId={selectedCandidate.previous_job_id}
           candidateName={selectedCandidate.candidateName}
-          position={modalPosition}
+          position={modalPosition ?? undefined}
         />
       )}
     </div>
