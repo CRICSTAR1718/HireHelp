@@ -193,7 +193,7 @@ export default function AllInterviews() {
                   )}
                   {assignment.completedAt && assignment.feedback && (
                     <button
-                      onClick={() => handleViewFeedback(assignment.feedback)}
+                      onClick={() => handleViewFeedback(assignment.feedback!)}
                       className="bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                     >
                       <MessageSquare className="w-4 h-4" />
