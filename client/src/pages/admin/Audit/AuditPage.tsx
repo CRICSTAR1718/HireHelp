@@ -43,7 +43,7 @@ export const AuditPage = () => {
           columns={columns}
           data={auditLogs || []}
           loading={isLoading}
-          emptyIcon={<FileText />}
+          emptyIcon={FileText}
           emptyMessage="No audit logs found. Activity will be recorded here as users interact with the platform."
         />
       </ContentCard>

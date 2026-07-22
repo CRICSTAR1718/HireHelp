@@ -33,6 +33,7 @@ export const Candidates: React.FC = () => {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState<{ top: number; left: number } | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isAdminPortal = location.pathname.startsWith('/admin');
@@ -83,7 +84,9 @@ export const Candidates: React.FC = () => {
     setShowFeedbackModal(true);
   };
 
-  const handleViewAiEvaluation = (application: Application) => {
+  const handleViewAiEvaluation = (e: React.MouseEvent, application: Application) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setModalPosition({ top: rect.bottom, left: rect.left });
     setSelectedCandidate(application);
     setShowAiModal(true);
   };
@@ -258,7 +261,7 @@ export const Candidates: React.FC = () => {
                   </button>
                   {application.ai_status === 'completed' && (
                     <button
-                      onClick={() => handleViewAiEvaluation(application)}
+                      onClick={(e) => handleViewAiEvaluation(e, application)}
                       className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                     >
                       <Eye className="w-4 h-4" />
@@ -427,10 +430,12 @@ export const Candidates: React.FC = () => {
             onClose={() => {
               setShowAiModal(false)
               setSelectedCandidate(null)
+              setModalPosition(null)
             }}
             applicationId={selectedCandidate.id}
             requisitionId={selectedCandidate.requisition_id}
             candidateName={`${selectedCandidate.candidate_first_name} ${selectedCandidate.candidate_last_name}`}
+            position={modalPosition}
           />
         )}
     </div>

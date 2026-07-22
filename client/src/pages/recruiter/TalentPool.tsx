@@ -13,6 +13,7 @@ export const TalentPool: React.FC = () => {
   const [selectedCandidate, setSelectedCandidate] = useState<TalentPoolCandidate | null>(null);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState<{ top: number; left: number } | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter';
@@ -53,7 +54,9 @@ export const TalentPool: React.FC = () => {
   const buildApplicationsListPath = (candidate: TalentPoolCandidate) =>
     `${basePath}/requisitions/${candidate.previous_job_id}/applications`;
 
-  const handleViewAiEvaluation = (candidate: TalentPoolCandidate) => {
+  const handleViewAiEvaluation = (e: React.MouseEvent, candidate: TalentPoolCandidate) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setModalPosition({ top: rect.bottom, left: rect.left });
     setSelectedCandidate(candidate);
     setShowAiModal(true);
   };
@@ -221,7 +224,7 @@ export const TalentPool: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleViewAiEvaluation(candidate)}
+                        onClick={(e) => handleViewAiEvaluation(e, candidate)}
                         className="flex items-center justify-center gap-2 text-base sm:text-sm"
                       >
                         <FileText className="w-4 h-4" />
@@ -322,10 +325,12 @@ export const TalentPool: React.FC = () => {
           onClose={() => {
             setShowAiModal(false)
             setSelectedCandidate(null)
+            setModalPosition(null)
           }}
           applicationId={selectedCandidate.application_id}
           requisitionId={selectedCandidate.previous_job_id}
           candidateName={selectedCandidate.candidateName}
+          position={modalPosition}
         />
       )}
     </div>
