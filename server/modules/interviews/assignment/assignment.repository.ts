@@ -1,6 +1,6 @@
 import { db } from '../../../database';
 import { assignments, interviewers, schedules } from '../../../database/schema';
-import { candidates } from '../../../database/schema/candidate.schema';
+import { candidates, resumes } from '../../../database/schema/candidate.schema';
 import { eq } from 'drizzle-orm';
 import { CreateAssignmentInput, UpdateAssignmentInput } from './assignment.schema';
 
@@ -66,6 +66,22 @@ export class AssignmentRepository {
 
       const [schedule] = await db.select().from(schedules).where(eq(schedules.assignmentId, assignment.id)).limit(1);
 
+      // Get candidate's most recent resume URL
+      let resumeUrl = null;
+      if (candidate) {
+        const [resume] = await db.select({
+          s3Url: resumes.s3Url
+        })
+        .from(resumes)
+        .where(eq(resumes.candidateId, candidate.id))
+        .orderBy(resumes.createdAt)
+        .limit(1);
+        
+        if (resume && resume.s3Url) {
+          resumeUrl = resume.s3Url;
+        }
+      }
+
       const enriched = {
         ...assignment,
         candidateName: candidate ? `${candidate.firstName} ${candidate.lastName}` : 'Unknown',
@@ -74,6 +90,7 @@ export class AssignmentRepository {
         interviewerName: interviewer?.name,
         interviewerEmail: interviewer?.email,
         schedule,
+        resumeUrl,
       };
       
       console.log('[Assignment Repository] Enriched assignment:', enriched.id, enriched.candidateName);
@@ -164,6 +181,22 @@ export class AssignmentRepository {
 
       const [schedule] = await db.select().from(schedules).where(eq(schedules.assignmentId, assignment.id)).limit(1);
 
+      // Get candidate's most recent resume URL
+      let resumeUrl = null;
+      if (candidate) {
+        const [resume] = await db.select({
+          s3Url: resumes.s3Url
+        })
+        .from(resumes)
+        .where(eq(resumes.candidateId, candidate.id))
+        .orderBy(resumes.createdAt)
+        .limit(1);
+        
+        if (resume && resume.s3Url) {
+          resumeUrl = resume.s3Url;
+        }
+      }
+
       return {
         ...assignment,
         candidateName: candidate ? `${candidate.firstName} ${candidate.lastName}` : 'Unknown',
@@ -172,6 +205,7 @@ export class AssignmentRepository {
         interviewerName: interviewer?.name,
         interviewerEmail: interviewer?.email,
         schedule,
+        resumeUrl,
       };
     }));
   }

@@ -16,6 +16,7 @@ export interface Assignment {
   completedAt?: Date;
   cancellationReason?: string;
   feedback?: string;
+  resumeUrl?: string;
   schedule?: {
     id: number;
     startTime: Date;

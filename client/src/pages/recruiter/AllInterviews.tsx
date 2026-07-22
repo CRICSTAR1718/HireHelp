@@ -13,7 +13,6 @@ export default function AllInterviews() {
   const [loading, setLoading] = useState(true)
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null)
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
-  const [downloadingResume, setDownloadingResume] = useState<string | null>(null)
 
   useEffect(() => {
     fetchAssignments()
@@ -44,20 +43,11 @@ export default function AllInterviews() {
     }
   }
 
-  const handleDownloadResume = async (candidateId: string) => {
-    setDownloadingResume(candidateId)
-    try {
-      const response = await api.get(`/candidates/${candidateId}/resume`)
-      if (response.data && response.data.resumeUrl) {
-        window.open(response.data.resumeUrl, '_blank', 'noopener,noreferrer')
-      } else {
-        alert('Resume not available for this candidate')
-      }
-    } catch (err) {
-      console.error('Failed to download resume:', err)
-      alert('Failed to download resume. Please try again.')
-    } finally {
-      setDownloadingResume(null)
+  const handleDownloadResume = (assignment: Assignment) => {
+    if (assignment.resumeUrl) {
+      window.open(assignment.resumeUrl, '_blank', 'noopener,noreferrer')
+    } else {
+      alert('Resume not available for this candidate')
     }
   }
 
@@ -193,12 +183,12 @@ export default function AllInterviews() {
                   )}
                   {isAdminPortal && (
                     <button
-                      onClick={() => handleDownloadResume(assignment.candidateId)}
-                      disabled={downloadingResume === assignment.candidateId}
-                      className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                      onClick={() => handleDownloadResume(assignment)}
+                      disabled={!assignment.resumeUrl}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
                     >
                       <Download className="w-4 h-4" />
-                      {downloadingResume === assignment.candidateId ? 'Downloading...' : 'Resume'}
+                      Resume
                     </button>
                   )}
                   {assignment.completedAt && assignment.feedback && (
