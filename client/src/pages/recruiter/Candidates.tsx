@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Users, Briefcase, Mail, MapPin, Search, Filter, Eye, FileText, Download, X } from 'lucide-react';
 import { getApplications } from '../../api/recruiter/applications';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -70,14 +71,14 @@ export const Candidates: React.FC = () => {
   };
 
   const handleViewDetails = (application: Application) => {
-    setSelectedCandidate(application)
-    setShowDetailsModal(true)
-  }
+    setSelectedCandidate(application);
+    setShowDetailsModal(true);
+  };
 
   const handleViewFeedback = (application: Application) => {
-    setSelectedCandidate(application)
-    setShowFeedbackModal(true)
-  }
+    setSelectedCandidate(application);
+    setShowFeedbackModal(true);
+  };
 
   const handleDownloadResume = (application: Application) => {
     if (application.resumeUrl) {
@@ -271,11 +272,16 @@ export const Candidates: React.FC = () => {
           </div>
         )}
 
-        {showDetailsModal && selectedCandidate && (
-          <>
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={() => setShowDetailsModal(false)} />
-            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-              <div className="bg-white rounded-lg shadow-lg max-w-3xl w-full mx-4 p-6 relative max-h-[85vh] overflow-y-auto">
+        {showDetailsModal && selectedCandidate && createPortal(
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowDetailsModal(false)}
+          >
+            <div
+              className="w-full max-w-3xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-white rounded-lg shadow-lg w-full p-6 relative max-h-[85vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-semibold text-gray-900">Candidate Profile</h3>
                   <button
@@ -359,32 +365,42 @@ export const Candidates: React.FC = () => {
                 </div>
               </div>
             </div>
-          </>
+          </div>,
+          document.body
         )}
 
-        {showFeedbackModal && selectedCandidate && selectedCandidate.interview_feedback && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6 relative">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Interview Feedback</h3>
+        {showFeedbackModal && selectedCandidate && selectedCandidate.interview_feedback && createPortal(
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFeedbackModal(false)}
+          >
+            <div
+              className="w-full max-w-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="bg-white rounded-lg shadow-lg w-full p-6 relative">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Interview Feedback</h3>
+                  <button
+                    onClick={() => setShowFeedbackModal(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedCandidate.interview_feedback}</p>
+                </div>
                 <button
                   onClick={() => setShowFeedbackModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
                 >
-                  <X className="w-5 h-5" />
+                  Close
                 </button>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
-                <p className="text-gray-700 whitespace-pre-wrap">{selectedCandidate.interview_feedback}</p>
-              </div>
-              <button
-                onClick={() => setShowFeedbackModal(false)}
-                className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Close
-              </button>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
     </div>
   );
