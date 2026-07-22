@@ -64,7 +64,7 @@ const ResponseRenderer: React.FC<ResponseRendererProps> = ({ field_type, respons
 
 
       case 'file':
-        if (!file_url) {
+        if (!file_url || file_url === 'temp_file_url') {
           return <span className="text-gray-500">No file uploaded</span>
         }
         return (

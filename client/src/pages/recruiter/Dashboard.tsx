@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardBody } from '../../components/interviewer';
-import { Briefcase, Users, Calendar, TrendingUp, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Briefcase, Users, Calendar, CheckCircle, XCircle } from 'lucide-react';
 import { assignmentApi, type Assignment } from '../../api/interviewer';
 import { getRequisitions } from '../../api/recruiter/requisitions';
 
@@ -92,10 +92,6 @@ export const RecruiterDashboard: React.FC = () => {
                 <div>
                   <p className="text-sm font-medium text-slate-600 mb-1">Total Jobs</p>
                   <p className="text-3xl font-bold text-slate-900">{stats.totalJobs}</p>
-                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    +12% from last month
-                  </p>
                 </div>
                 <div className="p-3 bg-blue-100 rounded-xl">
                   <Briefcase className="w-6 h-6 text-blue-600" />
@@ -110,10 +106,6 @@ export const RecruiterDashboard: React.FC = () => {
                 <div>
                   <p className="text-sm font-medium text-slate-600 mb-1">Active Candidates</p>
                   <p className="text-3xl font-bold text-slate-900">{stats.activeCandidates}</p>
-                  <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    +8% from last month
-                  </p>
                 </div>
                 <div className="p-3 bg-green-100 rounded-xl">
                   <Users className="w-6 h-6 text-green-600" />
@@ -128,10 +120,6 @@ export const RecruiterDashboard: React.FC = () => {
                 <div>
                   <p className="text-sm font-medium text-slate-600 mb-1">Scheduled Interviews</p>
                   <p className="text-3xl font-bold text-slate-900">{stats.scheduledInterviews}</p>
-                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    Today: 3 interviews
-                  </p>
                 </div>
                 <div className="p-3 bg-purple-100 rounded-xl">
                   <Calendar className="w-6 h-6 text-purple-600" />
@@ -146,10 +134,6 @@ export const RecruiterDashboard: React.FC = () => {
                 <div>
                   <p className="text-sm font-medium text-slate-600 mb-1">Pending Approvals</p>
                   <p className="text-3xl font-bold text-slate-900">{stats.pendingApprovals}</p>
-                  <p className="text-xs text-orange-600 mt-2 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" />
-                    Needs attention
-                  </p>
                 </div>
                 <div className="p-3 bg-orange-100 rounded-xl">
                   <CheckCircle className="w-6 h-6 text-orange-600" />

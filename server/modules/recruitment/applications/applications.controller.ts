@@ -18,8 +18,15 @@ export async function listApplications(req: Request, res: Response) {
 
 export async function getApplication(req: Request, res: Response) {
   try {
+    const applicationId = req.params.aid
+    // Basic UUID format validation
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidRegex.test(applicationId)) {
+      return res.status(400).json({ error: 'Invalid application ID format' })
+    }
+    
     const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
-    const data = await service.getApplication(req.params.aid as string, requisitionId)
+    const data = await service.getApplication(applicationId, requisitionId)
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
