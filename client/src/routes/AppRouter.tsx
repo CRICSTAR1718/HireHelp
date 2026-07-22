@@ -235,7 +235,7 @@ export function AppRouter() {
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="candidates" element={<Candidates />} />
             <Route path="talent-pool" element={<TalentPool />} />
-            <Route path="interviews" element={<AssignedInterviews />} />
+            <Route path="interviews" element={<InterviewPanel />} />
             <Route path="interviews/all" element={<AllInterviews />} />
             <Route path="schedule-interview" element={<InterviewSchedulingPage />} />
             <Route path="analytics" element={<AssignedInterviews />} />

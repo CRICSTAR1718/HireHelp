@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { assignmentApi, type Assignment } from "../../api/interviewer"
 import { toUserMessage } from "../../utils/toUserMessage"
 import { Video, Eye, X, Check, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
@@ -41,7 +42,7 @@ export default function InterviewPanel() {
     try {
       setUpdating(true);
       const updateData: any = {};
-      
+
       if (statusAction === 'complete') {
         updateData.status = 'completed';
         updateData.completedAt = new Date();
@@ -53,17 +54,30 @@ export default function InterviewPanel() {
 
       await assignmentApi.updateAssignment(selectedAssignment.id, updateData);
       await fetchAssignments();
-      setShowStatusModal(false);
-      setSelectedAssignment(null);
-      setStatusAction(null);
-      setFeedback('');
-      setCancellationReason('');
+      closeStatusModal();
     } catch (error: unknown) {
       console.error('Failed to update status:', error)
       alert(toUserMessage(error, 'Failed to update interview status'))
     } finally {
       setUpdating(false);
     }
+  };
+
+  const openStatusModal = (
+    assignment: Assignment,
+    action: 'complete' | 'cancel'
+  ) => {
+    setSelectedAssignment(assignment);
+    setStatusAction(action);
+    setShowStatusModal(true);
+  };
+
+  const closeStatusModal = () => {
+    setShowStatusModal(false);
+    setSelectedAssignment(null);
+    setStatusAction(null);
+    setFeedback('');
+    setCancellationReason('');
   };
 
   const getStatusColor = (status: string) => {
@@ -163,22 +177,14 @@ export default function InterviewPanel() {
                   <>
                     <button 
                       className="w-full bg-green-50 border border-green-200 text-green-700 py-2 px-4 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
-                      onClick={() => {
-                        setSelectedAssignment(assignment);
-                        setStatusAction('complete');
-                        setShowStatusModal(true);
-                      }}
+                      onClick={() => openStatusModal(assignment, 'complete')}
                     >
                       <Check className="w-4 h-4 mr-2" />
                       Mark as Completed
                     </button>
                     <button 
                       className="w-full bg-red-50 border border-red-200 text-red-700 py-2 px-4 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
-                      onClick={() => {
-                        setSelectedAssignment(assignment);
-                        setStatusAction('cancel');
-                        setShowStatusModal(true);
-                      }}
+                      onClick={() => openStatusModal(assignment, 'cancel')}
                     >
                       <X className="w-4 h-4 mr-2" />
                       Cancel Interview
@@ -227,10 +233,14 @@ export default function InterviewPanel() {
       </div>
 
       {/* Details Modal */}
-      {showDetailsModal && selectedAssignment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
+      {showDetailsModal && selectedAssignment && createPortal(
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => {
+          setShowDetailsModal(false);
+          setSelectedAssignment(null);
+        }}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Interview Details</h3>
               <button
                 onClick={() => {
@@ -312,31 +322,31 @@ export default function InterviewPanel() {
                 </div>
               )}
             </div>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Status Change Modal */}
-      {showStatusModal && selectedAssignment && statusAction && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">
-                {statusAction === 'complete' ? 'Complete Interview' : 'Cancel Interview'}
-              </h3>
-              <button
-                onClick={() => {
-                  setShowStatusModal(false);
-                  setSelectedAssignment(null);
-                  setStatusAction(null);
-                  setFeedback('');
-                  setCancellationReason('');
-                }}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      {showStatusModal && selectedAssignment && statusAction && createPortal(
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={closeStatusModal}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {statusAction === 'complete' ? 'Complete Interview' : 'Cancel Interview'}
+                </h3>
+                <button
+                  onClick={closeStatusModal}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             <div className="space-y-4">
               <p className="text-gray-600">
                 {statusAction === 'complete' 
@@ -375,13 +385,7 @@ export default function InterviewPanel() {
               )}
               <div className="flex gap-3 justify-end">
                 <button
-                  onClick={() => {
-                    setShowStatusModal(false);
-                    setSelectedAssignment(null);
-                    setStatusAction(null);
-                    setFeedback('');
-                    setCancellationReason('');
-                  }}
+                  onClick={closeStatusModal}
                   className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Cancel
@@ -397,8 +401,10 @@ export default function InterviewPanel() {
                 </button>
               </div>
             </div>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )
