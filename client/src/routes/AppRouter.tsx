@@ -182,6 +182,8 @@ export function AppRouter() {
             <Route path="requisitions/new" element={<RequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
             <Route path="requisitions/:id/edit" element={<RequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id/applications" element={<ApplicationsListPage />} />
+            <Route path="requisitions/:id/applications/:aid" element={<ApplicationDetailPage />} />
             <Route path="requisitions/:id" element={<RequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="candidates" element={<Candidates />} />
@@ -229,8 +231,8 @@ export function AppRouter() {
             <Route path="requisitions/new" element={<AdminRequisitionFormPage mode="create" user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/:id/form/builder" element={<FormBuilderPage />} />
             <Route path="requisitions/:id/edit" element={<AdminRequisitionFormPage mode="edit" user={useAppSelector((s) => s.auth.user)!} />} />
-            <Route path="requisitions/:id" element={<AdminRequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="requisitions/review" element={<AdminRequisitionReviewPage user={useAppSelector((s) => s.auth.user)!} />} />
+            <Route path="requisitions/:id" element={<AdminRequisitionDetailPage user={useAppSelector((s) => s.auth.user)!} />} />
             <Route path="forms/approvals" element={<FormApprovalsPage />} />
             <Route path="pipeline" element={<Pipeline />} />
             <Route path="candidates" element={<Candidates />} />
