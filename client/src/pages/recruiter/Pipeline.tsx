@@ -34,6 +34,7 @@ export const Pipeline: React.FC = () => {
   const [selectedCandidate, setSelectedCandidate] = useState<Application | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
+  const [modalPosition, setModalPosition] = useState<{ top: number; left: number } | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -95,7 +96,9 @@ export const Pipeline: React.FC = () => {
     setSelectedCandidate(null)
   }
 
-  const handleViewAiEvaluation = (application: Application) => {
+  const handleViewAiEvaluation = (e: React.MouseEvent, application: Application) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setModalPosition({ top: rect.bottom, left: rect.left })
     setSelectedCandidate(application)
     setShowAiModal(true)
   }
@@ -225,7 +228,7 @@ export const Pipeline: React.FC = () => {
                   </button>
                   {application.ai_status === 'completed' && (
                     <button
-                      onClick={() => handleViewAiEvaluation(application)}
+                      onClick={(e) => handleViewAiEvaluation(e, application)}
                       className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                     >
                       <Eye className="w-4 h-4" />
@@ -363,10 +366,12 @@ export const Pipeline: React.FC = () => {
             onClose={() => {
               setShowAiModal(false)
               setSelectedCandidate(null)
+              setModalPosition(null)
             }}
             applicationId={selectedCandidate.id}
             requisitionId={selectedCandidate.requisition_id}
             candidateName={`${selectedCandidate.candidate_first_name} ${selectedCandidate.candidate_last_name}`}
+            position={modalPosition}
           />
         )}
     </div>

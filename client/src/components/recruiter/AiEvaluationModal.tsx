@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal } from '../interviewer/Modal'
+import { createPortal } from 'react-dom'
 
 interface AiEvaluationModalProps {
   isOpen: boolean
@@ -7,6 +7,7 @@ interface AiEvaluationModalProps {
   applicationId: string
   requisitionId?: string
   candidateName: string
+  position?: { top: number; left: number }
 }
 
 interface DimensionScore {
@@ -44,18 +45,52 @@ export const AiEvaluationModal: React.FC<AiEvaluationModalProps> = ({
   onClose,
   applicationId,
   requisitionId,
-  candidateName
+  candidateName,
+  position
 }) => {
   const [evaluation, setEvaluation] = useState<AiEvaluationData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDetailedBreakdown, setShowDetailedBreakdown] = useState(false)
+  const [modalPosition, setModalPosition] = useState<{ top: number; left: number } | null>(null)
+  const [modalWidth, setModalWidth] = useState(600)
 
   useEffect(() => {
     if (isOpen && applicationId) {
       fetchEvaluation()
     }
   }, [isOpen, applicationId])
+
+  useEffect(() => {
+    if (isOpen && position) {
+      const margin = 16
+      const estimatedModalHeight = 500
+      const estimatedModalWidth = modalWidth
+
+      let top = position.top + 8
+      let left = position.left
+
+      // Clamp to viewport
+      if (left + estimatedModalWidth > window.innerWidth - margin) {
+        left = window.innerWidth - estimatedModalWidth - margin
+      }
+      if (left < margin) {
+        left = margin
+      }
+
+      if (top + estimatedModalHeight > window.innerHeight - margin) {
+        // Flip to open above the button
+        top = position.top - estimatedModalHeight - 8
+      }
+      if (top < margin) {
+        top = margin
+      }
+
+      setModalPosition({ top, left })
+    } else {
+      setModalPosition(null)
+    }
+  }, [isOpen, position, modalWidth])
 
   const fetchEvaluation = async () => {
     setLoading(true)
@@ -111,14 +146,24 @@ export const AiEvaluationModal: React.FC<AiEvaluationModalProps> = ({
 
   if (!isOpen) return null
 
-  return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-      onKeyDown={handleKeyDown}
-    >
+  const modalContent = (
+    <>
+      {/* Backdrop */}
       <div 
-        className="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto"
+        className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
+        onClick={handleBackdropClick}
+        onKeyDown={handleKeyDown}
+      />
+      
+      {/* Modal */}
+      <div 
+        className="fixed z-50 bg-white rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto"
+        style={{
+          top: modalPosition?.top ?? '50%',
+          left: modalPosition?.left ?? '50%',
+          transform: modalPosition ? 'none' : 'translate(-50%, -50%)',
+          width: modalWidth
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 sticky top-0 bg-white">
@@ -329,6 +374,8 @@ export const AiEvaluationModal: React.FC<AiEvaluationModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </>
   )
+
+  return createPortal(modalContent, document.body)
 }

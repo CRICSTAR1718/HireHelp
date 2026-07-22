@@ -17,6 +17,7 @@ const ApplicationsListPage: React.FC = () => {
   const isScopedView = Boolean(id)
   const [selectedApplication, setSelectedApplication] = useState<any>(null)
   const [showAiModal, setShowAiModal] = useState(false)
+  const [modalPosition, setModalPosition] = useState<{ top: number; left: number } | null>(null)
 
   useEffect(() => {
     fetchApplications()
@@ -48,7 +49,9 @@ const ApplicationsListPage: React.FC = () => {
     return name || app.candidate_email || app.candidate_id || 'N/A'
   }
 
-  const handleViewAiEvaluation = (app: any) => {
+  const handleViewAiEvaluation = (e: React.MouseEvent, app: any) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setModalPosition({ top: rect.bottom, left: rect.left })
     setSelectedApplication(app)
     setShowAiModal(true)
   }
@@ -193,7 +196,7 @@ const ApplicationsListPage: React.FC = () => {
                           </button>
                           {app.ai_status === 'completed' && (
                             <button
-                              onClick={() => handleViewAiEvaluation(app)}
+                              onClick={(e) => handleViewAiEvaluation(e, app)}
                               className="text-indigo-600 hover:text-indigo-900 text-sm sm:text-base font-medium"
                             >
                                 AI Eval
@@ -221,10 +224,12 @@ const ApplicationsListPage: React.FC = () => {
             onClose={() => {
               setShowAiModal(false)
               setSelectedApplication(null)
+              setModalPosition(null)
             }}
             applicationId={selectedApplication.id}
             requisitionId={id}
             candidateName={formatCandidateName(selectedApplication)}
+            position={modalPosition}
           />
         )}
     </div>
