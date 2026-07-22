@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Star, User, Briefcase, Mail, Calendar, Award, Download, Trash2, FileText, X, Eye, Phone, Building2 } from 'lucide-react';
-import { getTalentPoolCandidates, getTalentPoolStats, removeCandidateFromTalentPool, downloadCandidateResume, type TalentPoolCandidate } from '../../api/recruiter/talent-pool.api';
+import { Star, User, Briefcase, Mail, Calendar, Award, Trash2, FileText, X, Phone, Building2 } from 'lucide-react';
+import { getTalentPoolCandidates, getTalentPoolStats, removeCandidateFromTalentPool, type TalentPoolCandidate } from '../../api/recruiter/talent-pool.api';
 import { Card } from '../../components/admin/ui/card';
 import { Button } from '../../components/admin/ui/button';
 
@@ -44,20 +44,6 @@ export const TalentPool: React.FC = () => {
       console.error('Failed to remove candidate:', error);
     }
   };
-
-  const handleDownloadResume = async (id: string) => {
-    try {
-      const { resumeUrl } = await downloadCandidateResume(id);
-      if (resumeUrl) {
-        window.open(resumeUrl, '_blank');
-      }
-    } catch (error) {
-      console.error('Failed to download resume:', error);
-    }
-  };
-
-  const buildCandidateProfilePath = (candidate: TalentPoolCandidate) =>
-    `${basePath}/requisitions/${candidate.previous_job_id}/pipeline/candidate/${candidate.candidate_id}?applicationId=${candidate.application_id}`;
 
   const buildApplicationPath = (candidate: TalentPoolCandidate) =>
     `${basePath}/requisitions/${candidate.previous_job_id}/applications/${candidate.application_id}`;
@@ -197,7 +183,7 @@ export const TalentPool: React.FC = () => {
                         )}
                         {candidate.resumeUrl && (
                           <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <Download className="w-4 h-4" />
+                            <FileText className="w-4 h-4" />
                             <span>Resume is available</span>
                           </div>
                         )}
@@ -227,15 +213,6 @@ export const TalentPool: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate(buildCandidateProfilePath(candidate))}
-                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
-                    >
-                      <Eye className="w-4 h-4" />
-                      View Candidate Profile
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
                       onClick={() => candidate.resumeUrl && window.open(candidate.resumeUrl, '_blank', 'noopener,noreferrer')}
                       disabled={!candidate.resumeUrl}
                       className="flex items-center justify-center gap-2 text-base sm:text-sm"
@@ -246,21 +223,11 @@ export const TalentPool: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDownloadResume(candidate.id)}
-                      disabled={!candidate.resumeUrl}
-                      className="flex items-center justify-center gap-2 text-base sm:text-sm"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Resume
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
                       onClick={() => navigate(buildApplicationPath(candidate))}
                       className="flex items-center justify-center gap-2 text-base sm:text-sm"
                     >
                       <FileText className="w-4 h-4" />
-                      View Interview Feedback
+                      View Candidate Detail
                     </Button>
                     <Button
                       variant="outline"

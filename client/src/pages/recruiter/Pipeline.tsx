@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { GitPullRequest, User, Briefcase, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { GitPullRequest, User, Briefcase, Clock, CheckCircle, XCircle, Download, Eye, X } from 'lucide-react';
 import { getApplications } from '../../api/recruiter/applications';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface Application {
   id: string;
@@ -20,12 +21,17 @@ interface Application {
   interviewStatus?: string;
   interviewRole?: string;
   interviewCompletedAt?: string;
+  resumeUrl?: string;
 }
 
 export const Pipeline: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [selectedCandidate, setSelectedCandidate] = useState<Application | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     loadApplications();
@@ -67,6 +73,21 @@ export const Pipeline: React.FC = () => {
     }
   };
 
+  const handleDownloadResume = async (application: Application) => {
+    if (application.resumeUrl) {
+      window.open(application.resumeUrl, '_blank', 'noopener,noreferrer')
+    } else {
+      alert('Resume not available for this candidate')
+    }
+  }
+
+  const handleViewDetails = (application: Application) => {
+    setSelectedCandidate(application)
+    setShowDetailsModal(true)
+  }
+
+  const isAdminPortal = location.pathname.startsWith('/admin')
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -105,44 +126,44 @@ export const Pipeline: React.FC = () => {
             <p className="mt-1 text-sm" style={{ color: 'var(--hh-text-secondary)' }}>Candidates will appear here once they apply for positions.</p>
           </div>
         ) : (
-          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredApplications.map((application) => (
               <div
                 key={application.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 sm:p-6 border border-gray-200"
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200"
               >
                 <div className="flex items-start justify-between mb-4 gap-3">
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                      <User className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600" />
+                    <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                      <User className="w-6 h-6 text-indigo-600" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                      <h3 className="font-semibold text-gray-900 text-base">
                         {application.candidate_first_name} {application.candidate_last_name}
                       </h3>
-                      <p className="text-xs sm:text-sm text-gray-500 truncate">{application.candidate_email}</p>
+                      <p className="text-sm text-gray-500">{application.candidate_email}</p>
                     </div>
                   </div>
-                  <span className={`px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-medium flex items-center gap-1 border flex-shrink-0 ${getStatusColor(application.status)}`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 border flex-shrink-0 ${getStatusColor(application.status)}`}>
                     {getStatusIcon(application.status)}
-                    <span className="hidden sm:inline">{application.status.replace('_', ' ')}</span>
+                    <span>{application.status.replace('_', ' ')}</span>
                   </span>
                 </div>
 
-                <div className="space-y-2 sm:space-y-3 mb-4">
+                <div className="space-y-3 mb-4">
                   <div className="flex items-start gap-2 text-sm">
                     <Briefcase className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <span className="font-medium text-gray-900 truncate">{application.requisition_title}</span>
+                    <span className="font-medium text-gray-900">{application.requisition_title}</span>
                   </div>
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
                     <span className="font-medium">{application.department}</span>
                     <span className="text-gray-300">•</span>
-                    <span className="truncate">{application.location}</span>
+                    <span>{application.location}</span>
                   </div>
                   {application.interviewRole && (
-                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
                       <span className="font-medium">Interview:</span>
-                      <span className="truncate">{application.interviewRole}</span>
+                      <span>{application.interviewRole}</span>
                       {application.interviewStatus && (
                         <span className={`px-2 py-0.5 rounded text-xs ${
                           application.interviewStatus === 'completed' ? 'bg-green-100 text-green-800' :
@@ -156,31 +177,152 @@ export const Pipeline: React.FC = () => {
                   )}
                   {application.interviewFeedback && (
                     <div className="bg-green-50 rounded p-2 text-sm">
-                      <span className="font-medium text-green-800 text-xs sm:text-sm">Feedback:</span>
-                      <p className="text-green-700 mt-1 line-clamp-2 text-xs sm:text-sm">{application.interviewFeedback}</p>
+                      <span className="font-medium text-green-800 text-sm">Feedback:</span>
+                      <p className="text-green-700 mt-1 line-clamp-2 text-sm">{application.interviewFeedback}</p>
                     </div>
                   )}
                   {application.interviewCancellationReason && (
                     <div className="bg-red-50 rounded p-2 text-sm">
-                      <span className="font-medium text-red-800 text-xs sm:text-sm">Cancellation Reason:</span>
-                      <p className="text-red-700 mt-1 line-clamp-2 text-xs sm:text-sm">{application.interviewCancellationReason}</p>
+                      <span className="font-medium text-red-800 text-sm">Cancellation Reason:</span>
+                      <p className="text-red-700 mt-1 line-clamp-2 text-sm">{application.interviewCancellationReason}</p>
                     </div>
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 sm:pt-4 border-t border-gray-100 gap-2">
-                  <div className="text-xs sm:text-sm">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mb-4">
+                  <div className="text-sm">
                     <span className="text-gray-500">AI Score:</span>
                     <span className="ml-2 font-semibold text-indigo-600">
                       {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
                     </span>
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-500">
+                  <div className="text-sm text-gray-500">
                     {new Date(application.submitted_at).toLocaleDateString()}
                   </div>
                 </div>
+
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => handleViewDetails(application)}
+                    className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Details
+                  </button>
+                  {isAdminPortal && (
+                    <button
+                      onClick={() => handleDownloadResume(application)}
+                      disabled={!application.resumeUrl}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      <Download className="w-4 h-4" />
+                      Resume
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {showDetailsModal && selectedCandidate && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">Candidate Details</h3>
+                <button
+                  onClick={() => setShowDetailsModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Personal Information</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-sm text-gray-500">Name:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.candidate_first_name} {selectedCandidate.candidate_last_name}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Email:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.candidate_email}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Application Details</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-sm text-gray-500">Position:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.requisition_title}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Department:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.department}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Location:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.location}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Status:</span>
+                      <p className="font-medium text-gray-900">{selectedCandidate.status.replace('_', ' ')}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">AI Score:</span>
+                      <p className="font-medium text-indigo-600">{selectedCandidate.ai_score ? `${parseFloat(selectedCandidate.ai_score).toFixed(1)}%` : 'N/A'}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Applied On:</span>
+                      <p className="font-medium text-gray-900">{new Date(selectedCandidate.submitted_at).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </div>
+                {selectedCandidate.interviewRole && (
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-3">Interview Information</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="text-sm text-gray-500">Interview Role:</span>
+                        <p className="font-medium text-gray-900">{selectedCandidate.interviewRole}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-500">Interview Status:</span>
+                        <p className="font-medium text-gray-900">{selectedCandidate.interviewStatus || 'N/A'}</p>
+                      </div>
+                      {selectedCandidate.interviewCompletedAt && (
+                        <div>
+                          <span className="text-sm text-gray-500">Completed On:</span>
+                          <p className="font-medium text-gray-900">{new Date(selectedCandidate.interviewCompletedAt).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {selectedCandidate.interviewFeedback && (
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-green-900 mb-3">Interview Feedback</h4>
+                    <p className="text-green-700 whitespace-pre-wrap">{selectedCandidate.interviewFeedback}</p>
+                  </div>
+                )}
+                {selectedCandidate.interviewCancellationReason && (
+                  <div className="bg-red-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-red-900 mb-3">Cancellation Reason</h4>
+                    <p className="text-red-700 whitespace-pre-wrap">{selectedCandidate.interviewCancellationReason}</p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowDetailsModal(false)}
+                  className="bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         )}
     </div>
