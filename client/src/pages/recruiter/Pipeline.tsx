@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { GitPullRequest, User, Briefcase, Clock, CheckCircle, XCircle, Download, Eye, X } from 'lucide-react';
 import { getApplications } from '../../api/recruiter/applications';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -84,6 +85,11 @@ export const Pipeline: React.FC = () => {
   const handleViewDetails = (application: Application) => {
     setSelectedCandidate(application)
     setShowDetailsModal(true)
+  }
+
+  const closeDetailsModal = () => {
+    setShowDetailsModal(false)
+    setSelectedCandidate(null)
   }
 
   const isAdminPortal = location.pathname.startsWith('/admin')
@@ -225,13 +231,19 @@ export const Pipeline: React.FC = () => {
           </div>
         )}
 
-        {showDetailsModal && selectedCandidate && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 p-6 relative max-h-[90vh] overflow-y-auto">
+        {showDetailsModal && selectedCandidate && createPortal(
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={closeDetailsModal}
+          >
+            <div
+              className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-gray-900">Candidate Details</h3>
                 <button
-                  onClick={() => setShowDetailsModal(false)}
+                  onClick={closeDetailsModal}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <X className="w-6 h-6" />
@@ -316,14 +328,15 @@ export const Pipeline: React.FC = () => {
               </div>
               <div className="mt-6 flex justify-end">
                 <button
-                  onClick={() => setShowDetailsModal(false)}
+                  onClick={closeDetailsModal}
                   className="bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 transition-colors"
                 >
                   Close
                 </button>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
     </div>
   );
