@@ -17,6 +17,7 @@ const router = Router({ mergeParams: true })
 router.get('/',           authenticate, requireRole('hr', 'admin'), ctrl.listApplications)
 router.get('/shortlisted', authenticate, requireRole('hr', 'admin'), ctrl.getShortlistedCandidates)
 router.get('/:aid',       authenticate, requireRole('hr', 'admin'), ctrl.getApplication)
+router.get('/:aid/ai-evaluation', authenticate, requireRole('hr', 'admin'), ctrl.getAiEvaluation)
 router.patch('/:aid/status', authenticate, requireRole('hr', 'admin'), validate(UpdateStatusSchema), ctrl.updateStatus)
 router.post('/:aid/recalculate', authenticate, requireRole('hr', 'admin'), ctrl.recalculateFitment)
 

@@ -34,6 +34,26 @@ export interface EvaluationResponse {
   weaknesses: string[]
 }
 
+export interface FitmentScoreResponse {
+  score_id: string
+  application_id: string
+  overall_score: number
+  overall_reasoning: string
+  fit_verdict: 'strong_fit' | 'moderate_fit' | 'weak_fit'
+  strengths: string[]
+  weaknesses: string[]
+  recommendations: string[]
+  consider_because: string[]
+  not_consider_because: string[]
+  suitable_roles: string[]
+  dimensions: {
+    skills: { score: number; reasoning: string }
+    experience: { score: number; reasoning: string }
+    education: { score: number; reasoning: string }
+    culture_fit: { score: number; reasoning: string }
+  }
+}
+
 export const aiEvaluationClient = {
   async evaluateApplication(request: EvaluationRequest): Promise<EvaluationResponse> {
     if (!env.AI_EVALUATION_SERVICE_URL) {
@@ -64,5 +84,30 @@ export const aiEvaluationClient = {
     }
 
     return res.json() as Promise<EvaluationResponse>
+  },
+
+  async getFitmentScore(scoreId: string): Promise<FitmentScoreResponse> {
+    if (!env.AI_EVALUATION_SERVICE_URL) {
+      throw new Error('AI_EVALUATION_SERVICE_URL not configured')
+    }
+
+    console.log('[ai-evaluation-client] Fetching fitment score:', { score_id: scoreId })
+
+    const url = `${env.AI_EVALUATION_SERVICE_URL}/api/v1/fitment-score/${scoreId}`
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-service': 'recruitment-service'
+      }
+    })
+
+    if (!res.ok) {
+      const errorText = await res.text()
+      console.error(`[ai-evaluation-client] Failed to fetch fitment score: ${res.status} - ${errorText}`)
+      throw new Error(`Failed to fetch fitment score: ${res.status}`)
+    }
+
+    return res.json() as Promise<FitmentScoreResponse>
   }
 };

@@ -4,6 +4,7 @@ import { getApplication, updateApplicationStatus } from "../../../api/recruiter/
 import ApplicationStatusBadge from "../../../components/recruiter/ApplicationStatusBadge"
 import ResponseRenderer from "../../../components/recruiter/ResponseRenderer"
 import FitmentScore from "../../../components/recruiter/FitmentScore"
+import { AiEvaluationModal } from "../../../components/recruiter/AiEvaluationModal"
 
 const ApplicationDetailPage: React.FC = () => {
   const { id, aid } = useParams()
@@ -16,6 +17,7 @@ const ApplicationDetailPage: React.FC = () => {
   const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter'
   const isScopedView = Boolean(id)
   const backTarget = isScopedView ? `${basePath}/requisitions/${id}/applications` : `${basePath}/applications`
+  const [showAiModal, setShowAiModal] = useState(false)
 
   useEffect(() => {
     fetchApplication()
@@ -118,8 +120,16 @@ const ApplicationDetailPage: React.FC = () => {
             </div>
             <div>
               <label className="block text-base sm:text-sm font-medium text-gray-500">AI Fitment Score</label>
-              <div className="mt-1">
+              <div className="mt-1 flex items-center gap-2">
                 <FitmentScore score={application.ai_score} status={application.ai_status} />
+                {application.ai_status === 'completed' && (
+                  <button
+                    onClick={() => setShowAiModal(true)}
+                    className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                  >
+                    View AI Evaluation
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -197,6 +207,17 @@ const ApplicationDetailPage: React.FC = () => {
             </div>
           )}
         </div>
+
+        {/* AI Evaluation Modal */}
+        {application && (
+          <AiEvaluationModal
+            isOpen={showAiModal}
+            onClose={() => setShowAiModal(false)}
+            applicationId={application.id}
+            requisitionId={id}
+            candidateName={[application.candidate_first_name, application.candidate_last_name].filter(Boolean).join(' ') || application.candidate_email || application.candidate_id || 'N/A'}
+          />
+        )}
     </div>
   )
 }

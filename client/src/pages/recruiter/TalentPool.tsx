@@ -4,6 +4,7 @@ import { Star, User, Briefcase, Mail, Calendar, Award, Trash2, FileText, X, Phon
 import { getTalentPoolCandidates, getTalentPoolStats, removeCandidateFromTalentPool, type TalentPoolCandidate } from '../../api/recruiter/talent-pool.api';
 import { Card } from '../../components/admin/ui/card';
 import { Button } from '../../components/admin/ui/button';
+import { AiEvaluationModal } from '../../components/recruiter/AiEvaluationModal';
 
 export const TalentPool: React.FC = () => {
   const [candidates, setCandidates] = useState<TalentPoolCandidate[]>([]);
@@ -11,6 +12,7 @@ export const TalentPool: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedCandidate, setSelectedCandidate] = useState<TalentPoolCandidate | null>(null);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter';
@@ -50,6 +52,11 @@ export const TalentPool: React.FC = () => {
 
   const buildApplicationsListPath = (candidate: TalentPoolCandidate) =>
     `${basePath}/requisitions/${candidate.previous_job_id}/applications`;
+
+  const handleViewAiEvaluation = (candidate: TalentPoolCandidate) => {
+    setSelectedCandidate(candidate);
+    setShowAiModal(true);
+  };
 
   if (loading) {
     return (
@@ -210,6 +217,17 @@ export const TalentPool: React.FC = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-2 lg:flex-col lg:items-stretch lg:min-w-55">
+                    {candidate.ai_score != null && candidate.application_id && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewAiEvaluation(candidate)}
+                        className="flex items-center justify-center gap-2 text-base sm:text-sm"
+                      >
+                        <FileText className="w-4 h-4" />
+                        View AI Evaluation
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -295,6 +313,20 @@ export const TalentPool: React.FC = () => {
             </div>
           </Card>
         </div>
+      )}
+
+      {/* AI Evaluation Modal */}
+      {selectedCandidate && selectedCandidate.application_id && (
+        <AiEvaluationModal
+          isOpen={showAiModal}
+          onClose={() => {
+            setShowAiModal(false)
+            setSelectedCandidate(null)
+          }}
+          applicationId={selectedCandidate.application_id}
+          requisitionId={selectedCandidate.previous_job_id}
+          candidateName={selectedCandidate.candidateName}
+        />
       )}
     </div>
   );

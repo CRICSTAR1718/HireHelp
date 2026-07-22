@@ -276,6 +276,75 @@ export async function recalculateFitment(applicationId: string, requisitionId?: 
   return repo.findOne(applicationId, requisitionId)
 }
 
+export async function getAiEvaluation(applicationId: string, requisitionId?: string) {
+  const app = await repo.findOne(applicationId, requisitionId)
+  if (!app) throw Object.assign(new Error('Application not found'), { statusCode: 404 })
+
+  // If AI evaluation hasn't completed yet, return an error
+  if (app.ai_status !== 'completed') {
+    throw Object.assign(new Error('AI evaluation not yet completed'), { statusCode: 404 })
+  }
+
+  // Try to fetch detailed evaluation from AI service using application_id as score_id
+  // The AI service stores fitment scores in its database with score_id
+  try {
+    const { aiEvaluationClient } = await import('../../../clients/ai-evaluation.client')
+    const detailedEvaluation = await aiEvaluationClient.getFitmentScore(applicationId)
+    
+    // Return the detailed data from AI service
+    return {
+      application_id: detailedEvaluation.application_id,
+      candidate_id: app.candidate_id,
+      requisition_id: app.requisition_id,
+      overall_score: detailedEvaluation.overall_score,
+      overall_reasoning: detailedEvaluation.overall_reasoning,
+      fit_verdict: detailedEvaluation.fit_verdict,
+      strengths: detailedEvaluation.strengths || [],
+      weaknesses: detailedEvaluation.weaknesses || [],
+      recommendations: detailedEvaluation.recommendations || [],
+      consider_because: detailedEvaluation.consider_because || [],
+      not_consider_because: detailedEvaluation.not_consider_because || [],
+      suitable_roles: detailedEvaluation.suitable_roles || [],
+      dimensions: detailedEvaluation.dimensions || {
+        skills: { score: null, reasoning: null },
+        experience: { score: null, reasoning: null },
+        education: { score: null, reasoning: null },
+        culture_fit: { score: null, reasoning: null }
+      },
+      matched_skills: app.matched_skills || [],
+      missing_skills: app.missing_skills || []
+    }
+  } catch (error) {
+    console.error('[Application Service] Failed to fetch detailed AI evaluation, falling back to database data:', error)
+    
+    // Fallback to database data if AI service call fails
+    return {
+      application_id: app.id,
+      candidate_id: app.candidate_id,
+      requisition_id: app.requisition_id,
+      overall_score: app.ai_score ? parseFloat(app.ai_score.toString()) : null,
+      overall_reasoning: app.recommendation || null,
+      fit_verdict: app.ai_score && parseFloat(app.ai_score.toString()) >= 80 ? 'strong_fit' 
+                  : app.ai_score && parseFloat(app.ai_score.toString()) >= 60 ? 'moderate_fit' 
+                  : 'weak_fit',
+      strengths: app.strengths || [],
+      weaknesses: app.weaknesses || [],
+      recommendations: [],
+      consider_because: app.strengths || [],
+      not_consider_because: app.weaknesses || [],
+      suitable_roles: [],
+      dimensions: {
+        skills: { score: null, reasoning: null },
+        experience: { score: null, reasoning: null },
+        education: { score: null, reasoning: null },
+        culture_fit: { score: null, reasoning: null }
+      },
+      matched_skills: app.matched_skills || [],
+      missing_skills: app.missing_skills || []
+    }
+  }
+}
+
 export async function getCandidateApplications(candidateId: string) {
   return repo.findByCandidate(candidateId)
 }

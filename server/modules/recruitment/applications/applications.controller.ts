@@ -95,3 +95,11 @@ export async function getShortlistedCandidates(req: Request, res: Response) {
     res.json(data)
   } catch (err) { handleError(res, err) }
 }
+
+export async function getAiEvaluation(req: Request, res: Response) {
+  try {
+    const requisitionId = typeof req.query.requisitionId === 'string' ? req.query.requisitionId : undefined
+    const data = await service.getAiEvaluation(req.params.aid as string, requisitionId)
+    res.json(data)
+  } catch (err) { handleError(res, err) }
+}

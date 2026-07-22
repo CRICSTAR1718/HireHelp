@@ -40,3 +40,10 @@ export const updateApplicationStatus = async (aid: string, status: string, reqId
   })
   return res.data
 }
+
+export const getAiEvaluation = async (aid: string, reqId?: string) => {
+  const res = await api.get(`/applications/${aid}/ai-evaluation`, {
+    params: reqId ? { requisitionId: reqId } : undefined,
+  })
+  return res.data
+}

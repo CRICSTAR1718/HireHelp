@@ -6,6 +6,7 @@ export interface Column<T> {
   key: string;
   header: string;
   cell: (row: T) => ReactNode;
+  icon?: LucideIcon;
   sortable?: boolean;
 }
 

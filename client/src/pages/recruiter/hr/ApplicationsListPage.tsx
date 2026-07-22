@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getApplications } from "../../../api/recruiter/applications"
 import ApplicationStatusBadge from "../../../components/recruiter/ApplicationStatusBadge"
 import FitmentScore from "../../../components/recruiter/FitmentScore"
+import { AiEvaluationModal } from "../../../components/recruiter/AiEvaluationModal"
 
 const ApplicationsListPage: React.FC = () => {
   const { id } = useParams()
@@ -14,6 +15,8 @@ const ApplicationsListPage: React.FC = () => {
   const [error, setError] = useState('')
   const basePath = location.pathname.startsWith('/admin') ? '/admin' : '/recruiter'
   const isScopedView = Boolean(id)
+  const [selectedApplication, setSelectedApplication] = useState<any>(null)
+  const [showAiModal, setShowAiModal] = useState(false)
 
   useEffect(() => {
     fetchApplications()
@@ -43,6 +46,11 @@ const ApplicationsListPage: React.FC = () => {
   const formatCandidateName = (app: any) => {
     const name = [app.candidate_first_name, app.candidate_last_name].filter(Boolean).join(' ').trim()
     return name || app.candidate_email || app.candidate_id || 'N/A'
+  }
+
+  const handleViewAiEvaluation = (app: any) => {
+    setSelectedApplication(app)
+    setShowAiModal(true)
   }
 
   const filteredApplications = statusFilter === 'all' 
@@ -176,12 +184,22 @@ const ApplicationsListPage: React.FC = () => {
                         <FitmentScore score={app.ai_score} status={app.ai_status} compact />
                       </td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() => navigate(isScopedView ? `${basePath}/requisitions/${id}/applications/${app.id}` : `${basePath}/applications/${app.id}`)}
-                          className="text-indigo-600 hover:text-indigo-900 text-sm sm:text-base font-medium"
-                        >
-                          View
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => navigate(isScopedView ? `${basePath}/requisitions/${id}/applications/${app.id}` : `${basePath}/applications/${app.id}`)}
+                            className="text-indigo-600 hover:text-indigo-900 text-sm sm:text-base font-medium"
+                          >
+                            View
+                          </button>
+                          {app.ai_status === 'completed' && (
+                            <button
+                              onClick={() => handleViewAiEvaluation(app)}
+                              className="text-indigo-600 hover:text-indigo-900 text-sm sm:text-base font-medium"
+                            >
+                                AI Eval
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -194,6 +212,20 @@ const ApplicationsListPage: React.FC = () => {
               </div>
             )}
           </div>
+        )}
+        
+        {/* AI Evaluation Modal */}
+        {selectedApplication && (
+          <AiEvaluationModal
+            isOpen={showAiModal}
+            onClose={() => {
+              setShowAiModal(false)
+              setSelectedApplication(null)
+            }}
+            applicationId={selectedApplication.id}
+            requisitionId={id}
+            candidateName={formatCandidateName(selectedApplication)}
+          />
         )}
     </div>
   )

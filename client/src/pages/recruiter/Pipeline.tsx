@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { GitPullRequest, User, Briefcase, Clock, CheckCircle, XCircle, Download, Eye, X } from 'lucide-react';
 import { getApplications } from '../../api/recruiter/applications';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { AiEvaluationModal } from '../../components/recruiter/AiEvaluationModal';
 
 interface Application {
   id: string;
@@ -16,6 +17,7 @@ interface Application {
   candidate_email: string;
   status: string;
   ai_score: string;
+  ai_status?: string;
   submitted_at: string;
   interviewFeedback?: string;
   interviewCancellationReason?: string;
@@ -31,6 +33,7 @@ export const Pipeline: React.FC = () => {
   const [filter, setFilter] = useState<string>('all');
   const [selectedCandidate, setSelectedCandidate] = useState<Application | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -90,6 +93,11 @@ export const Pipeline: React.FC = () => {
   const closeDetailsModal = () => {
     setShowDetailsModal(false)
     setSelectedCandidate(null)
+  }
+
+  const handleViewAiEvaluation = (application: Application) => {
+    setSelectedCandidate(application)
+    setShowAiModal(true)
   }
 
   const isAdminPortal = location.pathname.startsWith('/admin')
@@ -215,6 +223,15 @@ export const Pipeline: React.FC = () => {
                     <Eye className="w-4 h-4" />
                     View Details
                   </button>
+                  {application.ai_status === 'completed' && (
+                    <button
+                      onClick={() => handleViewAiEvaluation(application)}
+                      className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                    >
+                      <Eye className="w-4 h-4" />
+                      AI Eval
+                    </button>
+                  )}
                   {isAdminPortal && (
                     <button
                       onClick={() => handleDownloadResume(application)}
@@ -337,6 +354,20 @@ export const Pipeline: React.FC = () => {
             </div>
           </div>,
           document.body
+        )}
+
+        {/* AI Evaluation Modal */}
+        {selectedCandidate && (
+          <AiEvaluationModal
+            isOpen={showAiModal}
+            onClose={() => {
+              setShowAiModal(false)
+              setSelectedCandidate(null)
+            }}
+            applicationId={selectedCandidate.id}
+            requisitionId={selectedCandidate.requisition_id}
+            candidateName={`${selectedCandidate.candidate_first_name} ${selectedCandidate.candidate_last_name}`}
+          />
         )}
     </div>
   );
