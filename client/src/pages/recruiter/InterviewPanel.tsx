@@ -109,8 +109,7 @@ export default function InterviewPanel() {
   }
 
   return (
-    <>
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
           <p className="text-gray-600">Manage your assigned interview sessions</p>
@@ -163,7 +162,7 @@ export default function InterviewPanel() {
               </div>
 
               <div className="px-6 pb-6 flex flex-col gap-2 border-t border-gray-100 pt-4">
-                <button 
+                <button
                   className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                   onClick={() => {
                     setSelectedAssignment(assignment);
@@ -175,14 +174,14 @@ export default function InterviewPanel() {
                 </button>
                 {assignment.status === 'pending' && (
                   <>
-                    <button 
+                    <button
                       className="w-full bg-green-50 border border-green-200 text-green-700 py-2 px-4 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                       onClick={() => openStatusModal(assignment, 'complete')}
                     >
                       <Check className="w-4 h-4 mr-2" />
                       Mark as Completed
                     </button>
-                    <button 
+                    <button
                       className="w-full bg-red-50 border border-red-200 text-red-700 py-2 px-4 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                       onClick={() => openStatusModal(assignment, 'cancel')}
                     >
@@ -219,7 +218,7 @@ export default function InterviewPanel() {
         {assignments.length === 0 && (
           <div className="bg-white rounded-lg p-12 text-center hh-fade-in" style={{ boxShadow: 'var(--hh-shadow-md)' }}>
             <p className="mb-4" style={{ color: 'var(--hh-text-secondary)' }}>No interviews assigned yet</p>
-            <button 
+            <button
               onClick={fetchAssignments}
               className="text-white py-2 px-4 rounded-lg transition-colors hh-btn-anim"
               style={{ backgroundColor: 'var(--hh-accent)' }}
@@ -230,7 +229,6 @@ export default function InterviewPanel() {
             </button>
           </div>
         )}
-      </div>
 
       {/* Details Modal */}
       {showDetailsModal && selectedAssignment && createPortal(
@@ -241,87 +239,87 @@ export default function InterviewPanel() {
           <div onClick={(e) => e.stopPropagation()}>
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-gray-900">Interview Details</h3>
-              <button
-                onClick={() => {
-                  setShowDetailsModal(false);
-                  setSelectedAssignment(null);
-                }}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Candidate Information</h4>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Name:</span>
-                    <span className="font-medium">{selectedAssignment.candidateName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Email:</span>
-                    <span className="font-medium">{selectedAssignment.candidateEmail}</span>
-                  </div>
-                  {selectedAssignment.candidatePhone && (
+                <h3 className="text-xl font-semibold text-gray-900">Interview Details</h3>
+                <button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setSelectedAssignment(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Candidate Information</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Phone:</span>
-                      <span className="font-medium">{selectedAssignment.candidatePhone}</span>
+                      <span className="text-gray-600">Name:</span>
+                      <span className="font-medium">{selectedAssignment.candidateName}</span>
                     </div>
-                  )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Email:</span>
+                      <span className="font-medium">{selectedAssignment.candidateEmail}</span>
+                    </div>
+                    {selectedAssignment.candidatePhone && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Phone:</span>
+                        <span className="font-medium">{selectedAssignment.candidatePhone}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h4 className="font-medium text-gray-900 mb-2">Interview Information</h4>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Role:</span>
-                    <span className="font-medium">{selectedAssignment.role}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Status:</span>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAssignment.status)}`}>
-                      {selectedAssignment.status}
-                    </span>
-                  </div>
-                  {selectedAssignment.schedule && (
-                    <>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Start Time:</span>
-                        <span className="font-medium">{formatDateTime(selectedAssignment.schedule.startTime)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">End Time:</span>
-                        <span className="font-medium">{formatDateTime(selectedAssignment.schedule.endTime)}</span>
-                      </div>
-                      {selectedAssignment.schedule.location && (
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Interview Information</h4>
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Role:</span>
+                      <span className="font-medium">{selectedAssignment.role}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Status:</span>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedAssignment.status)}`}>
+                        {selectedAssignment.status}
+                      </span>
+                    </div>
+                    {selectedAssignment.schedule && (
+                      <>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Location:</span>
-                          <span className="font-medium">{selectedAssignment.schedule.location}</span>
+                          <span className="text-gray-600">Start Time:</span>
+                          <span className="font-medium">{formatDateTime(selectedAssignment.schedule.startTime)}</span>
                         </div>
-                      )}
-                    </>
-                  )}
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">End Time:</span>
+                          <span className="font-medium">{formatDateTime(selectedAssignment.schedule.endTime)}</span>
+                        </div>
+                        {selectedAssignment.schedule.location && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Location:</span>
+                            <span className="font-medium">{selectedAssignment.schedule.location}</span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
+                {selectedAssignment.feedback && (
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Interviewer Feedback</h4>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <p className="text-sm">{selectedAssignment.feedback}</p>
+                    </div>
+                  </div>
+                )}
+                {selectedAssignment.cancellationReason && (
+                  <div>
+                    <h4 className="font-medium text-gray-900 mb-2">Cancellation Reason</h4>
+                    <div className="bg-red-50 rounded-lg p-4">
+                      <p className="text-sm">{selectedAssignment.cancellationReason}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-              {selectedAssignment.feedback && (
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Interviewer Feedback</h4>
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <p className="text-sm">{selectedAssignment.feedback}</p>
-                  </div>
-                </div>
-              )}
-              {selectedAssignment.cancellationReason && (
-                <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Cancellation Reason</h4>
-                  <div className="bg-red-50 rounded-lg p-4">
-                    <p className="text-sm">{selectedAssignment.cancellationReason}</p>
-                  </div>
-                </div>
-              )}
-            </div>
             </div>
           </div>
         </div>,
@@ -347,65 +345,65 @@ export default function InterviewPanel() {
                   <X className="w-5 h-5" />
                 </button>
               </div>
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                {statusAction === 'complete' 
-                  ? `Please provide feedback for ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
-                  : `Please provide a reason for cancelling ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
-                }
-              </p>
-              {statusAction === 'complete' ? (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Feedback *
-                  </label>
-                  <textarea
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your interview feedback..."
-                    required
-                  />
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  {statusAction === 'complete'
+                    ? `Please provide feedback for ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
+                    : `Please provide a reason for cancelling ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
+                  }
+                </p>
+                {statusAction === 'complete' ? (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Feedback *
+                    </label>
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your interview feedback..."
+                      required
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Cancellation Reason *
+                    </label>
+                    <textarea
+                      value={cancellationReason}
+                      onChange={(e) => setCancellationReason(e.target.value)}
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter the reason for cancellation..."
+                      required
+                    />
+                  </div>
+                )}
+                <div className="flex gap-3 justify-end">
+                  <button
+                    onClick={closeStatusModal}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleStatusChange}
+                    disabled={updating || (statusAction === 'complete' ? !feedback : !cancellationReason)}
+                    className={`px-4 py-2 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                      statusAction === 'complete' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
+                    }`}
+                  >
+                    {updating ? 'Updating...' : statusAction === 'complete' ? 'Complete' : 'Cancel'}
+                  </button>
                 </div>
-              ) : (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cancellation Reason *
-                  </label>
-                  <textarea
-                    value={cancellationReason}
-                    onChange={(e) => setCancellationReason(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter the reason for cancellation..."
-                    required
-                  />
-                </div>
-              )}
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={closeStatusModal}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleStatusChange}
-                  disabled={updating || (statusAction === 'complete' ? !feedback : !cancellationReason)}
-                  className={`px-4 py-2 rounded-lg text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                    statusAction === 'complete' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
-                  }`}
-                >
-                  {updating ? 'Updating...' : statusAction === 'complete' ? 'Complete' : 'Cancel'}
-                </button>
               </div>
-            </div>
             </div>
           </div>
         </div>,
         document.body
       )}
-    </>
+    </div>
   )
 }
