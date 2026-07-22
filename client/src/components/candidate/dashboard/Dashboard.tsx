@@ -52,7 +52,7 @@ export default function Dashboard() {
   const offers = applications.filter(app => app.status === "offer").length;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8">
+    <div className="space-y-8">
       <section>
         <SectionTitle
           description="Overview of your job search activity and application status."

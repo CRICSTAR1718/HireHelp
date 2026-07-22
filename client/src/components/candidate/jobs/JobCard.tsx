@@ -46,21 +46,21 @@ export default function JobCard({
     };
 
     return (
-        <Card className={`p-4 sm:p-5 hover:shadow-md transition-shadow hh-lift ${className}`}>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
+        <Card className={`p-6 sm:p-8 hover:shadow-md transition-shadow hh-lift ${className}`}>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-5">
                 <div className="flex-1">
-                    <h3 className="text-sm sm:text-base font-semibold text-slate-900">{title}</h3>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-slate-900">{title}</h3>
 
-                    <div className="mt-2 flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-slate-500">
+                    <div className="mt-4 flex flex-wrap gap-4 text-base sm:text-lg text-slate-500">
                         {department && (
-                            <div className="flex items-center gap-1.5">
-                                <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            <div className="flex items-center gap-2">
+                                <Building2 className="h-5 w-5 sm:h-6 sm:w-6" />
                                 {department}
                             </div>
                         )}
                         {location && (
-                            <div className="flex items-center gap-1.5">
-                                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            <div className="flex items-center gap-2">
+                                <MapPin className="h-5 w-5 sm:h-6 sm:w-6" />
                                 {location}
                             </div>
                         )}
@@ -72,32 +72,32 @@ export default function JobCard({
                 )}
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-wrap gap-3">
                 {employment_type && (
-                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-medium text-slate-600">
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-4 py-1.5 sm:px-5 sm:py-2 text-base font-medium text-slate-600">
                         {employment_type}
                     </span>
                 )}
                 {work_mode && (
-                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 sm:px-2.5 sm:py-1 text-xs font-medium text-slate-600">
+                    <span className="inline-flex items-center rounded-full bg-slate-100 px-4 py-1.5 sm:px-5 sm:py-2 text-base font-medium text-slate-600">
                         {work_mode}
                     </span>
                 )}
             </div>
 
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                    <Clock className="h-3.5 w-3.5" />
+            <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-2 text-base text-slate-400">
+                    <Clock className="h-5 w-5" />
                     {formatDate(published_at)}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 sm:gap-3 flex-wrap">
                     {onViewDetails && (
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => onViewDetails(id)}
-                            className="text-xs sm:text-sm"
+                            className="text-sm sm:text-base whitespace-nowrap"
                         >
                             View Details
                         </Button>
@@ -107,7 +107,7 @@ export default function JobCard({
                             size="sm"
                             onClick={() => onApply(id)}
                             disabled={applying}
-                            className="text-xs sm:text-sm"
+                            className="text-sm sm:text-base whitespace-nowrap"
                         >
                             {applying ? "Applying..." : "Apply"}
                         </Button>
@@ -116,8 +116,8 @@ export default function JobCard({
             </div>
 
             {salary && (
-                <div className="mt-3 pt-3 border-t border-slate-100">
-                    <p className="text-sm font-medium text-slate-900">{salary}</p>
+                <div className="mt-5 pt-5 border-t border-slate-100">
+                    <p className="text-lg font-medium text-slate-900">{salary}</p>
                 </div>
             )}
         </Card>

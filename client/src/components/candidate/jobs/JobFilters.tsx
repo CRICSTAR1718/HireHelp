@@ -1,12 +1,4 @@
-const filters = [
-    "All",
-    "Remote",
-    "Full Time",
-    "Internship",
-    "Frontend",
-    "Backend",
-    "AI",
-];
+const filters: string[] = [];
 
 export default function JobFilters() {
     return (

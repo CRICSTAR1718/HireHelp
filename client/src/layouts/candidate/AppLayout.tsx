@@ -58,7 +58,7 @@ export const AppLayout = () => {
           userType="Candidate"
         />
         <div className="min-w-0 flex-1 transition-all duration-200">
-          <main className="min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <main className="min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 pt-16 sm:pt-6 lg:pt-8">
             <PageTransition>
               <Outlet />
             </PageTransition>

@@ -215,14 +215,14 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
 
             {/* Loading Form */}
             {selectedJobId && loadingForm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
                     <Loader />
                 </div>
             )}
 
             {/* Form Error */}
             {selectedJobId && formError && !loadingForm && !formFields && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm p-4">
                     <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 p-6">
                         <h3 className="text-lg font-bold text-white mb-4">Error</h3>
                         <p className="text-rose-400 mb-4">{formError}</p>

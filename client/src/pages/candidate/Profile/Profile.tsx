@@ -52,7 +52,7 @@ export default function Profile() {
     }
 
     return (
-        <div className="mx-auto max-w-7xl space-y-8">
+        <div className="space-y-8">
             <SectionTitle
                 description="Manage your professional profile."
                 title="Profile"

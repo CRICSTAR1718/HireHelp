@@ -4,7 +4,7 @@ import PasswordSettings from "../../../components/candidate/settings/PasswordSet
 
 export default function Settings() {
     return (
-        <div className="mx-auto max-w-7xl space-y-8">
+        <div className="space-y-8">
             <SectionTitle
                 description="Manage your account preferences."
                 title="Settings"
