@@ -182,10 +182,10 @@ export const TalentPool: React.FC = () => {
 
                       <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mb-4">
                         {candidate.ai_score != null && (
-                          <div className="flex items-center gap-2 text-sm">
-                            <Award className="w-4 h-4 text-slate-400" />
-                            <span className="text-slate-600">AI Score:</span>
-                            <span className="font-semibold text-blue-600">{Number(candidate.ai_score).toFixed(1)}%</span>
+                          <div className="hh-ai-badge text-sm">
+                            <span className="hh-ai-dot"></span>
+                            <span>AI Score:</span>
+                            <span className="font-semibold">{Number(candidate.ai_score).toFixed(1)}%</span>
                           </div>
                         )}
                         {candidate.interview_score != null && (

@@ -26,11 +26,11 @@ export const DashboardPage = () => {
           description="Overview of platform metrics and management modules."
           title="Platform overview"
         />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatsCard description="Across the organization" icon={Users} label="Total Users" tone="blue" value={isLoading ? "—" : stats?.totalUsers?.toString() || "0"} />
-          <StatsCard description="Configured access roles" icon={UsersRound} label="Total Roles" tone="violet" value={isLoading ? "—" : stats?.totalRoles?.toString() || "0"} />
-          <StatsCard description="Active organizational units" icon={Building2} label="Departments" tone="emerald" value={isLoading ? "—" : stats?.totalDepartments?.toString() || "0"} />
-          <StatsCard description="Awaiting a decision" icon={ClipboardCheck} label="Pending Approvals" tone="amber" value={isLoading ? "—" : stats?.pendingApprovals?.toString() || "0"} />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 hh-stagger">
+          <div className="hh-stagger-item"><StatsCard description="Across the organization" icon={Users} label="Total Users" tone="blue" value={isLoading ? "—" : stats?.totalUsers?.toString() || "0"} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Configured access roles" icon={UsersRound} label="Total Roles" tone="violet" value={isLoading ? "—" : stats?.totalRoles?.toString() || "0"} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Active organizational units" icon={Building2} label="Departments" tone="emerald" value={isLoading ? "—" : stats?.totalDepartments?.toString() || "0"} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Awaiting a decision" icon={ClipboardCheck} label="Pending Approvals" tone="amber" value={isLoading ? "—" : stats?.pendingApprovals?.toString() || "0"} /></div>
         </div>
       </section>
 

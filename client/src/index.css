@@ -210,7 +210,10 @@
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform var(--hh-dur-fast) var(--hh-ease),
+    box-shadow var(--hh-dur-fast) var(--hh-ease),
+    background-color var(--hh-dur-fast) var(--hh-ease),
+    opacity var(--hh-dur-fast) var(--hh-ease);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -805,9 +808,12 @@
   border: 1px solid var(--border);
   border-radius: var(--hh-radius-md);
   box-shadow: var(--hh-shadow-sm);
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: transform var(--hh-dur-fast) var(--hh-ease),
+    box-shadow var(--hh-dur-fast) var(--hh-ease),
+    border-color var(--hh-dur-fast) var(--hh-ease);
 }
 .scope-recruiter .glass-card:hover {
+  transform: translateY(-3px);
   border-color: var(--border-light);
   box-shadow: var(--hh-shadow-md);
 }
@@ -821,13 +827,16 @@
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition: transform var(--hh-dur-fast) var(--hh-ease),
+    box-shadow var(--hh-dur-fast) var(--hh-ease),
+    background-color var(--hh-dur-fast) var(--hh-ease),
+    opacity var(--hh-dur-fast) var(--hh-ease);
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
 }
 .scope-recruiter .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: var(--hh-shadow-accent); }
-.scope-recruiter .btn-primary:active { transform: translateY(0); }
+.scope-recruiter .btn-primary:active { transform: translateY(0) scale(0.98); }
 .scope-recruiter .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .scope-recruiter .btn-secondary {
@@ -1556,7 +1565,10 @@
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform var(--hh-dur-fast) var(--hh-ease),
+    box-shadow var(--hh-dur-fast) var(--hh-ease),
+    background-color var(--hh-dur-fast) var(--hh-ease),
+    opacity var(--hh-dur-fast) var(--hh-ease);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;

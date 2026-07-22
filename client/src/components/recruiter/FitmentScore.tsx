@@ -10,10 +10,8 @@ export default function FitmentScore({ score, status, compact = false }: Fitment
 
   if (status === 'completed' && hasScore) {
     return (
-      <span className={compact
-        ? "inline-flex rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800"
-        : "inline-flex rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800"}
-      >
+      <span className="hh-ai-badge text-xs">
+        <span className="hh-ai-dot"></span>
         {numericScore.toFixed(0)}% fit
       </span>
     )

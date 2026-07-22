@@ -59,7 +59,8 @@ export const PipelineBoard: React.FC = () => {
                       Candidate #{entry.candidate_id.substring(0, 8)}
                     </span>
                     {entry.ai_score && (
-                      <span className="text-xs font-mono bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded flex-shrink-0">
+                      <span className="hh-ai-badge text-xs">
+                        <span className="hh-ai-dot"></span>
                         AI: {entry.ai_score}
                       </span>
                     )}

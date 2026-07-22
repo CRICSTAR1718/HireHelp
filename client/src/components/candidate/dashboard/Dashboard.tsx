@@ -58,11 +58,11 @@ export default function Dashboard() {
           description="Overview of your job search activity and application status."
           title="Dashboard"
         />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatsCard description="Total job applications submitted" icon={Briefcase} label="Applications" tone="blue" value={String(applications.length)} />
-          <StatsCard description="Currently in review" icon={Activity} label="Active Applications" tone="violet" value={String(activeApplications)} />
-          <StatsCard description="Moved to interview stage" icon={CheckCircle2} label="Shortlisted" tone="emerald" value={String(shortlisted)} />
-          <StatsCard description="Job offers received" icon={FileText} label="Offers" tone="amber" value={String(offers)} />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4 hh-stagger">
+          <div className="hh-stagger-item"><StatsCard description="Total job applications submitted" icon={Briefcase} label="Applications" tone="blue" value={String(applications.length)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Currently in review" icon={Activity} label="Active Applications" tone="violet" value={String(activeApplications)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Moved to interview stage" icon={CheckCircle2} label="Shortlisted" tone="emerald" value={String(shortlisted)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Job offers received" icon={FileText} label="Offers" tone="amber" value={String(offers)} /></div>
         </div>
       </section>
 

@@ -127,7 +127,7 @@ export const Candidates: React.FC = () => {
         </div>
 
         {filteredApplications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in">
             <Users className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates found</h3>
             <p className="mt-1 text-sm text-gray-500">
@@ -177,9 +177,14 @@ export const Candidates: React.FC = () => {
                   <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Fitment Score</p>
-                      <p className="text-lg font-semibold text-indigo-600">
-                        {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
-                      </p>
+                      {application.ai_score ? (
+                        <span className="hh-ai-badge text-sm">
+                          <span className="hh-ai-dot"></span>
+                          {parseFloat(application.ai_score).toFixed(1)}%
+                        </span>
+                      ) : (
+                        <p className="text-lg font-semibold text-indigo-600">N/A</p>
+                      )}
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-500 mb-1">Status</p>

@@ -211,7 +211,7 @@ export const AssignedInterviews: React.FC = () => {
 
         {assignments.length === 0 && (
           <Card>
-            <CardBody className="text-center py-12">
+            <CardBody className="text-center py-12 hh-fade-in">
               <p className="text-gray-500 mb-4">No interviews assigned yet</p>
               <Button variant="outline" onClick={loadAssignments}>Refresh</Button>
             </CardBody>

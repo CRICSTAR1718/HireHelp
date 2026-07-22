@@ -85,8 +85,8 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-          <Card className="shadow-lg border-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 hh-stagger">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -104,7 +104,7 @@ export const RecruiterDashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -122,7 +122,7 @@ export const RecruiterDashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -140,7 +140,7 @@ export const RecruiterDashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardBody className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -160,8 +160,8 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          <Card className="shadow-lg border-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 hh-stagger">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0">
               <h2 className="text-lg font-semibold text-white">Recent Job Postings</h2>
             </CardHeader>
@@ -191,7 +191,7 @@ export const RecruiterDashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className="shadow-lg border-0">
+          <Card className="shadow-lg border-0 hh-stagger-item">
             <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0">
               <h2 className="text-lg font-semibold text-white">Upcoming Interviews</h2>
             </CardHeader>
@@ -224,23 +224,23 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <Card className="shadow-lg border-0 mt-6">
+        <Card className="shadow-lg border-0 mt-6 hh-stagger-item">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 border-0">
             <h2 className="text-lg font-semibold text-white">Quick Actions</h2>
           </CardHeader>
           <CardBody className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <button className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 hh-stagger">
+              <button className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors hh-stagger-item">
                 <Briefcase className="w-5 h-5 text-blue-600" />
                 <span className="font-medium text-blue-900">Create New Job</span>
               </button>
-              <button className="flex items-center gap-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+              <button className="flex items-center gap-3 p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors hh-stagger-item">
                 <Users className="w-5 h-5 text-green-600" />
                 <span className="font-medium text-green-900">View Candidates</span>
               </button>
               <button 
                 onClick={() => navigate('/recruiter/schedule-interview')}
-                className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                className="flex items-center gap-3 p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors hh-stagger-item"
               >
                 <Calendar className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-900">Schedule Interview</span>

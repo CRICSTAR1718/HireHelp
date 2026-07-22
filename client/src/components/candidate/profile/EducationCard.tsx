@@ -8,7 +8,7 @@ interface Props {
 
 export default function EducationCard({ education }: Props) {
     return (
-        <Card className="p-5">
+        <Card className="p-5 hh-lift">
             <SectionTitle title="Education" />
             <div className="mt-4 space-y-4">
                 {education.map((item) => (

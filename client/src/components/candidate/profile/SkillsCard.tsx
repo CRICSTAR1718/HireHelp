@@ -7,7 +7,7 @@ interface Props {
 
 export default function SkillsCard({ skills }: Props) {
     return (
-        <Card className="p-5">
+        <Card className="p-5 hh-lift">
             <SectionTitle title="Skills" />
             <div className="mt-4 flex flex-wrap gap-2">
                 {skills.map((skill) => (

@@ -56,9 +56,9 @@ export const InterviewHistory: React.FC = () => {
           <p className="text-gray-600">View your past interview feedback and ratings</p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 hh-stagger">
           {feedbacks.map((feedback) => (
-            <Card key={feedback.id} className="hover:shadow-xl transition-shadow">
+            <Card key={feedback.id} className="hover:shadow-xl transition-shadow hh-stagger-item">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
