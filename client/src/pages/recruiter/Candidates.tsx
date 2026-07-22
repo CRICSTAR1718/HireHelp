@@ -127,10 +127,10 @@ export const Candidates: React.FC = () => {
         </div>
 
         {filteredApplications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in">
-            <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates found</h3>
-            <p className="mt-1 text-sm text-gray-500">
+          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in" style={{ boxShadow: 'var(--hh-shadow-md)' }}>
+            <Users className="mx-auto h-12 w-12" style={{ color: 'var(--hh-text-muted)' }} />
+            <h3 className="mt-2 text-sm font-medium" style={{ color: 'var(--hh-text)' }}>No candidates found</h3>
+            <p className="mt-1 text-sm" style={{ color: 'var(--hh-text-secondary)' }}>
               {searchTerm || statusFilter !== 'all'
                 ? 'Try adjusting your search or filter criteria.'
                 : 'Candidates will appear here once they apply for positions.'}

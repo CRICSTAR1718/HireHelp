@@ -190,10 +190,10 @@ export default function InterviewerDashboard() {
         </div>
 
         {assignments.length === 0 ? (
-          <div className="text-center py-12">
-            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 mb-2">No interviews assigned yet</p>
-            <p className="text-gray-500 text-sm">You'll see your assigned interviews here</p>
+          <div className="text-center py-12 hh-fade-in">
+            <AlertCircle className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--hh-text-muted)' }} />
+            <p className="mb-2" style={{ color: 'var(--hh-text-secondary)' }}>No interviews assigned yet</p>
+            <p className="text-sm" style={{ color: 'var(--hh-text-muted)' }}>You'll see your assigned interviews here</p>
           </div>
         ) : (
           <div className="space-y-4">

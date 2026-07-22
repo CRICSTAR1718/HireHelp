@@ -20,7 +20,7 @@ export default function Button({
         <button
             disabled={disabled || loading}
             className={clsx(
-                "rounded-xl px-5 py-3 font-semibold transition-all duration-300 hh-btn-anim",
+                "rounded-xl px-5 py-3 font-semibold transition-all duration-300 hh-btn-anim hh-lift hh-press",
 
                 variant === "primary" &&
                 "bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02]",

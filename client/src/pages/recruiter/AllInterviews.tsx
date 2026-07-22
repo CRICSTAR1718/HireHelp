@@ -68,10 +68,10 @@ export default function AllInterviews() {
         </div>
 
         {assignments.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No interviews scheduled</h3>
-            <p className="mt-1 text-sm text-gray-500">Schedule the first interview to get started.</p>
+          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in" style={{ boxShadow: 'var(--hh-shadow-md)' }}>
+            <Calendar className="mx-auto h-12 w-12" style={{ color: 'var(--hh-text-muted)' }} />
+            <h3 className="mt-2 text-sm font-medium" style={{ color: 'var(--hh-text)' }}>No interviews scheduled</h3>
+            <p className="mt-1 text-sm" style={{ color: 'var(--hh-text-secondary)' }}>Schedule the first interview to get started.</p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -166,10 +166,10 @@ export default function RequisitionReviewPage({ user }: RequisitionReviewPagePro
       </div>
 
       {filteredRequisitions.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-state-icon">📋</div>
-          <h3 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>No requisitions found</h3>
-          <p>No requisitions match the current filter.</p>
+        <div className="empty-state hh-fade-in" style={{ backgroundColor: 'var(--hh-surface-soft)', borderRadius: 'var(--hh-radius-lg)', padding: '3rem', textAlign: 'center' }}>
+          <div className="empty-state-icon text-4xl mb-4">📋</div>
+          <h3 style={{ color: 'var(--hh-text)', marginBottom: '0.5rem' }}>No requisitions found</h3>
+          <p style={{ color: 'var(--hh-text-secondary)' }}>No requisitions match the current filter.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1rem' }}>

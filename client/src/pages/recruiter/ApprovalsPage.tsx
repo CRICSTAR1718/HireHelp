@@ -100,10 +100,10 @@ export default function ApprovalsPage({ user }: ApprovalsPageProps) {
       {error && <div className="alert-error" style={{ marginBottom: '1.5rem' }}>{error}</div>}
 
       {approvals.length === 0 ? (
-        <div className="empty-state glass-card" style={{ padding: '3rem' }}>
-          <div className="empty-state-icon">📋</div>
-          <h3 style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>No approvals yet</h3>
-          <p>
+        <div className="empty-state glass-card hh-fade-in" style={{ padding: '3rem', backgroundColor: 'var(--hh-surface-soft)', borderRadius: 'var(--hh-radius-lg)' }}>
+          <div className="empty-state-icon text-4xl mb-4">📋</div>
+          <h3 style={{ color: 'var(--hh-text)', marginBottom: '0.5rem' }}>No approvals yet</h3>
+          <p style={{ color: 'var(--hh-text-secondary)' }}>
             {canApprove
               ? 'Click "Add Myself as Approver" to start the approval process.'
               : 'No approval records have been created for this requisition.'}

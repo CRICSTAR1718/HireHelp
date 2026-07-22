@@ -28,11 +28,11 @@ export default function Input({
           py-3
                     text-slate-900
           outline-none
-                    focus:border-blue-500
-          focus:shadow-lg
-          focus:shadow-blue-500/10
-          transition-all
-          duration-300
+                    focus:border-[var(--hh-accent)]
+          focus:shadow-[0_0_0_3px_var(--hh-accent-soft)]
+          transition-[border-color,box-shadow]
+          duration-[175ms]
+          ease-[var(--hh-ease)]
                     placeholder:text-slate-400
         "
             />

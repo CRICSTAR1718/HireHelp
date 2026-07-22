@@ -204,10 +204,10 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
       )}
 
       {filteredRequisitions.length === 0 ? (
-        <div className="admin-empty-state">
-          <div className="admin-empty-icon">📋</div>
-          <h3 className="admin-empty-title">No requisitions found</h3>
-          <p className="admin-empty-text">Try adjusting your filters or create a new requisition.</p>
+        <div className="admin-empty-state hh-fade-in" style={{ backgroundColor: 'var(--hh-surface-soft)', borderRadius: 'var(--hh-radius-lg)', padding: '3rem', textAlign: 'center' }}>
+          <div className="admin-empty-icon text-4xl mb-4">📋</div>
+          <h3 className="admin-empty-title" style={{ color: 'var(--hh-text)', marginBottom: '0.5rem' }}>No requisitions found</h3>
+          <p className="admin-empty-text" style={{ color: 'var(--hh-text-secondary)' }}>Try adjusting your filters or create a new requisition.</p>
         </div>
       ) : (
         <div className="admin-requisition-grid hh-stagger">

@@ -125,10 +125,10 @@ export const TalentPool: React.FC = () => {
         </div>
 
         {candidates.length === 0 ? (
-          <Card className="text-center py-12">
-            <User className="mx-auto h-12 w-12 text-slate-400" />
-            <h3 className="mt-2 text-sm font-medium text-slate-900">No candidates in Talent Pool</h3>
-            <p className="mt-1 text-sm text-slate-500">
+          <Card className="text-center py-12 hh-fade-in">
+            <User className="mx-auto h-12 w-12" style={{ color: 'var(--hh-text-muted)' }} />
+            <h3 className="mt-2 text-sm font-medium" style={{ color: 'var(--hh-text)' }}>No candidates in Talent Pool</h3>
+            <p className="mt-1 text-sm" style={{ color: 'var(--hh-text-secondary)' }}>
               Rejected candidates will be automatically added here.
             </p>
           </Card>

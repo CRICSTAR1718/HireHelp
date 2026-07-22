@@ -19,4 +19,5 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, des
       </div>
     </div>
   );
+  
 };

@@ -142,7 +142,11 @@ export default function ApplicationTable({ applications }: Props) {
 
                             {/* Job Description */}
                             {loadingJob ? (
-                                <div className="text-slate-400">Loading job details...</div>
+                                <div className="space-y-3">
+                                    <div className="h-4 rounded hh-skeleton" style={{ width: '60%' }} />
+                                    <div className="h-4 rounded hh-skeleton" style={{ width: '90%' }} />
+                                    <div className="h-4 rounded hh-skeleton" style={{ width: '80%' }} />
+                                </div>
                             ) : jobDetails ? (
                                 <div className="space-y-4">
                                     <h4 className="text-md font-semibold text-white">Job Description</h4>

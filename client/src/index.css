@@ -1,6 +1,35 @@
 @import "tailwindcss";
 @import "./styles/themes.css";
 
+/* ── Sonner toast styling with theme tokens ─────────────────────────────── */
+[data-sonner-toast] {
+  animation: hh-scale-in var(--hh-dur-base) var(--hh-ease) both;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--hh-success-soft);
+  border-color: var(--hh-success);
+  color: var(--hh-success);
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--hh-danger-soft);
+  border-color: var(--hh-danger);
+  color: var(--hh-danger);
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: var(--hh-info-soft);
+  border-color: var(--hh-info);
+  color: var(--hh-info);
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background: var(--hh-warning-soft);
+  border-color: var(--hh-warning);
+  color: var(--hh-warning);
+}
+
 /* ── Global resets (shared) ─────────────────────────────────────────── */
 @layer base {
   * { box-sizing: border-box; }

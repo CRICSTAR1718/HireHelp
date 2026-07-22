@@ -211,11 +211,14 @@ export default function InterviewPanel() {
         </div>
 
         {assignments.length === 0 && (
-          <div className="bg-white rounded-lg shadow-md p-12 text-center">
-            <p className="text-gray-500 mb-4">No interviews assigned yet</p>
+          <div className="bg-white rounded-lg p-12 text-center hh-fade-in" style={{ boxShadow: 'var(--hh-shadow-md)' }}>
+            <p className="mb-4" style={{ color: 'var(--hh-text-secondary)' }}>No interviews assigned yet</p>
             <button 
               onClick={fetchAssignments}
-              className="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+              className="text-white py-2 px-4 rounded-lg transition-colors hh-btn-anim"
+              style={{ backgroundColor: 'var(--hh-accent)' }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--hh-accent-hover)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--hh-accent)'}
             >
               Refresh
             </button>

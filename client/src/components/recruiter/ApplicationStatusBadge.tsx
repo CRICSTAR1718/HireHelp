@@ -6,12 +6,11 @@ interface ApplicationStatusBadgeProps {
 
 const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({ status }) => {
   const colorMap: Record<string, string> = {
-    // Dark UI variants (avoid light bg + dark text combo that reduces contrast)
-    submitted: 'bg-blue-500/15 text-sky-200 border border-sky-500/30',
-    under_review: 'bg-yellow-500/15 text-yellow-200 border border-yellow-500/30',
-    shortlisted: 'bg-emerald-500/15 text-emerald-200 border border-emerald-500/30',
-    rejected: 'bg-rose-500/15 text-rose-200 border border-rose-500/30',
-    hired: 'bg-indigo-500/15 text-indigo-200 border border-indigo-500/30'
+    submitted: 'bg-[var(--hh-info-soft)] text-[var(--hh-info)] border border-[var(--hh-info)]/30',
+    under_review: 'bg-[var(--hh-warning-soft)] text-[var(--hh-warning)] border border-[var(--hh-warning)]/30',
+    shortlisted: 'bg-[var(--hh-success-soft)] text-[var(--hh-success)] border border-[var(--hh-success)]/30',
+    rejected: 'bg-[var(--hh-danger-soft)] text-[var(--hh-danger)] border border-[var(--hh-danger)]/30',
+    hired: 'bg-[var(--hh-info-soft)] text-[var(--hh-info)] border border-[var(--hh-info)]/30'
   }
 
 
@@ -23,11 +22,14 @@ const ApplicationStatusBadge: React.FC<ApplicationStatusBadgeProps> = ({ status 
     hired: 'Hired'
   }
 
-  const colorClass = colorMap[status] || 'bg-gray-100 text-gray-800'
+  const colorClass = colorMap[status] || 'bg-[var(--hh-surface-hover)] text-[var(--hh-text-muted)]'
   const label = labelMap[status] || status
 
   return (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 ${colorClass}`}>
+    <span 
+      className={`px-3 py-1 text-xs font-medium inline-flex items-center gap-1 ${colorClass}`}
+      style={{ borderRadius: 'var(--hh-radius-pill)' }}
+    >
       {label}
     </span>
   )

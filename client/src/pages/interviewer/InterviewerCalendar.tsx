@@ -276,10 +276,10 @@ export default function InterviewerCalendar() {
             </h2>
             
             {selectedDateInterviews.length === 0 ? (
-              <div className="text-center py-8">
-                <CalendarIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 mb-2">No interviews scheduled</p>
-                <p className="text-sm text-gray-500">Select a different date or schedule a new interview</p>
+              <div className="text-center py-8 hh-fade-in">
+                <CalendarIcon className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--hh-text-muted)' }} />
+                <p className="mb-2" style={{ color: 'var(--hh-text-secondary)' }}>No interviews scheduled</p>
+                <p className="text-sm" style={{ color: 'var(--hh-text-muted)' }}>Select a different date or schedule a new interview</p>
               </div>
             ) : (
               <div className="space-y-4">

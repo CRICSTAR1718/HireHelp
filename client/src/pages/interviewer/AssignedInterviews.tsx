@@ -212,8 +212,8 @@ export const AssignedInterviews: React.FC = () => {
         {assignments.length === 0 && (
           <Card>
             <CardBody className="text-center py-12 hh-fade-in">
-              <p className="text-gray-500 mb-4">No interviews assigned yet</p>
-              <Button variant="outline" onClick={loadAssignments}>Refresh</Button>
+              <p className="mb-4" style={{ color: 'var(--hh-text-secondary)' }}>No interviews assigned yet</p>
+              <Button variant="outline" onClick={loadAssignments} className="hh-btn-anim">Refresh</Button>
             </CardBody>
           </Card>
         )}

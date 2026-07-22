@@ -99,10 +99,10 @@ export const Pipeline: React.FC = () => {
         </div>
 
         {filteredApplications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <GitPullRequest className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates in pipeline</h3>
-            <p className="mt-1 text-sm text-gray-500">Candidates will appear here once they apply for positions.</p>
+          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in" style={{ boxShadow: 'var(--hh-shadow-md)' }}>
+            <GitPullRequest className="mx-auto h-12 w-12" style={{ color: 'var(--hh-text-muted)' }} />
+            <h3 className="mt-2 text-sm font-medium" style={{ color: 'var(--hh-text)' }}>No candidates in pipeline</h3>
+            <p className="mt-1 text-sm" style={{ color: 'var(--hh-text-secondary)' }}>Candidates will appear here once they apply for positions.</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

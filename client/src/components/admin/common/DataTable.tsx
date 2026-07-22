@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { EmptyState } from "./EmptyState";
 
 export interface Column<T> {
   key: string;
@@ -19,9 +20,10 @@ export function DataTable<T>({ columns, data, emptyMessage = "No data available"
   if (loading) {
     return (
       <div className="min-h-64 grid place-items-center">
-        <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent" />
-          <p className="mt-3 text-sm text-slate-500">Loading...</p>
+        <div className="w-full max-w-2xl space-y-3 px-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="h-12 rounded-lg hh-skeleton" style={{ borderRadius: 'var(--hh-radius-sm)' }} />
+          ))}
         </div>
       </div>
     );
@@ -29,11 +31,11 @@ export function DataTable<T>({ columns, data, emptyMessage = "No data available"
 
   if (data.length === 0) {
     return (
-      <div className="min-h-64 flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 px-5 py-10 text-center">
-        {emptyIcon && <div className="rounded-xl bg-blue-50 p-3 text-blue-600">{emptyIcon}</div>}
-        <h2 className="mt-4 text-sm font-semibold text-slate-900">No data found</h2>
-        <p className="mt-1 max-w-sm text-sm text-slate-500">{emptyMessage}</p>
-      </div>
+      <EmptyState 
+        icon={emptyIcon as any || (() => null)} 
+        title="No data found" 
+        description={emptyMessage}
+      />
     );
   }
 
