@@ -284,15 +284,13 @@ export default function AdminRequisitionsPage({ user }: AdminRequisitionsPagePro
 
               {/* Actions */}
               <div className="admin-card-actions">
-                {user?.role === 'admin' && (
-                  <button
-                    className="admin-action-btn admin-action-btn-danger"
-                    onClick={(e) => handleDelete(e, req.id)}
-                    disabled={deleting === req.id}
-                  >
-                    {deleting === req.id ? 'Deleting…' : 'Delete'}
-                  </button>
-                )}
+                <button
+                  className="admin-action-btn admin-action-btn-danger"
+                  onClick={(e) => handleDelete(e, req.id)}
+                  disabled={deleting === req.id}
+                >
+                  {deleting === req.id ? 'Deleting…' : 'Delete'}
+                </button>
               </div>
             </div>
           ))}

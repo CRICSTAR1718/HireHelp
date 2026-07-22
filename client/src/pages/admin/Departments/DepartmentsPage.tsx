@@ -121,7 +121,7 @@ export const DepartmentsPage = () => {
         }
         title="All Departments"
       >
-        <DataTable columns={columns} data={departments || []} loading={isLoading} emptyIcon={<Building2 />} />
+        <DataTable columns={columns} data={departments || []} loading={isLoading} emptyIcon={Building2} />
       </ContentCard>
 
       <Dialog

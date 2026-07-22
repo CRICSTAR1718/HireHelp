@@ -211,9 +211,6 @@ export async function close(id: string, userId: string, closed_reason?: string) 
 export async function deleteRequisition(id: string) {
   const current = await repo.findStatus(id)
   if (!current) throw Object.assign(new Error('Requisition not found'), { statusCode: 404 })
-  if (current.status !== 'draft') {
-    throw Object.assign(new Error('Can only delete draft requisitions'), { statusCode: 400 })
-  }
   const deleted = await repo.remove(id)
   if (!deleted) throw Object.assign(new Error('Requisition not found'), { statusCode: 404 })
   return { message: 'Requisition deleted successfully' }
