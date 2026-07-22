@@ -1,5 +1,5 @@
 import { db, pool } from './index';
-import { roles, permissions, rolePermissions, departments, users } from './schema';
+import { roles, permissions, rolePermissions, departments, users, question_templates } from './schema';
 import { hashPassword } from '../common/utils/password';
 import { eq } from 'drizzle-orm';
 
@@ -142,6 +142,56 @@ async function seed() {
   } else {
     console.log(`  Bootstrap admin ${bootstrapEmail} already exists, skipped.`);
   }
+
+  console.log('Seeding generic question templates...');
+  const GENERIC_TEMPLATES = [
+    // Text fields
+    { label: 'Full Name', field_type: 'text', category: 'generic', user_id: null, is_required: true, placeholder: 'Enter your full name', helper_text: 'Please provide your legal name as it appears on official documents', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Email Address', field_type: 'text', category: 'generic', user_id: null, is_required: true, placeholder: 'your.email@example.com', helper_text: 'We will use this email for all communication', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Phone Number', field_type: 'text', category: 'generic', user_id: null, is_required: true, placeholder: '+1 234 567 8900', helper_text: 'Include country code', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Current Location', field_type: 'text', category: 'generic', user_id: null, is_required: true, placeholder: 'City, State, Country', helper_text: 'Where are you currently located?', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'LinkedIn Profile URL', field_type: 'text', category: 'generic', user_id: null, is_required: false, placeholder: 'https://linkedin.com/in/yourprofile', helper_text: 'Link to your LinkedIn profile', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Portfolio URL', field_type: 'text', category: 'generic', user_id: null, is_required: false, placeholder: 'https://yourportfolio.com', helper_text: 'Link to your portfolio or website', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'GitHub Profile URL', field_type: 'text', category: 'generic', user_id: null, is_required: false, placeholder: 'https://github.com/yourusername', helper_text: 'Link to your GitHub profile', max_rating: 5, options: null, usage_count: 0 },
+    // Textarea fields
+    { label: 'Professional Summary', field_type: 'textarea', category: 'generic', user_id: null, is_required: false, placeholder: 'Brief summary of your professional background', helper_text: 'Tell us about yourself in 2-3 sentences', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Why are you interested in this role?', field_type: 'textarea', category: 'generic', user_id: null, is_required: true, placeholder: 'Explain your motivation', helper_text: 'What excites you about this position?', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Describe a challenging project you worked on', field_type: 'textarea', category: 'generic', user_id: null, is_required: false, placeholder: 'Describe the project, your role, and the outcome', helper_text: 'Share a specific example from your experience', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'What are your salary expectations?', field_type: 'textarea', category: 'generic', user_id: null, is_required: false, placeholder: 'Provide your expected salary range', helper_text: 'This helps us ensure alignment', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'When can you start?', field_type: 'textarea', category: 'generic', user_id: null, is_required: true, placeholder: 'Provide your availability', helper_text: 'Your earliest start date', max_rating: 5, options: null, usage_count: 0 },
+    // Dropdown fields
+    { label: 'Years of Experience', field_type: 'dropdown', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'Total years of professional experience', max_rating: 5, options: JSON.stringify([{ label: '0-1 years' }, { label: '1-3 years' }, { label: '3-5 years' }, { label: '5-10 years' }, { label: '10+ years' }]), usage_count: 0 },
+    { label: 'Employment Type Preference', field_type: 'dropdown', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'What type of employment are you looking for?', max_rating: 5, options: JSON.stringify([{ label: 'Full-time' }, { label: 'Part-time' }, { label: 'Contract' }, { label: 'Freelance' }]), usage_count: 0 },
+    { label: 'Work Mode Preference', field_type: 'dropdown', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'How would you prefer to work?', max_rating: 5, options: JSON.stringify([{ label: 'On-site' }, { label: 'Remote' }, { label: 'Hybrid' }]), usage_count: 0 },
+    { label: 'Highest Education Level', field_type: 'dropdown', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'Select your highest completed education', max_rating: 5, options: JSON.stringify([{ label: 'High School' }, { label: 'Associate Degree' }, { label: "Bachelor's Degree" }, { label: "Master's Degree" }, { label: 'PhD' }, { label: 'Other' }]), usage_count: 0 },
+    { label: 'Notice Period', field_type: 'dropdown', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'How much notice do you need to give your current employer?', max_rating: 5, options: JSON.stringify([{ label: 'Immediate' }, { label: '1-2 weeks' }, { label: '1 month' }, { label: '2 months' }, { label: '3+ months' }]), usage_count: 0 },
+    // Multi-select fields
+    { label: 'Programming Languages', field_type: 'multi_select', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Select languages you are proficient in', max_rating: 5, options: JSON.stringify([{ label: 'JavaScript' }, { label: 'Python' }, { label: 'Java' }, { label: 'C++' }, { label: 'C#' }, { label: 'Go' }, { label: 'Ruby' }, { label: 'PHP' }, { label: 'Swift' }, { label: 'Kotlin' }]), usage_count: 0 },
+    { label: 'Frameworks & Libraries', field_type: 'multi_select', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Select frameworks you have experience with', max_rating: 5, options: JSON.stringify([{ label: 'React' }, { label: 'Angular' }, { label: 'Vue.js' }, { label: 'Node.js' }, { label: 'Django' }, { label: 'Spring Boot' }, { label: '.NET' }, { label: 'Flutter' }, { label: 'React Native' }]), usage_count: 0 },
+    { label: 'Databases', field_type: 'multi_select', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Select databases you have worked with', max_rating: 5, options: JSON.stringify([{ label: 'PostgreSQL' }, { label: 'MySQL' }, { label: 'MongoDB' }, { label: 'Redis' }, { label: 'SQLite' }, { label: 'Oracle' }, { label: 'SQL Server' }]), usage_count: 0 },
+    { label: 'Cloud Platforms', field_type: 'multi_select', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Select cloud platforms you have experience with', max_rating: 5, options: JSON.stringify([{ label: 'AWS' }, { label: 'Google Cloud' }, { label: 'Azure' }, { label: 'Heroku' }, { label: 'DigitalOcean' }]), usage_count: 0 },
+    { label: 'Tools & Technologies', field_type: 'multi_select', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Select tools you are familiar with', max_rating: 5, options: JSON.stringify([{ label: 'Git' }, { label: 'Docker' }, { label: 'Kubernetes' }, { label: 'Jenkins' }, { label: 'CI/CD' }, { label: 'Linux' }, { label: 'Agile/Scrum' }]), usage_count: 0 },
+    // File upload
+    { label: 'Resume/CV', field_type: 'file', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'Upload your resume in PDF format', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Cover Letter', field_type: 'file', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Upload your cover letter (optional)', max_rating: 5, options: null, usage_count: 0 },
+    // Checkbox
+    { label: 'I am willing to relocate', field_type: 'checkbox', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Check if you are open to relocating for this role', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'I require visa sponsorship', field_type: 'checkbox', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Check if you need visa sponsorship', max_rating: 5, options: null, usage_count: 0 },
+    // Date
+    { label: 'Date of Birth', field_type: 'date', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Your date of birth', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Expected Start Date', field_type: 'date', category: 'generic', user_id: null, is_required: true, placeholder: null, helper_text: 'When can you join?', max_rating: 5, options: null, usage_count: 0 },
+    // Number
+    { label: 'Current CTC (Annual)', field_type: 'number', category: 'generic', user_id: null, is_required: false, placeholder: 'Enter amount in USD', helper_text: 'Current annual compensation', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Expected CTC (Annual)', field_type: 'number', category: 'generic', user_id: null, is_required: false, placeholder: 'Enter amount in USD', helper_text: 'Expected annual compensation', max_rating: 5, options: null, usage_count: 0 },
+    // Rating
+    { label: 'Rate your proficiency in [Skill]', field_type: 'rating', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: '1 = Beginner, 5 = Expert', max_rating: 5, options: null, usage_count: 0 },
+    // Yes/No
+    { label: 'Do you have experience working in a similar industry?', field_type: 'yes_no', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Industry experience check', max_rating: 5, options: null, usage_count: 0 },
+    { label: 'Are you available for overtime?', field_type: 'yes_no', category: 'generic', user_id: null, is_required: false, placeholder: null, helper_text: 'Overtime availability', max_rating: 5, options: null, usage_count: 0 },
+  ];
+
+  await db.insert(question_templates).values(GENERIC_TEMPLATES).onConflictDoNothing();
+  console.log('  Generic question templates seeded.');
 
   console.log('Seed complete.');
 }
