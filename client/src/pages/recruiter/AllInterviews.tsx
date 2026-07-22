@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assignmentApi, type Assignment } from "../../api/interviewer"
 import api from "../../api/recruiter/index"
@@ -63,6 +64,11 @@ export default function AllInterviews() {
   const handleViewFeedback = (feedback: string) => {
     setSelectedFeedback(feedback)
     setShowFeedbackModal(true)
+  }
+
+  const closeFeedbackModal = () => {
+    setShowFeedbackModal(false)
+    setSelectedFeedback(null)
   }
 
   if (loading) {
@@ -210,13 +216,19 @@ export default function AllInterviews() {
           </div>
         )}
 
-        {showFeedbackModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6 relative">
+        {showFeedbackModal && createPortal(
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            onClick={closeFeedbackModal}
+          >
+            <div
+              className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Interview Feedback</h3>
                 <button
-                  onClick={() => setShowFeedbackModal(false)}
+                  onClick={closeFeedbackModal}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <X className="w-5 h-5" />
@@ -226,13 +238,14 @@ export default function AllInterviews() {
                 <p className="text-gray-700 whitespace-pre-wrap">{selectedFeedback || 'No feedback provided'}</p>
               </div>
               <button
-                onClick={() => setShowFeedbackModal(false)}
+                onClick={closeFeedbackModal}
                 className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 Close
               </button>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
     </div>
   )
