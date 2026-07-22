@@ -144,7 +144,7 @@ export const RolesPage = () => {
         }
         title="All Roles"
       >
-        <DataTable columns={columns} data={roles || []} loading={isLoading} emptyIcon={<ShieldCheck />} />
+        <DataTable columns={columns} data={roles || []} loading={isLoading} emptyIcon={ShieldCheck} />
       </ContentCard>
 
       <Dialog

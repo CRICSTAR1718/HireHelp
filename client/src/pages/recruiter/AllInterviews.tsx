@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assignmentApi, type Assignment } from "../../api/interviewer"
-import { Calendar, Clock, User, Video, Mail, Briefcase, MapPin, CheckCircle } from 'lucide-react'
+import api from "../../api/recruiter/index"
+import { Calendar, Clock, User, Video, Mail, Briefcase, MapPin, CheckCircle, MessageSquare, Download, X } from 'lucide-react'
 
 export default function AllInterviews() {
   const navigate = useNavigate()
+  const location = window.location.pathname
+  const isAdminPortal = location.startsWith('/admin')
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null)
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
+  const [downloadingResume, setDownloadingResume] = useState<string | null>(null)
 
   useEffect(() => {
     fetchAssignments()
@@ -37,6 +43,28 @@ export default function AllInterviews() {
     }
   }
 
+  const handleDownloadResume = async (candidateId: string) => {
+    setDownloadingResume(candidateId)
+    try {
+      const response = await api.get(`/candidates/${candidateId}/resume`)
+      if (response.data && response.data.resumeUrl) {
+        window.open(response.data.resumeUrl, '_blank', 'noopener,noreferrer')
+      } else {
+        alert('Resume not available for this candidate')
+      }
+    } catch (err) {
+      console.error('Failed to download resume:', err)
+      alert('Failed to download resume. Please try again.')
+    } finally {
+      setDownloadingResume(null)
+    }
+  }
+
+  const handleViewFeedback = (feedback: string) => {
+    setSelectedFeedback(feedback)
+    setShowFeedbackModal(true)
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -53,18 +81,22 @@ export default function AllInterviews() {
         </div>
 
         <div className="mb-6 flex gap-4">
-          <button
-            onClick={() => navigate('/recruiter/interviews')}
-            className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
-          >
-            My Interviews
-          </button>
-          <button
-            onClick={() => navigate('/recruiter/interviews/schedule')}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Schedule New Interview
-          </button>
+          {!isAdminPortal && (
+            <>
+              <button
+                onClick={() => navigate('/recruiter/interviews')}
+                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                My Interviews
+              </button>
+              <button
+                onClick={() => navigate('/recruiter/interviews/schedule')}
+                className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Schedule New Interview
+              </button>
+            </>
+          )}
         </div>
 
         {assignments.length === 0 ? (
@@ -119,17 +151,24 @@ export default function AllInterviews() {
                       Assigned: {new Date(assignment.assignedAt).toLocaleDateString()}
                     </div>
                   </div>
-                  {assignment.completedAt && (
-                    <div className="text-sm text-gray-500">
+                  {assignment.completedAt ? (
+                    <div className="text-sm text-green-600 font-medium">
                       <div className="flex items-center">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Completed: {new Date(assignment.completedAt).toLocaleDateString()}
+                        Conducted: {new Date(assignment.completedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-sm text-yellow-600 font-medium">
+                      <div className="flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        Not Conducted
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {assignment.schedule?.meetingLink ? (
                     <a
                       href={assignment.schedule.meetingLink}
@@ -146,9 +185,53 @@ export default function AllInterviews() {
                       No Link
                     </button>
                   )}
+                  {isAdminPortal && (
+                    <button
+                      onClick={() => handleDownloadResume(assignment.candidateId)}
+                      disabled={downloadingResume === assignment.candidateId}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      {downloadingResume === assignment.candidateId ? 'Downloading...' : 'Resume'}
+                    </button>
+                  )}
+                  {assignment.completedAt && assignment.feedback && (
+                    <button
+                      onClick={() => handleViewFeedback(assignment.feedback)}
+                      className="bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      View Feedback
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {showFeedbackModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-lg max-w-lg w-full mx-4 p-6 relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Interview Feedback</h3>
+                <button
+                  onClick={() => setShowFeedbackModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
+                <p className="text-gray-700 whitespace-pre-wrap">{selectedFeedback || 'No feedback provided'}</p>
+              </div>
+              <button
+                onClick={() => setShowFeedbackModal(false)}
+                className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         )}
     </div>

@@ -129,7 +129,7 @@ export const PermissionsPage = () => {
         }
         title="All Permissions"
       >
-        <DataTable columns={columns} data={permissions || []} loading={isLoading} emptyIcon={<ShieldCheck />} />
+        <DataTable columns={columns} data={permissions || []} loading={isLoading} emptyIcon={ShieldCheck} />
       </ContentCard>
 
       <Dialog

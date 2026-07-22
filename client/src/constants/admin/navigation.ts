@@ -2,7 +2,7 @@ import { ClipboardCheck, FileText, LayoutDashboard, ShieldCheck, Users, UsersRou
 import type { NavigationGroup } from "../../types/admin/navigation";
 
 export const navigationGroups: NavigationGroup[] = [
-  { label: "Dashboard", items: [{ label: "Overview", href: "/admin", icon: LayoutDashboard }] },
+  { label: "Dashboard", items: [{ label: "Dashboard", href: "/admin", icon: LayoutDashboard }] },
   { label: "Recruitment", items: [
     { label: "Requisitions", href: "/admin/requisitions", icon: Briefcase },
     { label: "Create Requisition", href: "/admin/requisitions/new", icon: Plus },

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import { EmptyState } from "./EmptyState";
 
 export interface Column<T> {
@@ -12,7 +13,7 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   emptyMessage?: string;
-  emptyIcon?: ReactNode;
+  emptyIcon?: LucideIcon;
   loading?: boolean;
 }
 
@@ -32,7 +33,7 @@ export function DataTable<T>({ columns, data, emptyMessage = "No data available"
   if (data.length === 0) {
     return (
       <EmptyState 
-        icon={emptyIcon as any || (() => null)} 
+        icon={emptyIcon} 
         title="No data found" 
         description={emptyMessage}
       />

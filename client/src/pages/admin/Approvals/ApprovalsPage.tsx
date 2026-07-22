@@ -121,7 +121,7 @@ export const ApprovalsPage = () => {
           columns={columns}
           data={approvals || []}
           loading={isLoading}
-          emptyIcon={<ClipboardCheck />}
+          emptyIcon={ClipboardCheck}
           emptyMessage="No approvals found. Pending approval requests will appear here."
         />
       </ContentCard>

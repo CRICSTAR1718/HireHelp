@@ -152,7 +152,7 @@ export const UsersPage = () => {
         }
         title="All Users"
       >
-        <DataTable columns={columns} data={users || []} loading={isLoading} emptyIcon={<UserRound />} />
+        <DataTable columns={columns} data={users || []} loading={isLoading} emptyIcon={UserRound} />
       </ContentCard>
 
       <Dialog
