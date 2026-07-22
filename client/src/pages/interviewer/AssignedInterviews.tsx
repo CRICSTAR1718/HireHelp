@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Card, CardHeader, CardBody, CardFooter, Button } from "../../components/interviewer";
 import { assignmentApi, type Assignment } from "../../api/interviewer";
 import { toUserMessage } from "../../utils/toUserMessage";
@@ -32,13 +33,30 @@ export const AssignedInterviews: React.FC = () => {
     }
   };
 
+  const openStatusModal = (
+    assignment: Assignment,
+    action: 'complete' | 'cancel'
+  ) => {
+    setSelectedAssignment(assignment);
+    setStatusAction(action);
+    setShowStatusModal(true);
+  };
+
+  const closeStatusModal = () => {
+    setShowStatusModal(false);
+    setSelectedAssignment(null);
+    setStatusAction(null);
+    setFeedback('');
+    setCancellationReason('');
+  };
+
   const handleStatusChange = async () => {
     if (!selectedAssignment || !statusAction) return;
 
     try {
       setUpdating(true);
       const updateData: any = {};
-      
+
       if (statusAction === 'complete') {
         updateData.status = 'completed';
         updateData.completedAt = new Date();
@@ -50,11 +68,7 @@ export const AssignedInterviews: React.FC = () => {
 
       await assignmentApi.updateAssignment(selectedAssignment.id, updateData);
       await loadAssignments();
-      setShowStatusModal(false);
-      setSelectedAssignment(null);
-      setStatusAction(null);
-      setFeedback('');
-      setCancellationReason('');
+      closeStatusModal();
     } catch (error: unknown) {
       console.error('Failed to update status:', error);
       alert(toUserMessage(error, 'Failed to update status'));
@@ -145,8 +159,8 @@ export const AssignedInterviews: React.FC = () => {
                 </div>
               </CardBody>
               <CardFooter className="flex flex-col gap-2">
-                <Button 
-                  variant="primary" 
+                <Button
+                  variant="primary"
                   className="w-full"
                   onClick={() => {
                     setSelectedAssignment(assignment);
@@ -158,26 +172,18 @@ export const AssignedInterviews: React.FC = () => {
                 </Button>
                 {assignment.status === 'pending' && (
                   <>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full bg-green-50 border-green-200 text-green-700"
-                      onClick={() => {
-                    setSelectedAssignment(assignment);
-                    setStatusAction('complete');
-                    setShowStatusModal(true);
-                  }}
+                      onClick={() => openStatusModal(assignment, 'complete')}
                     >
                       <Check className="w-4 h-4 mr-2" />
                       Mark as Completed
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full bg-red-50 border-red-200 text-red-700"
-                      onClick={() => {
-                    setSelectedAssignment(assignment);
-                    setStatusAction('cancel');
-                    setShowStatusModal(true);
-                  }}
+                      onClick={() => openStatusModal(assignment, 'cancel')}
                     >
                       <X className="w-4 h-4 mr-2" />
                       Cancel Interview
@@ -219,10 +225,14 @@ export const AssignedInterviews: React.FC = () => {
         )}
 
       {/* Details Modal */}
-      {showDetailsModal && selectedAssignment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
+      {showDetailsModal && selectedAssignment && createPortal(
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => {
+          setShowDetailsModal(false);
+          setSelectedAssignment(null);
+        }}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <Card className="max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Interview Details</h3>
               <button
                 onClick={() => {
@@ -305,25 +315,27 @@ export const AssignedInterviews: React.FC = () => {
               )}
             </div>
           </Card>
-        </div>
+          </div>
+        </div>,
+        document.body
       )}
 
       {/* Status Change Modal */}
-      {showStatusModal && selectedAssignment && statusAction && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="max-w-md w-full p-6">
+      {showStatusModal && selectedAssignment && statusAction && createPortal(
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={closeStatusModal}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <Card
+              className="max-w-md w-full shadow-2xl p-6"
+            >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">
                 {statusAction === 'complete' ? 'Complete Interview' : 'Cancel Interview'}
               </h3>
               <button
-                onClick={() => {
-                  setShowStatusModal(false);
-                  setSelectedAssignment(null);
-                  setStatusAction(null);
-                  setFeedback('');
-                  setCancellationReason('');
-                }}
+                onClick={closeStatusModal}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X className="w-5 h-5" />
@@ -331,7 +343,7 @@ export const AssignedInterviews: React.FC = () => {
             </div>
             <div className="space-y-4">
               <p className="text-gray-600">
-                {statusAction === 'complete' 
+                {statusAction === 'complete'
                   ? `Please provide feedback for ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
                   : `Please provide a reason for cancelling ${selectedAssignment.candidateName}'s ${selectedAssignment.role} interview.`
                 }
@@ -344,8 +356,8 @@ export const AssignedInterviews: React.FC = () => {
                   <textarea
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     placeholder="Enter your interview feedback..."
                     required
                   />
@@ -358,23 +370,17 @@ export const AssignedInterviews: React.FC = () => {
                   <textarea
                     value={cancellationReason}
                     onChange={(e) => setCancellationReason(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     placeholder="Enter the reason for cancellation..."
                     required
                   />
                 </div>
               )}
-              <div className="flex gap-3 justify-end">
+              <div className="flex gap-3 justify-end pb-1">
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    setShowStatusModal(false);
-                    setSelectedAssignment(null);
-                    setStatusAction(null);
-                    setFeedback('');
-                    setCancellationReason('');
-                  }}
+                  onClick={closeStatusModal}
                 >
                   Cancel
                 </Button>
@@ -388,7 +394,9 @@ export const AssignedInterviews: React.FC = () => {
               </div>
             </div>
           </Card>
-        </div>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );
