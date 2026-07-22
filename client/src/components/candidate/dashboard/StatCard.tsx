@@ -16,7 +16,7 @@ export default function StatCard({
     color,
 }: Props) {
     return (
-        <div className="rounded-2xl bg-slate-900/50 border border-slate-800/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group">
+        <div className="rounded-2xl bg-slate-900/50 border border-slate-800/50 p-6 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 hover:scale-[1.02] group hh-lift">
 
             <div className="flex justify-between">
 

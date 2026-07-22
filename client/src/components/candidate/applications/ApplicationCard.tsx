@@ -9,6 +9,7 @@ interface Props {
     appliedDate: string;
     status: "Applied" | "Interview" | "Rejected" | "Offer";
     onView?: () => void;
+    className?: string;
 }
 
 function getStatusTone(status: string): "success" | "warning" | "neutral" | "info" {
@@ -31,9 +32,10 @@ export default function ApplicationCard({
     appliedDate,
     status,
     onView,
+    className = "",
 }: Props) {
     return (
-        <Card className="p-5 hover:shadow-md transition-shadow">
+        <Card className={`p-5 hover:shadow-md transition-shadow hh-lift ${className}`}>
             <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                     <h3 className="text-base font-semibold text-slate-900">{role}</h3>

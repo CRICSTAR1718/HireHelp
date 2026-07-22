@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { login, register } from "../../api/recruiter/auth"
+import { toUserMessage } from "../../utils/toUserMessage"
 
 const ROLES = [
   { value: 'hr',    label: 'HR' },
@@ -42,8 +43,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       }
       onLogin(user)
       navigate('/recruiter/requisitions')
-    } catch (err: any) {
-      setError(err.message || (mode === 'login' ? 'Invalid credentials' : 'Registration failed'))
+    } catch (err: unknown) {
+      setError(toUserMessage(err, mode === 'login' ? 'Invalid credentials' : 'Registration failed'))
     } finally {
       setLoading(false)
     }

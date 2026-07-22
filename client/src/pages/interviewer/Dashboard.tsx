@@ -84,16 +84,16 @@ export default function InterviewerDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Interviewer Dashboard</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Interviewer Dashboard</h1>
         <p className="text-gray-600">Welcome back! Here's your interview overview.</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 hh-stagger">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow hh-stagger-item">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-blue-100 rounded-lg">
               <Users className="w-6 h-6 text-blue-600" />
@@ -104,7 +104,7 @@ export default function InterviewerDashboard() {
           <div className="text-sm text-gray-600">Total Interviews</div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow hh-stagger-item">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-green-100 rounded-lg">
               <CheckCircle className="w-6 h-6 text-green-600" />
@@ -115,7 +115,7 @@ export default function InterviewerDashboard() {
           <div className="text-sm text-gray-600">Completed Interviews</div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow hh-stagger-item">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-yellow-100 rounded-lg">
               <Clock className="w-6 h-6 text-yellow-600" />
@@ -126,7 +126,7 @@ export default function InterviewerDashboard() {
           <div className="text-sm text-gray-600">Pending Interviews</div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow hh-stagger-item">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-purple-100 rounded-lg">
               <Calendar className="w-6 h-6 text-purple-600" />
@@ -139,7 +139,7 @@ export default function InterviewerDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
         <div 
           className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white cursor-pointer hover:shadow-lg transition-shadow"
           onClick={() => navigate('/interviewer/interviews')}
@@ -229,7 +229,7 @@ export default function InterviewerDashboard() {
       {/* Performance Overview */}
       <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-6">Performance Overview</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6">
             <div className="flex items-center gap-3 mb-4">
               <TrendingUp className="w-6 h-6 text-blue-600" />

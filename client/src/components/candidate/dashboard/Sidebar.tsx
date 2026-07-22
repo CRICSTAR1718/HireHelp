@@ -44,17 +44,17 @@ export default function Sidebar() {
     };
 
     return (
-        <aside className="hidden lg:flex h-full w-72 flex-col bg-white/95 border-r border-blue-100">
+        <aside className="hidden lg:flex h-full w-72 flex-col bg-slate-900 border-r border-slate-700">
 
             {/* Logo */}
 
-            <div className="border-b border-blue-100 px-8 py-8 bg-gradient-to-r from-blue-50 to-transparent">
+            <div className="border-b border-slate-700 px-8 py-8 bg-gradient-to-r from-slate-800 to-slate-900">
 
-                <h1 className="text-3xl font-extrabold tracking-tight text-blue-700">
+                <h1 className="text-3xl font-extrabold tracking-tight text-white">
                     HireHelp
                 </h1>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-400">
                     Candidate Portal
                 </p>
 
@@ -79,7 +79,7 @@ export default function Sidebar() {
                                 transition-all duration-300 ease-out
                                 ${isActive
                                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25"
-                                    : "text-slate-600 hover:bg-blue-50 hover:text-blue-700 hover:scale-[1.02]"
+                                    : "text-slate-300 hover:bg-slate-800 hover:text-white hover:scale-[1.02]"
                                 }
                                 `
                             }
@@ -98,7 +98,7 @@ export default function Sidebar() {
 
             {/* User */}
 
-            <div className="border-t border-blue-100 p-5 bg-gradient-to-t from-slate-50 to-transparent">
+            <div className="border-t border-slate-700 p-5 bg-gradient-to-t from-slate-800 to-slate-900">
 
                 <div className="mb-4 flex items-center gap-3">
 
@@ -108,11 +108,11 @@ export default function Sidebar() {
 
                     <div>
 
-                        <h3 className="font-semibold text-slate-900">
+                        <h3 className="font-semibold text-white">
                             {displayName}
                         </h3>
 
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-400">
                             {user?.email ?? ""}
                         </p>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPendingApprovals, approveForm, rejectForm, requestFormChanges } from "../../../api/recruiter/formApprovals"
+import { toUserMessage } from "../../../utils/toUserMessage"
 
 const FormApprovalsPage: React.FC = () => {
   const navigate = useNavigate()
@@ -18,10 +19,13 @@ const FormApprovalsPage: React.FC = () => {
     try {
       const data = await getPendingApprovals()
       setApprovals(data)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to fetch approvals:', err)
-      if (err.message.includes('403')) {
-        setMessage('Only admins can view form approvals')
+      const { isAxiosError } = await import("axios");
+      if (isAxiosError(err) && err.message.includes('403')) {
+        setMessage('You do not have permission to view approvals.')
+      } else {
+        setMessage(toUserMessage(err, 'Failed to fetch approvals'))
       }
     } finally {
       setLoading(false)
@@ -34,9 +38,9 @@ const FormApprovalsPage: React.FC = () => {
       setMessage(result.message)
       await fetchApprovals()
       setTimeout(() => setMessage(''), 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to approve form:', err)
-      setMessage(err.message || 'Failed to approve form')
+      setMessage(toUserMessage(err, 'Failed to approve form'))
     }
   }
 
@@ -47,9 +51,9 @@ const FormApprovalsPage: React.FC = () => {
       setMessage(result.message)
       await fetchApprovals()
       setTimeout(() => setMessage(''), 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to reject form:', err)
-      setMessage(err.message || 'Failed to reject form')
+      setMessage(toUserMessage(err, 'Failed to reject form'))
     }
   }
 
@@ -65,9 +69,9 @@ const FormApprovalsPage: React.FC = () => {
       setRemarks('')
       await fetchApprovals()
       setTimeout(() => setMessage(''), 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to request changes:', err)
-      setMessage(err.message || 'Failed to request changes')
+      setMessage(toUserMessage(err, 'Failed to request changes'))
     }
   }
 

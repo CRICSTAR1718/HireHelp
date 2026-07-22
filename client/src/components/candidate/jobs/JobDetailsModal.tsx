@@ -3,6 +3,7 @@ import { MapPin, Clock, Building2, DollarSign, X, ArrowLeft, Zap } from "lucide-
 import type { Job } from "../../../types/candidate";
 import { getJob } from "../../../api/candidate/jobs.api";
 import { checkCandidateInTalentPool, applyForJobFromTalentPool } from "../../../api/recruiter/talent-pool.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import { useAuth as useCandidateAuth } from "../../../hooks/candidate/useAuth";
 
 interface Props {
@@ -65,7 +66,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                 setJob(jobData);
             } catch (err) {
                 console.error('Failed to fetch job details:', err);
-                setError(err instanceof Error ? err.message : 'Failed to load job details');
+                setError(toUserMessage(err, 'Failed to load job details. Please try again.'));
             } finally {
                 setLoading(false);
             }
@@ -100,7 +101,7 @@ export default function JobDetailsModal({ jobId, onClose, onApply, onTalentPoolA
                 onTalentPoolApply?.(job.id);
             } catch (err) {
                 console.error('Failed to apply from Talent Pool:', err);
-                setError(err instanceof Error ? err.message : 'Failed to submit application');
+                setError(toUserMessage(err, 'Failed to submit application. Please try again.'));
             } finally {
                 setApplying(false);
             }

@@ -61,16 +61,40 @@ export const Candidates: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="space-y-8 px-4 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <div className="hh-skeleton h-10 w-48 rounded mb-2" />
+          <div className="hh-skeleton h-5 w-64 rounded" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="hh-skeleton h-12 w-12 rounded-full" />
+                <div className="flex-1">
+                  <div className="hh-skeleton h-6 w-3/4 rounded mb-2" />
+                  <div className="hh-skeleton h-4 w-1/2 rounded" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="hh-skeleton h-4 w-full rounded" />
+                <div className="hh-skeleton h-4 w-2/3 rounded" />
+                <div className="flex justify-between pt-3 border-t border-gray-100">
+                  <div className="hh-skeleton h-8 w-16 rounded" />
+                  <div className="hh-skeleton h-6 w-16 rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="space-y-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">All Candidates</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">All Candidates</h1>
           <p className="text-gray-600">View and manage all candidate applications across positions</p>
         </div>
 
@@ -103,94 +127,79 @@ export const Candidates: React.FC = () => {
         </div>
 
         {filteredApplications.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-center py-12 bg-white rounded-lg shadow hh-fade-in">
             <Users className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No candidates found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm || statusFilter !== 'all' 
-                ? 'Try adjusting your search or filter criteria.' 
+              {searchTerm || statusFilter !== 'all'
+                ? 'Try adjusting your search or filter criteria.'
                 : 'Candidates will appear here once they apply for positions.'}
             </p>
           </div>
         ) : (
-          <div className="bg-white shadow rounded-lg overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Candidate
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Position
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Department
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Fitment Score
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Applied Date
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredApplications.map((application) => (
-                  <tr key={application.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                          <span className="text-indigo-600 font-semibold">
-                            {application.candidate_first_name.charAt(0)}{application.candidate_last_name.charAt(0)}
-                          </span>
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
-                            {application.candidate_first_name} {application.candidate_last_name}
-                          </div>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Mail className="w-3 h-3 mr-1" />
-                            {application.candidate_email}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-900">
-                        <Briefcase className="w-4 h-4 mr-2 text-gray-400" />
-                        {application.requisition_title}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <span className="font-medium">{application.department}</span>
-                        <span className="mx-2">•</span>
-                        <div className="flex items-center">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          {application.location}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm font-semibold text-indigo-600">
-                        {application.ai_score ? `${parseFloat(application.ai_score).toFixed(1)}%` : 'N/A'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(application.status)}`}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 hh-stagger">
+            {filteredApplications.map((application) => (
+              <div key={application.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow p-4 sm:p-6 hh-lift hh-stagger-item">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <span className="text-indigo-600 font-semibold text-lg">
+                      {application.candidate_first_name.charAt(0)}{application.candidate_last_name.charAt(0)}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                      {application.candidate_first_name} {application.candidate_last_name}
+                    </h3>
+                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                      <Mail className="w-3 h-3 mr-1 flex-shrink-0" />
+                      <span className="truncate">{application.candidate_email}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <Briefcase className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-900 truncate">{application.requisition_title}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="font-medium text-gray-700">{application.department}</span>
+                    <span className="text-gray-300">•</span>
+                    <div className="flex items-center">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      <span className="truncate">{application.location}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Fitment Score</p>
+                      {application.ai_score ? (
+                        <span className="hh-ai-badge text-sm">
+                          <span className="hh-ai-dot"></span>
+                          {parseFloat(application.ai_score).toFixed(1)}%
+                        </span>
+                      ) : (
+                        <p className="text-lg font-semibold text-indigo-600">N/A</p>
+                      )}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 mb-1">Status</p>
+                      <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(application.status)}`}>
                         {application.status.replace('_', ' ')}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(application.submitted_at).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 text-xs text-gray-400">
+                    <span>Applied: {new Date(application.submitted_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
     </div>

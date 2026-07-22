@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { createRequisition, updateRequisition, getRequisition } from "../../api/recruiter/requisitions"
 import { createForm } from "../../api/recruiter/forms"
+import { toUserMessage } from "../../utils/toUserMessage"
 
 const DEPARTMENTS = [
   'Engineering', 'Product', 'Design', 'Marketing', 'Sales',
@@ -193,8 +194,8 @@ export default function AdminRequisitionFormPage({ mode = 'create', user }: Admi
         await updateRequisition(id || '', payload)
         navigate(`/admin/requisitions/${id}`)
       }
-    } catch (err: any) {
-      setApiError(err.response?.data?.error || err.message || 'Operation failed')
+    } catch (err: unknown) {
+      setApiError(toUserMessage(err, 'Operation failed'))
     } finally {
       setLoading(false)
     }

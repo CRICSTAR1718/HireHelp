@@ -3,6 +3,7 @@ import { Card, Button } from "../../../components/admin/ui";
 import { Label } from "../../../components/admin/ui";
 import PasswordInput from "../ui/PasswordInput";
 import { changePassword } from "../../../api/candidate/settings.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 
 export default function PasswordSettings() {
     const [formData, setFormData] = useState({
@@ -60,7 +61,7 @@ export default function PasswordSettings() {
             setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to change password");
+            setError(toUserMessage(err, "Failed to change password. Please try again."));
         } finally {
             setLoading(false);
         }

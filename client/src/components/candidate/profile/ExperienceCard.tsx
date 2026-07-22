@@ -10,7 +10,7 @@ export default function ExperienceCard({ experience }: Props) {
     const safeExperience = experience ?? [];
 
     return (
-        <Card className="p-5">
+        <Card className="p-5 hh-lift">
             <SectionTitle title="Experience" />
             <div className="mt-4 space-y-4">
                 {safeExperience.map((item) => (

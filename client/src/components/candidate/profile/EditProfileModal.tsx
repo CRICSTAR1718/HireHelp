@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X, Save, Upload, Plus, X as XIcon } from "lucide-react";
 import type { Profile } from "../../../types/candidate";
 import { updateProfile, uploadProfilePicture } from "../../../api/candidate/profile.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 
 interface Props {
     profile: Profile;
@@ -127,7 +128,7 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
             setTimeout(() => setSuccess(false), 2000);
         } catch (err) {
             console.error('Failed to upload profile picture:', err);
-            setError(err instanceof Error ? err.message : 'Failed to upload profile picture');
+            setError(toUserMessage(err, 'Failed to upload profile picture. Please try again.'));
         } finally {
             setUploadingPicture(false);
         }
@@ -172,7 +173,7 @@ export default function EditProfileModal({ profile, onClose, onSave }: Props) {
             }, 1500);
         } catch (err) {
             console.error('Failed to update profile:', err);
-            const errorMessage = err instanceof Error ? err.message : 'Failed to update profile';
+            const errorMessage = toUserMessage(err, 'Failed to update profile. Please try again.');
             setError(errorMessage);
             // Stay on the page, don't crash
         } finally {

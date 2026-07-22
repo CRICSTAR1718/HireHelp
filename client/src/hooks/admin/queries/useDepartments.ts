@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as departmentsApi from "../../../api/admin/departments";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { CreateDepartmentInput, UpdateDepartmentInput } from "../../../types/admin/departments";
 
 export const useDepartments = () => {
@@ -28,7 +29,7 @@ export const useCreateDepartment = () => {
       toast.success("Department created successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to create department");
+      toast.error(toUserMessage(error, "Failed to create department. Please try again."));
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateDepartment = () => {
       toast.success("Department updated successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update department");
+      toast.error(toUserMessage(error, "Failed to update department. Please try again."));
     },
   });
 };
@@ -60,7 +61,7 @@ export const useDeleteDepartment = () => {
       toast.success("Department deleted successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete department");
+      toast.error(toUserMessage(error, "Failed to delete department. Please try again."));
     },
   });
 };

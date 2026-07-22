@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Button } from "../../components/interviewer";
 import { assignmentApi, type Assignment } from "../../api/interviewer";
+import { toUserMessage } from "../../utils/toUserMessage";
 import { Video, Eye, X, Check, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 
 export const AssignedInterviews: React.FC = () => {
@@ -23,9 +24,9 @@ export const AssignedInterviews: React.FC = () => {
       const data = await assignmentApi.getInterviewerAssignments();
       // Ensure data is an array
       setAssignments(Array.isArray(data) ? data : []);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to load assignments:', error);
-      setAssignments([]);
+      alert(toUserMessage(error, 'Failed to load assignments'));
     } finally {
       setLoading(false);
     }
@@ -54,9 +55,9 @@ export const AssignedInterviews: React.FC = () => {
       setStatusAction(null);
       setFeedback('');
       setCancellationReason('');
-    } catch (error) {
-      console.error('Failed to update assignment:', error);
-      alert('Failed to update interview status');
+    } catch (error: unknown) {
+      console.error('Failed to update status:', error);
+      alert(toUserMessage(error, 'Failed to update status'));
     } finally {
       setUpdating(false);
     }
@@ -91,15 +92,15 @@ export const AssignedInterviews: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">My Interviews</h1>
           <p className="text-gray-600">Manage your assigned interview sessions</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 hh-stagger">
           {assignments.map((assignment) => (
-            <Card key={assignment.id} className="hover:shadow-xl transition-shadow">
+            <Card key={assignment.id} className="hover:shadow-xl transition-shadow hh-stagger-item">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
@@ -210,7 +211,7 @@ export const AssignedInterviews: React.FC = () => {
 
         {assignments.length === 0 && (
           <Card>
-            <CardBody className="text-center py-12">
+            <CardBody className="text-center py-12 hh-fade-in">
               <p className="text-gray-500 mb-4">No interviews assigned yet</p>
               <Button variant="outline" onClick={loadAssignments}>Refresh</Button>
             </CardBody>

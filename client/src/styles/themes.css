@@ -1,0 +1,327 @@
+/* ══════════════════════════════════════════════════════════════════════
+   HireHelp unified theme — light only, "friendly SaaS" direction.
+   Single source of truth for color, radius, shadow and motion across all
+   four portals. Scope-specific files can still override, but should pull
+   from these vars instead of hardcoding hex.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* Brand */
+    --hh-accent: #2563eb;
+    --hh-accent-hover: #1d4ed8;
+    --hh-accent-soft: #eff6ff;
+    --hh-accent-border: #bfdbfe;
+    --hh-accent-2: #7c3aed;
+
+    /* Surfaces */
+    --hh-bg: #f8fafc;
+    --hh-surface: #ffffff;
+    --hh-surface-soft: #f8fafc;
+    --hh-surface-hover: #f1f5f9;
+
+    /* Text */
+    --hh-text: #1e293b;
+    --hh-text-secondary: #475569;
+    --hh-text-muted: #94a3b8;
+
+    /* Borders */
+    --hh-border: #e2e8f0;
+    --hh-border-strong: #cbd5e1;
+
+    /* Status */
+    --hh-success: #16a34a;
+    --hh-success-soft: #dcfce7;
+    --hh-warning: #d97706;
+    --hh-warning-soft: #fef3c7;
+    --hh-danger: #dc2626;
+    --hh-danger-soft: #fee2e2;
+    --hh-info: #2563eb;
+    --hh-info-soft: #eff6ff;
+
+    /* Shape */
+    --hh-radius-sm: 8px;
+    --hh-radius-md: 12px;
+    --hh-radius-lg: 16px;
+    --hh-radius-pill: 999px;
+
+    /* Elevation */
+    --hh-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --hh-shadow-md: 0 4px 16px rgba(15, 23, 42, 0.08);
+    --hh-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+    --hh-shadow-accent: 0 8px 24px rgba(37, 99, 235, 0.18);
+
+    /* Motion */
+    --hh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --hh-dur-fast: 150ms;
+    --hh-dur-base: 250ms;
+    --hh-dur-slow: 450ms;
+}
+
+/* ── Global page transition ──────────────────────────────────────────
+   Wrap route content in <PageTransition> (see components/shared). It
+   re-mounts on every pathname change so this animation replays. */
+@keyframes hh-page-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.hh-page-transition {
+    animation: hh-page-in var(--hh-dur-slow) var(--hh-ease) both;
+}
+
+/* ── Staggered list / card reveal ───────────────────────────────────
+   Add .hh-stagger to a container and .hh-stagger-item to its children;
+   each child fades/slides in slightly after the previous one. */
+@keyframes hh-item-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hh-stagger-item {
+    animation: hh-item-in var(--hh-dur-base) var(--hh-ease) both;
+}
+
+.hh-stagger>*:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.hh-stagger>*:nth-child(2) {
+    animation-delay: 40ms;
+}
+
+.hh-stagger>*:nth-child(3) {
+    animation-delay: 80ms;
+}
+
+.hh-stagger>*:nth-child(4) {
+    animation-delay: 120ms;
+}
+
+.hh-stagger>*:nth-child(5) {
+    animation-delay: 160ms;
+}
+
+.hh-stagger>*:nth-child(6) {
+    animation-delay: 200ms;
+}
+
+.hh-stagger>*:nth-child(n+7) {
+    animation-delay: 240ms;
+}
+
+/* ── Hover / press microinteractions ────────────────────────────────
+   Drop these on any card/button for the "alive" SaaS feel. */
+.hh-lift {
+    transition: transform var(--hh-dur-fast) var(--hh-ease),
+        box-shadow var(--hh-dur-fast) var(--hh-ease),
+        border-color var(--hh-dur-fast) var(--hh-ease);
+}
+
+.hh-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--hh-shadow-md);
+    border-color: var(--hh-accent-border);
+}
+
+.hh-press:active {
+    transform: scale(0.97);
+}
+
+.hh-btn-anim {
+    transition: transform var(--hh-dur-fast) var(--hh-ease),
+        box-shadow var(--hh-dur-fast) var(--hh-ease),
+        background-color var(--hh-dur-fast) var(--hh-ease),
+        opacity var(--hh-dur-fast) var(--hh-ease);
+}
+
+.hh-btn-anim:hover {
+    transform: translateY(-1px);
+}
+
+.hh-btn-anim:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ── Skeleton / loading shimmer ─────────────────────────────────────── */
+@keyframes hh-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.hh-skeleton {
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+    background-size: 400% 100%;
+    animation: hh-shimmer 1.4s ease infinite;
+    border-radius: var(--hh-radius-sm);
+}
+
+/* ── "AI thinking" pulse — for AI screening / evaluation states ────── */
+@keyframes hh-ai-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.25);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(124, 58, 237, 0);
+    }
+}
+
+@keyframes hh-ai-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hh-ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--hh-radius-pill);
+    font-size: 12px;
+    font-weight: 600;
+    color: #6d28d9;
+    background: linear-gradient(90deg, #ede9fe, #eff6ff);
+    animation: hh-ai-pulse 2s ease infinite;
+}
+
+.hh-ai-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7c3aed;
+    animation: hh-ai-spin 1.2s linear infinite;
+    border: 1.5px solid transparent;
+    border-top-color: #7c3aed;
+    background: transparent;
+}
+
+/* ── Fade-in utility for modals/toasts ──────────────────────────────── */
+@keyframes hh-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hh-scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.hh-fade-in {
+    animation: hh-fade-in var(--hh-dur-base) var(--hh-ease) both;
+}
+
+.hh-scale-in {
+    animation: hh-scale-in var(--hh-dur-base) var(--hh-ease) both;
+}
+
+/* ── Animated doodle background ─────────────────────────────────────
+   Decorative, very low-contrast blobs that drift slowly. Pointer-events
+   none so they never interfere with interaction. See AnimatedBackground. */
+@keyframes hh-drift-a {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(30px, -20px) scale(1.05);
+    }
+}
+
+@keyframes hh-drift-b {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-25px, 25px) scale(1.08);
+    }
+}
+
+@keyframes hh-drift-c {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(20px, 15px) scale(0.96);
+    }
+}
+
+.hh-doodle-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hh-doodle-shape-a {
+    animation: hh-drift-a 18s ease-in-out infinite;
+}
+
+.hh-doodle-shape-b {
+    animation: hh-drift-b 22s ease-in-out infinite;
+}
+
+.hh-doodle-shape-c {
+    animation: hh-drift-c 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hh-page-transition,
+    .hh-stagger-item,
+    .hh-lift,
+    .hh-btn-anim,
+    .hh-skeleton,
+    .hh-ai-badge,
+    .hh-ai-dot,
+    .hh-fade-in,
+    .hh-scale-in,
+    .hh-doodle-shape-a,
+    .hh-doodle-shape-b,
+    .hh-doodle-shape-c {
+        animation: none !important;
+        transition: none !important;
+    }
+}

@@ -18,6 +18,7 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 import { getForm, createForm, addField, updateField, deleteField, reorderFields, publishForm, getQuestionTemplates, saveQuestionTemplate } from "../../../api/recruiter/forms"
 import { getFormApprovalStatus } from "../../../api/recruiter/formApprovals"
+import { toUserMessage } from "../../../utils/toUserMessage"
 import { useSelector } from 'react-redux'
 import type { RootState } from '../../../store'
 
@@ -56,20 +57,20 @@ const SortableItem: React.FC<SortableItemProps> = ({ field, onEdit, onDelete }) 
     <div
       ref={setNodeRef}
       style={style}
-      className="glass-card border border-gray-200/30 p-4 mb-3 shadow-sm hover:shadow-md transition-shadow"
+      className="glass-card border border-gray-200/30 p-3 sm:p-4 mb-3 shadow-sm hover:shadow-md transition-shadow"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 flex-1">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
           <button
             {...attributes}
             {...listeners}
-            className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+            className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing flex-shrink-0"
           >
             ⠿
           </button>
-          <div className="flex-1">
-            <div className="font-medium text-gray-900">{field.label}</div>
-            <div className="flex gap-2 mt-1">
+          <div className="flex-1 min-w-0">
+            <div className="font-medium text-gray-900 truncate">{field.label}</div>
+            <div className="flex flex-wrap gap-1 sm:gap-2 mt-1">
               <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
                 {field.field_type}
               </span>
@@ -81,10 +82,10 @@ const SortableItem: React.FC<SortableItemProps> = ({ field, onEdit, onDelete }) 
             </div>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1 sm:gap-2 flex-shrink-0">
           <button
             onClick={() => onEdit(field)}
-            className="text-gray-400 hover:text-indigo-600 transition-colors"
+            className="text-gray-400 hover:text-indigo-600 transition-colors p-1"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -92,7 +93,7 @@ const SortableItem: React.FC<SortableItemProps> = ({ field, onEdit, onDelete }) 
           </button>
           <button
             onClick={() => onDelete(field.id)}
-            className="text-gray-400 hover:text-red-600 transition-colors"
+            className="text-gray-400 hover:text-red-600 transition-colors p-1"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -157,9 +158,10 @@ const FormBuilderPage: React.FC = () => {
     try {
       const data = await getForm(id || '')
       setForm(data)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to fetch form:', err)
-      if (err.message.includes('404')) {
+      const { isAxiosError } = await import("axios");
+      if (isAxiosError(err) && err.message.includes('404')) {
         // Form doesn't exist, show create button
         setForm(null)
       }
@@ -203,9 +205,9 @@ const FormBuilderPage: React.FC = () => {
     try {
       const newForm = await createForm(id || '')
       setForm(newForm)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to create form:', err)
-      setMessage(err.message || 'Failed to create form')
+      setMessage(toUserMessage(err, 'Failed to create form'))
     }
   }
 
@@ -241,9 +243,9 @@ const FormBuilderPage: React.FC = () => {
       resetForm()
       setMessage(editingField ? 'Field updated' : 'Field added')
       setTimeout(() => setMessage(''), 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to save field:', err)
-      setMessage(err.message || 'Failed to save field')
+      setMessage(toUserMessage(err, 'Failed to save field'))
     }
   }
 
@@ -267,9 +269,9 @@ const FormBuilderPage: React.FC = () => {
       await fetchForm()
       setMessage('Field deleted')
       setTimeout(() => setMessage(''), 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to delete field:', err)
-      setMessage(err.message || 'Failed to delete field')
+      setMessage(toUserMessage(err, 'Failed to delete field'))
     }
   }
 
@@ -301,9 +303,9 @@ const FormBuilderPage: React.FC = () => {
         setMessage('Approval request sent to admins')
         setTimeout(() => setMessage(''), 3000)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to request approval:', err)
-      setMessage(err.message || 'Failed to request approval')
+      setMessage(toUserMessage(err, 'Failed to request approval'))
     }
   }
 
@@ -366,18 +368,18 @@ const FormBuilderPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <button
               onClick={() => navigate(isAdminRoute ? `/admin/requisitions/${id}` : `/recruiter/requisitions/${id}`)}
-              className="text-indigo-600 hover:text-indigo-800 mb-2 inline-flex items-center"
+              className="text-indigo-600 hover:text-indigo-800 mb-2 inline-flex items-center text-base sm:text-sm"
             >
               ← Back to Requisition
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">Application Form</h1>
-            <div className="flex items-center gap-3 mt-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Application Form</h1>
+            <div className="flex flex-wrap items-center gap-2 mt-2">
               {approvalStatus?.is_published && (
                 <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                   Published
@@ -405,7 +407,7 @@ const FormBuilderPage: React.FC = () => {
           <button
             onClick={handlePublish}
             disabled={form.is_published || (!isAdminRoute && approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending'))}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-base sm:text-sm"
           >
             {form.is_published ? 'Published' : isAdminRoute ? 'Publish Form' : approvalStatus?.approvals?.some((a: any) => a.approval.status === 'pending') ? 'Approval Pending' : 'Request Approval'}
           </button>
@@ -418,16 +420,16 @@ const FormBuilderPage: React.FC = () => {
           </div>
         )}
 
-        <div className="flex gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Main Field List */}
-          <div className="flex-1">
-            <div className="glass-card rounded-lg shadow p-6" style={{ border: '1px solid var(--border)' }}>
+          <div className="flex-1 order-2 lg:order-1">
+            <div className="glass-card rounded-lg shadow p-4 sm:p-6" style={{ border: '1px solid var(--border)' }}>
 
               <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Form Fields</h2>
 
               {form.fields?.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  No fields added yet. Use the form on the right to add your first field.
+                  No fields added yet. Use the form below to add your first field.
                 </div>
               ) : (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -447,9 +449,9 @@ const FormBuilderPage: React.FC = () => {
           </div>
 
           {/* Sidebar Form */}
-          <div className="w-96">
-            <div className="glass-card rounded-lg shadow p-6 sticky top-6" style={{ border: '1px solid var(--border)' }}>
-              <div className="flex items-center justify-between mb-4">
+          <div className="w-full lg:w-96 order-1 lg:order-2">
+            <div className="glass-card rounded-lg shadow p-4 sm:p-6 sticky top-4 lg:top-6" style={{ border: '1px solid var(--border)' }}>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
                   {editingField ? 'Edit Field' : 'Add Field'}
                 </h2>
@@ -464,7 +466,7 @@ const FormBuilderPage: React.FC = () => {
 
               {showTemplates && (
                 <div className="mb-4 p-3 rounded-lg" style={{ background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)' }}>
-                  <div className="flex gap-2 mb-3">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     <button
                       type="button"
                       onClick={() => setTemplateCategory('all')}
@@ -498,8 +500,8 @@ const FormBuilderPage: React.FC = () => {
                           onClick={() => handleSelectTemplate(template)}
                           className="w-full text-left p-2 rounded hover:bg-indigo-50 transition-colors border border-gray-200"
                         >
-                          <div className="font-medium text-sm text-gray-900">{template.label}</div>
-                          <div className="flex items-center gap-2 mt-1">
+                          <div className="font-medium text-sm text-gray-900 truncate">{template.label}</div>
+                          <div className="flex flex-wrap items-center gap-1 sm:gap-2 mt-1">
                             <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
                               {template.field_type}
                             </span>
@@ -646,7 +648,7 @@ const FormBuilderPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex gap-2 pt-4">
+                <div className="flex flex-col sm:flex-row gap-2 pt-4">
                   <button
                     type="submit"
                     className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"

@@ -69,7 +69,7 @@ async register(data: RegisterInput) {
   async login(data: LoginInput) {
     const candidate = await authRepository.findByEmail(data.email);
     if (!candidate) {
-      throw new Error('Invalid credentials');
+      throw new Error('Email is not registered');
     }
 
     if (!candidate.passwordHash) {

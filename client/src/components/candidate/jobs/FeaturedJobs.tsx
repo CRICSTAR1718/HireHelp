@@ -7,6 +7,7 @@ import Loader from "../ui/Loader";
 import { getJobs, getJobForm } from "../../../api/candidate/jobs.api";
 import { submitApplication, checkApplicationStatus } from "../../../api/candidate/applications.api";
 import { uploadResume } from "../../../api/candidate/profile.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { Job, FormResponse } from "../../../types/candidate";
 
 interface FeaturedJobsProps {
@@ -42,7 +43,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
         getJobs()
             .then(setJobs)
             .catch((err) => {
-                setError(err instanceof Error ? err.message : "Failed to load jobs");
+                setError(toUserMessage(err, "Failed to load jobs. Please try again."));
                 setJobs([]);
             })
             .finally(() => setLoading(false));
@@ -75,7 +76,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
             const form = await getJobForm(jobId);
             setFormFields(form.fields);
         } catch (err) {
-            setFormError(err instanceof Error ? err.message : "Failed to load application form");
+            setFormError(toUserMessage(err, "Failed to load application form. Please try again."));
         } finally {
             setLoadingForm(false);
         }
@@ -122,7 +123,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
             // Clear success message after 3 seconds
             setTimeout(() => setSuccessMessage(null), 3000);
         } catch (err) {
-            setFormError(err instanceof Error ? err.message : "Failed to submit application");
+            setFormError(toUserMessage(err, "Failed to submit application. Please try again."));
         } finally {
             setSubmitting(false);
         }
@@ -171,7 +172,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
             ) : jobs.length === 0 ? (
                 <p className="text-slate-500">No jobs found.</p>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 hh-stagger">
                     {jobs.map((job) => (
                         <JobCard
                             key={job.id}
@@ -186,6 +187,7 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
                             onApply={handleApply}
                             onViewDetails={handleViewDetails}
                             hasApplied={appliedJobIds.has(job.id)}
+                            className="hh-stagger-item"
                         />
                     ))}
                 </div>

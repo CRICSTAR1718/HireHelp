@@ -1,5 +1,6 @@
 import axios, { isAxiosError } from "axios";
 import { TOKEN_KEY } from "../shared/client";
+import { toUserMessage } from "../../utils/toUserMessage";
 
 const api = axios.create({
     baseURL: `${import.meta.env.VITE_API_URL || "/api"}/candidates`,
@@ -13,11 +14,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (isAxiosError(error)) {
-            const message =
-                (error.response?.data as { error?: string; message?: string } | undefined)?.error ||
-                (error.response?.data as { error?: string; message?: string } | undefined)?.message ||
-                error.message;
-
+            const message = toUserMessage(error, "Something went wrong. Please try again.");
             return Promise.reject(new Error(message));
         }
 
@@ -26,3 +23,4 @@ api.interceptors.response.use(
 );
 
 export default api;
+

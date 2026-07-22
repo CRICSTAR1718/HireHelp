@@ -26,7 +26,7 @@ export const StaffLoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<LoginFormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, clearErrors } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -42,6 +42,9 @@ export const StaffLoginPage = () => {
     try {
       await login(values);
     } catch (error) {
+      console.error("Login error:", error);
+      // Clear field-level errors and show root error instead
+      clearErrors(["email", "password"]);
       setError("root", { message: getErrorMessage(error, "Unable to sign in. Please try again.") });
     }
   };

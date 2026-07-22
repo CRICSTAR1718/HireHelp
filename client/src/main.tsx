@@ -13,7 +13,6 @@ import { getCurrentStaffUser } from "./api/shared/auth";
 import { loginSuccess, sessionResolved as sessionResolvedAction, logout } from "./store/authSlice";
 import { setAuthFailureHandler } from "./api/shared/client";
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

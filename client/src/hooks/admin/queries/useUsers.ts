@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as usersApi from "../../../api/admin/users";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { CreateUserInput, UpdateUserInput } from "../../../types/admin/users";
 
 export const useUsers = () => {
@@ -28,7 +29,7 @@ export const useCreateUser = () => {
       toast.success("User created successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to create user");
+      toast.error(toUserMessage(error, "Failed to create user. Please try again."));
     },
   });
 };
@@ -45,7 +46,7 @@ export const useUpdateUser = () => {
       toast.success("User updated successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update user");
+      toast.error(toUserMessage(error, "Failed to update user. Please try again."));
     },
   });
 };
@@ -60,7 +61,7 @@ export const useDeleteUser = () => {
       toast.success("User deleted successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete user");
+      toast.error(toUserMessage(error, "Failed to delete user. Please try again."));
     },
   });
 };

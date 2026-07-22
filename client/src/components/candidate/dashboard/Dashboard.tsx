@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Briefcase, CheckCircle2, FileText, User, Activity } from "lucide-react";
+import { ArrowUpRight, Briefcase, CheckCircle2, FileText, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ContentCard, SectionTitle, StatusBadge, LoadingState } from "../../../components/admin/common";
 import { DashboardCard, StatsCard } from "../../../components/admin/dashboard";
 import { getDashboard } from "../../../api/candidate/dashboard.api";
 import { getApplications } from "../../../api/candidate/applications.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { DashboardData } from "../../../types/candidate";
 import type { Application } from "../../../types/candidate";
 
 const quickActions = [
   { label: "Browse Jobs", href: "/candidate/jobs", icon: Briefcase },
-  { label: "Complete Profile", href: "/candidate/profile", icon: User },
   { label: "View Applications", href: "/candidate/applications", icon: FileText },
-  { label: "Account Settings", href: "/candidate/settings", icon: Activity },
 ];
 
 export default function Dashboard() {
@@ -31,7 +30,7 @@ export default function Dashboard() {
         setApplications(appsData);
       })
       .catch((err) =>
-        setError(err instanceof Error ? err.message : "Failed to load dashboard")
+        setError(toUserMessage(err, "Failed to load dashboard. Please try again."))
       )
       .finally(() => setLoading(false));
   }, []);
@@ -59,11 +58,11 @@ export default function Dashboard() {
           description="Overview of your job search activity and application status."
           title="Dashboard"
         />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatsCard description="Total job applications submitted" icon={Briefcase} label="Applications" tone="blue" value={String(applications.length)} />
-          <StatsCard description="Currently in review" icon={Activity} label="Active Applications" tone="violet" value={String(activeApplications)} />
-          <StatsCard description="Moved to interview stage" icon={CheckCircle2} label="Shortlisted" tone="emerald" value={String(shortlisted)} />
-          <StatsCard description="Job offers received" icon={FileText} label="Offers" tone="amber" value={String(offers)} />
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4 hh-stagger">
+          <div className="hh-stagger-item"><StatsCard description="Total job applications submitted" icon={Briefcase} label="Applications" tone="blue" value={String(applications.length)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Currently in review" icon={Activity} label="Active Applications" tone="violet" value={String(activeApplications)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Moved to interview stage" icon={CheckCircle2} label="Shortlisted" tone="emerald" value={String(shortlisted)} /></div>
+          <div className="hh-stagger-item"><StatsCard description="Job offers received" icon={FileText} label="Offers" tone="amber" value={String(offers)} /></div>
         </div>
       </section>
 
@@ -127,24 +126,6 @@ export default function Dashboard() {
               <p className="text-sm text-slate-500">No recent activity</p>
             </div>
           )}
-        </ContentCard>
-
-        <ContentCard title="Profile Completion">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">Profile Completion</span>
-              <span className="text-sm font-semibold text-slate-900">{data.profileCompletion}%</span>
-            </div>
-            <div className="h-3 w-full rounded-full bg-slate-200">
-              <div
-                className="h-3 rounded-full bg-blue-600 transition-all"
-                style={{ width: `${data.profileCompletion}%` }}
-              />
-            </div>
-            <p className="text-sm text-slate-500">
-              Complete your profile to improve visibility to recruiters.
-            </p>
-          </div>
         </ContentCard>
       </section>
     </div>

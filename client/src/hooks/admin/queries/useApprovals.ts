@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as approvalsApi from "../../../api/admin/approvals";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { ApprovalDecisionInput } from "../../../types/admin/approvals";
 
 export const useApprovals = () => {
@@ -30,7 +31,7 @@ export const useApproveApproval = () => {
       toast.success("Approval approved successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to approve");
+      toast.error(toUserMessage(error, "Failed to approve. Please try again."));
     },
   });
 };
@@ -47,7 +48,7 @@ export const useRejectApproval = () => {
       toast.success("Approval rejected successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to reject");
+      toast.error(toUserMessage(error, "Failed to reject. Please try again."));
     },
   });
 };

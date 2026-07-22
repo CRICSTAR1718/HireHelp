@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { assignmentApi, type Assignment } from "../../api/interviewer"
+import { toUserMessage } from "../../utils/toUserMessage"
 import { Video, Eye, X, Check, Clock, AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 
 export default function InterviewPanel() {
@@ -57,9 +58,9 @@ export default function InterviewPanel() {
       setStatusAction(null);
       setFeedback('');
       setCancellationReason('');
-    } catch (error) {
-      console.error('Failed to update assignment:', error);
-      alert('Failed to update interview status');
+    } catch (error: unknown) {
+      console.error('Failed to update status:', error)
+      alert(toUserMessage(error, 'Failed to update interview status'))
     } finally {
       setUpdating(false);
     }

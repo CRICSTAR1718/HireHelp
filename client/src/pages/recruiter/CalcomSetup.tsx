@@ -198,10 +198,10 @@ export default function CalcomSetup() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Cal.com Setup</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Cal.com Setup</h1>
         <p className="text-gray-600">Connect your Cal.com account for interview scheduling</p>
       </div>
 
@@ -226,8 +226,8 @@ export default function CalcomSetup() {
 
       {/* Connected State */}
       {integration && !showUpdateForm ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-start justify-between mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-green-100 rounded-lg">
                 <Calendar className="w-6 h-6 text-green-600" />
@@ -245,7 +245,7 @@ export default function CalcomSetup() {
           </div>
 
           <div className="space-y-4 mb-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-500 mb-1">Event Type ID</label>
                 <p className="text-gray-900 font-medium">{integration.calendarId || 'Not set'}</p>
@@ -271,7 +271,7 @@ export default function CalcomSetup() {
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => setShowUpdateForm(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
@@ -306,7 +306,7 @@ export default function CalcomSetup() {
         </div>
       ) : (
         /* Connection Form */
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-blue-100 rounded-lg">
               <Calendar className="w-6 h-6 text-blue-600" />
@@ -380,7 +380,7 @@ export default function CalcomSetup() {
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleSave}
               disabled={saving || !apiKey.trim() || !eventTypeId.trim()}
@@ -411,8 +411,8 @@ export default function CalcomSetup() {
       )}
 
       {/* Help Section */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
-        <div className="flex items-start gap-4">
+      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start gap-4">
           <div className="p-3 bg-blue-100 rounded-lg">
             <Key className="w-6 h-6 text-blue-600" />
           </div>

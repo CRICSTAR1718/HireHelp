@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getApprovals, createApproval, decideApproval } from "../../api/recruiter/approvals"
+import { toUserMessage } from "../../utils/toUserMessage"
 import StatusBadge from "../../components/recruiter/StatusBadge"
 
 const APPROVAL_STATUS_MAP: Record<string, string> = {
@@ -49,8 +50,8 @@ export default function ApprovalsPage({ user }: ApprovalsPageProps) {
     try {
       await createApproval(reqId || '', { approver_role: user.role })
       fetchApprovals()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to add approval')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Failed to add approval'))
     }
   }
 
@@ -59,8 +60,8 @@ export default function ApprovalsPage({ user }: ApprovalsPageProps) {
     try {
       await decideApproval(reqId || '', approvalId, status)
       fetchApprovals()
-    } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to update approval')
+    } catch (err: unknown) {
+      alert(toUserMessage(err, 'Failed to update approval'))
     } finally {
       setDeciding(null)
     }

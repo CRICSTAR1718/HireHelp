@@ -75,7 +75,7 @@ export default function ApplicationTable({ applications }: Props) {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 hh-stagger">
             {applications.map((app) => (
                 <ApplicationCard
                     key={app.id}
@@ -85,6 +85,7 @@ export default function ApplicationTable({ applications }: Props) {
                     appliedDate={formatDate(app.appliedDate)}
                     status={formatStatus(app.status) as any}
                     onView={() => handleView(app)}
+                    className="hh-stagger-item"
                 />
             ))}
 

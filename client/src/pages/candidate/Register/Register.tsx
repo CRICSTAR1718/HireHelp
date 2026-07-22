@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/store/hooks";
 import { loginStart, loginSuccess, loginFailure } from "@/store/authSlice";
 import { register, verifyEmail, resendOtp } from "../../../api/candidate/auth.api";
+import { toUserMessage } from "../../../utils/toUserMessage";
 import type { RegisterRequest } from "../../../types/candidate/auth";
 
 import Card from "../../../components/candidate/ui/Card";
@@ -73,10 +74,7 @@ export default function Register() {
             setShowOtpForm(true);
             setSuccessMessage(response.message || "Verification OTP sent to your email.");
         } catch (error) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : "Registration failed. Please try again.";
+            const message = toUserMessage(error, "Registration failed. Please try again.");
 
             setServerError(message);
             dispatch(loginFailure(message));
@@ -102,10 +100,7 @@ export default function Register() {
 
             navigate(destination, { replace: true });
         } catch (error) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : "Verification failed. Please try again.";
+            const message = toUserMessage(error, "Verification failed. Please try again.");
 
             setServerError(message);
             dispatch(loginFailure(message));
@@ -120,10 +115,7 @@ export default function Register() {
             const response = await resendOtp(registeredEmail, "REGISTRATION");
             setSuccessMessage(response.message || "OTP resent successfully.");
         } catch (error) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : "Failed to resend OTP. Please try again.";
+            const message = toUserMessage(error, "Failed to resend OTP. Please try again.");
 
             setServerError(message);
         }

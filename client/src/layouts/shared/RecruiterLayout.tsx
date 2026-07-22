@@ -2,6 +2,8 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/shared/useAuth";
 import { Briefcase, Plus, GitPullRequest, Users, Star, Calendar, BarChart2, FileText, Bell, Settings, LogOut, LayoutDashboard, ChevronDown, ChevronRight, Home, Link, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { AnimatedBackground } from "@/components/shared/AnimatedBackground";
+import { PageTransition } from "@/components/shared/PageTransition";
 
 const navItems = [
   { to: "/recruiter/dashboard", label: "Dashboard", icon: Home, end: true },
@@ -34,7 +36,6 @@ export const RecruiterLayout = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleLogout = () => {
@@ -47,26 +48,17 @@ export const RecruiterLayout = () => {
   };
 
   return (
-    <div className="scope-recruiter min-h-screen flex">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
+    <div className="scope-recruiter relative min-h-screen flex">
+      <AnimatedBackground />
       {/* Sidebar */}
       <aside
-        className={`bg-white shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
-          sidebarCollapsed ? 'w-16' : 'w-64'
-        } ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`bg-slate-900 shadow-lg border-r flex flex-col fixed h-screen transition-all duration-300 ${
+          sidebarCollapsed ? 'w-0 -translate-x-full opacity-0 pointer-events-none' : 'w-64 translate-x-0 opacity-100'
         }`}
         style={{ borderColor: 'var(--border)', zIndex: 9999 }}
       >
         {/* Logo */}
-        <div className="p-5 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)', background: 'linear-gradient(135deg, var(--accent), #6366f1)' }}>
+        <div className="p-5 border-b border-slate-700 flex items-center bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/20 rounded-lg">
               <LayoutDashboard className="w-5 h-5 text-white" />
@@ -78,12 +70,6 @@ export const RecruiterLayout = () => {
               </div>
             )}
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-white hover:bg-white/20 rounded-lg p-1"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </div>
 
         {/* Navigation Items */}
@@ -99,30 +85,27 @@ export const RecruiterLayout = () => {
                     <NavLink
                       to={item.to}
                       className={({ isActive }) =>
-                        `flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                        `flex items-center justify-between w-full px-4 py-3 rounded-lg font-medium transition-colors ${
                           isActive
-                            ? "text-white shadow-md"
-                            : ""
+                            ? "bg-blue-600 !text-white"
+                            : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                         }`
                       }
-                      style={({ isActive }) => ({
-                        backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                        color: isActive ? 'white' : 'var(--text-secondary)'
-                      })}
-                      onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                      onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
-                      onClick={() => !sidebarCollapsed && toggleExpanded(item.label)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        !sidebarCollapsed && toggleExpanded(item.label);
+                      }}
                     >
                       {({ isActive }) => (
                         <>
                           <div className="flex items-center gap-3">
-                            <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <Icon className={`w-5 h-5 shrink-0 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                             {!sidebarCollapsed && <span>{item.label}</span>}
                           </div>
                           {!sidebarCollapsed && (expandedItem === item.label ? (
-                            <ChevronDown className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <ChevronDown className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                           ) : (
-                            <ChevronRight className="w-4 h-4" style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                            <ChevronRight className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                           ))}
                         </>
                       )}
@@ -136,22 +119,16 @@ export const RecruiterLayout = () => {
                               <NavLink
                                 to={subItem.to}
                                 className={({ isActive }) =>
-                                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-colors ${
                                     isActive
-                                      ? "text-white shadow-md"
-                                      : ""
+                                      ? "bg-blue-600 !text-white"
+                                      : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                                   }`
                                 }
-                                style={({ isActive }) => ({
-                                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                                  color: isActive ? 'white' : 'var(--text-secondary)'
-                                })}
-                                onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                                onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                               >
                                 {({ isActive }) => (
                                   <>
-                                    <SubIcon className={`w-4 h-4`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                                    <SubIcon className={`w-4 h-4 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                                     <span className="text-sm">{subItem.label}</span>
                                   </>
                                 )}
@@ -170,22 +147,16 @@ export const RecruiterLayout = () => {
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                      `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                         isActive
-                          ? "text-white shadow-md"
-                          : ""
+                          ? "bg-blue-600 !text-white"
+                          : "!text-slate-300 hover:bg-slate-800 hover:!text-white"
                       }`
                     }
-                    style={({ isActive }) => ({
-                      backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                      color: isActive ? 'white' : 'var(--text-secondary)'
-                    })}
-                    onMouseEnter={(e) => { if (!e.currentTarget.style.backgroundColor || e.currentTarget.style.backgroundColor === 'transparent') { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
-                    onMouseLeave={(e) => { if (!e.currentTarget.classList.contains('text-white')) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; } }}
                   >
                     {({ isActive }) => (
                       <>
-                        <Icon className={`w-5 h-5 flex-shrink-0`} style={{ color: isActive ? 'white' : 'var(--text-muted)' }} strokeWidth={2} />
+                        <Icon className={`w-5 h-5 shrink-0 ${isActive ? '!text-white' : '!text-slate-500'}`} strokeWidth={2} />
                         {!sidebarCollapsed && <span>{item.label}</span>}
                       </>
                     )}
@@ -197,23 +168,10 @@ export const RecruiterLayout = () => {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-hover)' }}>
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 mb-2"
-            style={{ color: 'var(--text-secondary)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--bg-hover)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-          >
-            <LayoutDashboard className="w-5 h-5" strokeWidth={2} />
-            {!sidebarCollapsed && <span>Collapse</span>}
-          </button>
+        <div className="p-4 border-t border-slate-700 bg-slate-800">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium transition-all duration-200 group"
-            style={{ color: 'var(--danger)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)'; e.currentTarget.style.color = 'var(--danger)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--danger)'; }}
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-lg font-medium text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all duration-200 group"
           >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" strokeWidth={2} />
             {!sidebarCollapsed && <span>Logout</span>}
@@ -222,20 +180,21 @@ export const RecruiterLayout = () => {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 p-6 transition-all duration-300 ${
-        sidebarCollapsed ? 'ml-16' : 'ml-64'
-      }`} style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-primary)' }}>
-        {/* Mobile menu button */}
+      <main className={`relative z-10 flex-1 p-6 transition-all duration-300 ${
+        sidebarCollapsed ? 'ml-0' : 'ml-64'
+      }`} style={{ borderColor: 'var(--border)' }}>
+        {/* Hamburger menu button */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className="lg:hidden mb-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200"
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="mb-4 flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200"
           style={{ color: 'var(--text-secondary)', backgroundColor: 'var(--bg-secondary)' }}
         >
           <Menu className="w-5 h-5" strokeWidth={2} />
-          <span>Menu</span>
         </button>
         <div className="max-w-7xl mx-auto">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </div>
       </main>
     </div>

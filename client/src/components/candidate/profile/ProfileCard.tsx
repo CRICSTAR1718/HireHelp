@@ -10,7 +10,7 @@ interface Props {
 
 export default function ProfileCard({ profile, onEditProfile }: Props) {
     return (
-        <Card className="p-6">
+        <Card className="p-6 hh-lift">
             <div className="flex items-center gap-4 mb-6">
                 <UserAvatar 
                     firstName={profile.fullName.split(' ')[0]} 
