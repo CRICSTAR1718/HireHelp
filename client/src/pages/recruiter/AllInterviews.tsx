@@ -170,7 +170,7 @@ export default function AllInterviews() {
                       href={assignment.schedule.meetingLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                      className="flex-1 bg-white text-white py-2 px-4 rounded-lg hover:border-2 border-solid border-blue-500 p-4 transition-colors text-sm font-medium flex items-center justify-center gap-2"
                     >
                       <Video className="w-4 h-4" />
                       Join Meeting
