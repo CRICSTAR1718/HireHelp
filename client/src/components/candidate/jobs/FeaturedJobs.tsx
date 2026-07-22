@@ -98,9 +98,11 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
 
             // Upload resume
             let resumeId: number;
+            let resumeS3Url: string;
             try {
                 const uploadResult = await uploadResume(resumeFile);
                 resumeId = uploadResult.id;
+                resumeS3Url = uploadResult.s3Url;
                 console.log('Resume uploaded successfully:', uploadResult);
             } catch (uploadError) {
                 console.error('Resume upload failed:', uploadError);
@@ -109,9 +111,17 @@ export default function FeaturedJobs({ initialSelectedJobId = null }: FeaturedJo
                 return;
             }
 
+            // Replace temp_file_url with actual S3 URL in responses
+            const updatedResponses = responses.map(response => {
+                if (response.file_url === 'temp_file_url') {
+                    return { ...response, file_url: resumeS3Url };
+                }
+                return response;
+            });
+
             await submitApplication({
                 jobId: selectedJobId,
-                responses,
+                responses: updatedResponses,
                 resumeId
             });
 
