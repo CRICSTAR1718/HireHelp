@@ -186,8 +186,14 @@ export const AiEvaluationModal: React.FC<AiEvaluationModalProps> = ({
           )}
 
           {error && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+              <p className="text-sm text-red-700 mb-3">{error}</p>
+              <button
+                onClick={fetchEvaluation}
+                className="text-sm font-medium text-red-700 hover:text-red-900 underline"
+              >
+                Retry
+              </button>
             </div>
           )}
 
